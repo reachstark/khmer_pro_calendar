@@ -4,6 +4,7 @@ import { Sparkles, Copy, Check, Eye } from 'lucide-vue-next'
 import confetti from 'canvas-confetti'
 import CalendarHeader from '@/components/CalendarHeader.vue'
 import MonthBannerCard from '@/components/MonthBannerCard.vue'
+import NewYearCountdown from '@/components/NewYearCountdown.vue'
 import CalendarGrid from '@/components/CalendarGrid.vue'
 import MonthHolidaysList from '@/components/MonthHolidaysList.vue'
 import DateDetailsModal from '@/components/DateDetailsModal.vue'
@@ -28,6 +29,8 @@ const {
   isHolidaysDrawerOpen,
   selectedDate,
   selectDate,
+  selectPrevDay,
+  selectNextDay,
 } = useCalendarState()
 
 useCalendarSettings() // Initializes theme, font scale, start of week
@@ -87,13 +90,39 @@ function handleKeyDown(e: KeyboardEvent) {
     return
   }
 
+  // If DateDetailsModal is open, do NOT navigate months with arrow keys!
+  // Instead, Left/Right arrow keys navigate days within the modal.
+  if (selectedDate.value) {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      selectPrevDay()
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      selectNextDay()
+    } else if (e.key === 'Escape') {
+      selectedDate.value = null
+    }
+    return
+  }
+
+  // If any other modal/drawer is open, ignore navigation keys
+  if (isAnyModalOpen.value) {
+    if (e.key === 'Escape') {
+      isSearchOpen.value = false
+      isSettingsOpen.value = false
+      isHolidaysDrawerOpen.value = false
+      isInstallHelpOpen.value = false
+    }
+    return
+  }
+
   if (e.key === 'ArrowLeft') {
     prevMonth()
   } else if (e.key === 'ArrowRight') {
     nextMonth()
   } else if (e.key === 't' || e.key === 'T') {
     goToToday()
-  } else if (e.key === 's' || e.key === 'S' || e.key === '/') {
+  } else if (e.key === 's' || e.key === '/') {
     e.preventDefault()
     isSearchOpen.value = true
   } else if (e.key === 'Escape') {
@@ -146,6 +175,9 @@ onUnmounted(() => {
         <div class="lg:col-span-8 flex flex-col gap-4 sm:gap-5">
           <!-- Month Banner Card (Cambodia Month Artwork & Color Theme) -->
           <MonthBannerCard />
+
+          <!-- New Year Countdown Timer (Visible 15 days before New Year's Eve or when viewing December) -->
+          <NewYearCountdown />
 
           <!-- Calendar Matrix Grid (Animated Month Transitions) -->
           <CalendarGrid />
