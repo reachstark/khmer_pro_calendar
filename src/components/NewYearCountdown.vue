@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Sparkles, ChevronDown, ChevronUp, X } from 'lucide-vue-next'
-import { useCalendarState } from '@/composables/useCalendarState'
 import { toKhmerNumber } from '@/utils/khmerCalendar'
-
-const { currentMonth, currentYear } = useCalendarState()
 
 const isCollapsed = ref(false)
 const isDismissed = ref(false)
@@ -22,53 +19,58 @@ onUnmounted(() => {
   if (timer) clearInterval(timer)
 })
 
-// Automatically displays 15 days before New Year's Eve (Dec 16 through Dec 31)
-// or whenever viewing December in the calendar
-const isCountdownActive = computed(() => {
-  if (isDismissed.value) return false
-
-  const realMonth = now.value.getMonth() // 0-11
-  const realDate = now.value.getDate()
-
-  // Real-world window: Dec 16 - Dec 31 (15 days before New Year's Eve)
-  const isRealWorldWindow = realMonth === 11 && realDate >= 16
-
-  // In-calendar viewing: viewing December (month index 11)
-  const isViewingDecember = currentMonth.value === 11
-
-  return isRealWorldWindow || isViewingDecember
+// Check if preview mode is enabled via query parameter or localStorage for testing/demo
+const isPreviewMode = computed(() => {
+  if (typeof window === 'undefined') return false
+  return (
+    new URLSearchParams(window.location.search).get('previewCountdown') === 'true' ||
+    localStorage.getItem('khmer_calendar_preview_countdown') === 'true'
+  )
 })
 
-// Target Year for New Year's Day
+// Target Year for New Year's Day (Jan 1, 00:00:00)
 const targetYear = computed(() => {
-  if (currentMonth.value === 11) {
-    return currentYear.value + 1
+  const currentRealYear = now.value.getFullYear()
+  // If it is Jan 1, target is today's year for celebration
+  if (now.value.getMonth() === 0 && now.value.getDate() === 1) {
+    return currentRealYear
   }
-  return now.value.getFullYear() + 1
+  return currentRealYear + 1
 })
 
 const targetDate = computed(() => {
   return new Date(targetYear.value, 0, 1, 0, 0, 0, 0)
 })
 
+// Live time remaining until New Year (Jan 1, 00:00:00)
 const timeRemaining = computed(() => {
-  let diff = targetDate.value.getTime() - now.value.getTime()
-
-  // If user is previewing December in calendar while current real date is not Dec 16-31,
-  // show the live 15-day countdown progression relative to New Year's Eve
-  if (currentMonth.value === 11 && (now.value.getMonth() !== 11 || now.value.getDate() < 16)) {
-    const simTarget = new Date(currentYear.value + 1, 0, 1, 0, 0, 0, 0)
-    // 15 days before Dec 31 is Dec 16
-    const simulatedNow = new Date(
-      currentYear.value,
-      11,
-      16,
-      now.value.getHours(),
-      now.value.getMinutes(),
-      now.value.getSeconds()
-    )
-    diff = simTarget.getTime() - simulatedNow.getTime()
+  // If preview mode is forced for testing while outside the 15-day window, provide a sample 15-day progression
+  if (isPreviewMode.value) {
+    const rawDiff = targetDate.value.getTime() - now.value.getTime()
+    const rawDays = Math.floor(rawDiff / (1000 * 60 * 60 * 24))
+    if (rawDays > 15) {
+      return {
+        isCelebration: false,
+        days: 15,
+        hours: 12,
+        minutes: 30,
+        seconds: 45,
+      }
+    }
   }
+
+  // Jan 1 New Year Day celebration
+  if (now.value.getMonth() === 0 && now.value.getDate() === 1) {
+    return {
+      isCelebration: true,
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+    }
+  }
+
+  const diff = targetDate.value.getTime() - now.value.getTime()
 
   if (diff <= 0) {
     return {
@@ -92,6 +94,26 @@ const timeRemaining = computed(() => {
     minutes,
     seconds,
   }
+})
+
+// Feature displays ONLY when exactly 15 days or fewer remain until New Year
+// (e.g. from Dec 16 countdown down to Dec 31/Jan 1).
+// Since current date is 18-Nov-2026 (~43 days away), it remains completely hidden.
+const isCountdownActive = computed(() => {
+  if (isDismissed.value) return false
+  if (isPreviewMode.value) return true
+
+  // Active on Jan 1 (New Year's Day)
+  if (now.value.getMonth() === 0 && now.value.getDate() === 1) {
+    return true
+  }
+
+  const diff = targetDate.value.getTime() - now.value.getTime()
+  if (diff <= 0) return false
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  // Starts counting down 15 days until New Year's Eve / New Year
+  return days <= 15
 })
 </script>
 

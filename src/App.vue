@@ -176,7 +176,7 @@ onUnmounted(() => {
           <!-- Month Banner Card (Cambodia Month Artwork & Color Theme) -->
           <MonthBannerCard />
 
-          <!-- New Year Countdown Timer (Visible 15 days before New Year's Eve or when viewing December) -->
+          <!-- New Year Countdown Timer (Visible only 15 days before New Year's Eve) -->
           <NewYearCountdown />
 
           <!-- Calendar Matrix Grid (Animated Month Transitions) -->
