@@ -185,41 +185,69 @@ const moonPhaseVisual = computed(() => {
       <!-- Holiday Banner (if holiday exists) -->
       <div
         v-if="selectedDate.holiday"
-        class="mt-3 rounded-2xl border p-3.5 sm:p-4"
+        class="mt-4 overflow-hidden rounded-2xl sm:rounded-3xl border shadow-md transition-all"
         :class="
           selectedDate.holiday.isOffDay
-            ? 'border-red-500/30 bg-red-500/10 text-red-900 dark:text-red-200'
-            : 'border-blue-500/30 bg-blue-500/10 text-blue-900 dark:text-blue-200'
+            ? 'border-red-500/30 bg-red-500/5 dark:border-red-500/40 dark:bg-red-950/20'
+            : 'border-blue-500/30 bg-blue-500/5 dark:border-blue-500/40 dark:bg-blue-950/20'
         "
       >
-        <div class="flex items-center justify-between gap-2">
-          <div class="flex items-center gap-2">
+        <!-- Rich Banner Image -->
+        <div v-if="selectedDate.holiday.imageUrl" class="relative h-32 sm:h-44 w-full overflow-hidden">
+          <img
+            :src="selectedDate.holiday.imageUrl"
+            :alt="selectedDate.holiday.titleKh"
+            class="h-full w-full object-cover object-center transform transition-transform duration-700 hover:scale-105"
+            loading="eager"
+          />
+          <!-- Contrast scrim overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/50 to-black/25"></div>
+
+          <!-- Official Holiday / Observance Badge on Image -->
+          <div class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3">
             <span
-              class="flex h-7 w-7 items-center justify-center rounded-xl text-white font-bold text-xs"
-              :class="selectedDate.holiday.isOffDay ? 'bg-red-500' : 'bg-blue-500'"
+              class="rounded-full px-2.5 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white shadow-md backdrop-blur-md"
+              :class="selectedDate.holiday.isOffDay ? 'bg-red-600/90' : 'bg-blue-600/90'"
             >
-              🎉
+              {{ selectedDate.holiday.isOffDay ? 'ឈប់សម្រាកផ្លូវការ' : 'ពិធីប្រពៃណី / ទិវាជាតិ' }}
             </span>
+          </div>
+
+          <!-- Bottom Title overlay on Image -->
+          <div class="absolute bottom-2.5 left-3 right-3 sm:bottom-3 sm:left-4 sm:right-4 text-white">
+            <h3 class="text-base sm:text-xl font-bold leading-tight drop-shadow-md">
+              {{ selectedDate.holiday.titleKh }}
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-200 font-medium drop-shadow-xs mt-0.5">
+              {{ selectedDate.holiday.titleEn }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Description & Details -->
+        <div class="p-3.5 sm:p-4">
+          <!-- Fallback header if image doesn't load -->
+          <div v-if="!selectedDate.holiday.imageUrl" class="flex items-center justify-between gap-2 mb-2">
             <div>
-              <h3 class="text-sm sm:text-base font-bold leading-tight">
+              <h3 class="text-sm sm:text-base font-bold leading-tight text-slate-900 dark:text-white">
                 {{ selectedDate.holiday.titleKh }}
               </h3>
               <p class="text-xs opacity-75 font-medium">
                 {{ selectedDate.holiday.titleEn }}
               </p>
             </div>
+            <span
+              class="rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white"
+              :class="selectedDate.holiday.isOffDay ? 'bg-red-600' : 'bg-blue-600'"
+            >
+              {{ selectedDate.holiday.isOffDay ? 'ឈប់សម្រាកផ្លូវការ' : 'ពិធីប្រពៃណី/ទិវាជាតិ' }}
+            </span>
           </div>
 
-          <span
-            class="rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white"
-            :class="selectedDate.holiday.isOffDay ? 'bg-red-600' : 'bg-blue-600'"
-          >
-            {{ selectedDate.holiday.isOffDay ? 'ឈប់សម្រាកផ្លូវការ' : 'ពិធីប្រពៃណី/ទិវាជាតិ' }}
-          </span>
+          <p class="text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-slate-200">
+            {{ selectedDate.holiday.descriptionKh }}
+          </p>
         </div>
-        <p class="text-xs sm:text-sm mt-2 opacity-90 leading-relaxed font-normal">
-          {{ selectedDate.holiday.descriptionKh }}
-        </p>
       </div>
 
       <!-- Holy Day Banner (ថ្ងៃសីល) -->

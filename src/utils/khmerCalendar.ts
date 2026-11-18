@@ -57,6 +57,7 @@ export interface HolidayEvent {
   descriptionKh: string
   descriptionEn: string
   isOffDay: boolean // ឈប់សម្រាកការងារផ្លូវការ
+  imageUrl?: string // High-resolution holiday banner image
 }
 
 // Convert western digits to Khmer numerals
@@ -161,6 +162,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'ការប្រារព្ធពិធីឆ្លងឆ្នាំសកលទូទាំងពិភពលោក',
       descriptionEn: 'Celebration of the first day of the Gregorian New Year',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_solar_new_year.jpg',
     }
   }
 
@@ -173,6 +175,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'រំលឹកដល់ទិវាជ័យជម្នះថ្ងៃ ៧ មករា ឆ្នាំ ១៩៧៩',
       descriptionEn: 'Commemoration of the fall of the Khmer Rouge regime in 1979',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_victory_day.jpg',
     }
   }
 
@@ -185,6 +188,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'អបអរសាទរសិទ្ធិ និងសមភាពស្ត្រីទូទាំងពិភពលោក',
       descriptionEn: 'Global celebration of social, economic, cultural, and political achievements of women',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_womens_day.jpg',
     }
   }
 
@@ -197,6 +201,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'ទិវាសាមគ្គីភាព និងសិទ្ធិរបស់កម្មករនិយោជិតអន្តរជាតិ',
       descriptionEn: 'International workers and labour rights day',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_labour_day.jpg',
     }
   }
 
@@ -209,6 +214,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'ព្រះរាជពិធីចម្រើនព្រះជន្ម ព្រះករុណា ព្រះបាទសម្តេចព្រះបរមនាថ នរោត្តម សីហមុនី',
       descriptionEn: 'Official birthday celebration of His Majesty King Norodom Sihamoni',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_king_birthday.jpg',
     }
   }
 
@@ -221,6 +227,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'គោរពវិញ្ញាណក្ខន្ធជនរងគ្រោះក្នុងរបបកម្ពុជាប្រជាធិបតេយ្យ',
       descriptionEn: 'Commemoration of victims of the Cambodian genocide',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_remembrance_day.jpg',
     }
   }
 
@@ -233,6 +240,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'ព្រះរាជពិធីបុណ្យចម្រើនព្រះជន្ម សម្តេចព្រះមហាក្សត្រី នរោត្តម មុនិនាថ សីហនុ ព្រះវររាជមាតាជាតិខ្មែរ',
       descriptionEn: 'Official birthday of Her Majesty Queen Mother Norodom Monineath Sihanouk',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_queen_mother_birthday.jpg',
     }
   }
 
@@ -245,6 +253,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'រំលឹកដល់ការប្រកាសឱ្យប្រើរដ្ឋធម្មនុញ្ញឆ្នាំ ១៩៩៣',
       descriptionEn: 'Celebration of the signing of the Cambodian Constitution in 1993',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_constitutional_day.jpg',
     }
   }
 
@@ -257,6 +266,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'ទិវាប្រារព្ធពិធីគោរពព្រះវិញ្ញាណក្ខន្ធ ព្រះករុណា ព្រះបាទសម្តេចព្រះ នរោត្តម សីហនុ',
       descriptionEn: 'Memorial day honoring King Father Norodom Sihanouk',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_king_father_commemoration.jpg',
     }
   }
 
@@ -269,6 +279,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'រំលឹកខួបនៃការឡើងគ្រងរាជសម្បត្តិរបស់ ព្រះករុណា ព្រះបាទសម្តេចព្រះបរមនាថ នរោត្តម សីហមុនី',
       descriptionEn: 'Coronation anniversary of His Majesty King Norodom Sihamoni',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_coronation_day.jpg',
     }
   }
 
@@ -281,6 +292,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'ខួបនៃការទទួលបានឯករាជ្យពេញលេញពីសាធារណរដ្ឋបារាំង ឆ្នាំ ១៩៥៣',
       descriptionEn: 'Celebration of Cambodia gaining full independence from France in 1953',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_independence_day.jpg',
     }
   }
 
@@ -296,6 +308,7 @@ export function getCambodiaHoliday(
         descriptionKh: 'ថ្ងៃដំបូងនៃពិធីបុណ្យចូលឆ្នាំថ្មីប្រពៃណីជាតិ ទេវតាឆ្នាំថ្មីចុះមកគ្រប់គ្រងផែនដី',
         descriptionEn: 'First day of Khmer New Year welcoming the new year Angel (Devada)',
         isOffDay: true,
+      imageUrl: '/images/holidays/holiday_khmer_new_year.jpg',
       }
     }
     if (day === ny.day + 1) {
@@ -307,6 +320,7 @@ export function getCambodiaHoliday(
         descriptionKh: 'ថ្ងៃទីពីរនៃពិធីបុណ្យចូលឆ្នាំថ្មី ធ្វើបុណ្យដាក់បាត្រ និងចែកទានដល់ជនក្រីក្រ',
         descriptionEn: 'Second day of Khmer New Year, day of giving gifts to parents and elders',
         isOffDay: true,
+      imageUrl: '/images/holidays/holiday_khmer_new_year.jpg',
       }
     }
     if (day === ny.day + 2) {
@@ -318,6 +332,7 @@ export function getCambodiaHoliday(
         descriptionKh: 'ថ្ងៃឡើងស័កថ្មី ស្រង់ព្រះពុទ្ធរូប ងូតទឹកជូនមាតាបិតា និងពូនភ្នំខ្សាច់',
         descriptionEn: 'Final day of Khmer New Year, washing Buddha statues and seeking blessings',
         isOffDay: true,
+      imageUrl: '/images/holidays/holiday_khmer_new_year.jpg',
       }
     }
   }
@@ -334,6 +349,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'រំលឹកដល់ការជួបជុំសាវ័ក ១.២៥០ អង្គដោយមិនបានណាត់ និងការប្រកាសឱវាទបាតិមោក្ខ',
       descriptionEn: 'Commemorates Buddha declaring the fundamental principles of Buddhism',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_meak_bochea.jpg',
     }
   }
 
@@ -347,6 +363,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'រំលឹកដល់ព្រឹត្តិការណ៍សំខាន់ ៣ របស់ព្រះសម្មាសម្ពុទ្ធ៖ ប្រសូត ត្រាស់ដឹង និងបរិនិព្វាន',
       descriptionEn: 'The most sacred Buddhist day commemorating the Birth, Enlightenment, and Nirvana of Buddha',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_visak_bochea.jpg',
     }
   }
 
@@ -360,6 +377,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'ព្រះរាជពិធីប្រពៃណីប្រកាសចាប់ផ្តើមរដូវបង្កបង្កើនផល និងទស្សន៍ទាយភោគផលកសិកម្មតាមរយៈគោឧសភរាជ',
       descriptionEn: 'Ancient royal ceremony marking the beginning of the rice-planting season',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_royal_ploughing.jpg',
     }
   }
 
@@ -375,6 +393,7 @@ export function getCambodiaHoliday(
         descriptionKh: 'ថ្ងៃទីមួយនៃថ្ងៃឈប់សម្រាកផ្លូវការបុណ្យភ្ជុំបិណ្ឌ',
         descriptionEn: 'First official holiday day of the Pchum Ben ancestral festival',
         isOffDay: true,
+      imageUrl: '/images/holidays/holiday_pchum_ben.jpg',
       }
     }
     if (khmerInfo.day === 15) {
@@ -386,6 +405,7 @@ export function getCambodiaHoliday(
         descriptionKh: 'ថ្ងៃបុណ្យភ្ជុំបិណ្ឌធំ ឧទ្ទិសកុសលជូនបុព្វការីជន និងញាតិកាលទាំង ៧ សន្តាន',
         descriptionEn: 'Main Pchum Ben Day honoring ancestors and making offerings at pagodas',
         isOffDay: true,
+      imageUrl: '/images/holidays/holiday_pchum_ben.jpg',
       }
     }
     if (khmerInfo.day >= 1 && khmerInfo.day <= 13) {
@@ -411,6 +431,7 @@ export function getCambodiaHoliday(
       descriptionKh: 'ថ្ងៃចុងក្រោយនៃពិធីបុណ្យភ្ជុំបិណ្ឌ ជូនដំណើរដូនតាត្រឡប់ទៅវិញ',
       descriptionEn: 'Final official holiday of Pchum Ben festival',
       isOffDay: true,
+      imageUrl: '/images/holidays/holiday_pchum_ben.jpg',
     }
   }
 
@@ -426,6 +447,7 @@ export function getCambodiaHoliday(
         descriptionKh: 'បើកការប្រណាំងទូកង និងការបណ្តែតប្រទីបអបអរសាទរ',
         descriptionEn: 'First day of Water Festival, dragon boat races opening ceremonies',
         isOffDay: true,
+      imageUrl: '/images/holidays/holiday_water_festival.jpg',
       }
     }
     if (khmerInfo.day === 15 && khmerInfo.moonPhase === MoonPhase.Waxing) {
@@ -437,6 +459,7 @@ export function getCambodiaHoliday(
         descriptionKh: 'ថ្ងៃពេញបូណ៌មីសំពះព្រះខែ អកអំបុក និងបណ្តែតប្រទីបដ៏មហោឡារិក',
         descriptionEn: 'Main Water Festival day: Full moon salutation, flattened rice eating, and illuminated flotillas',
         isOffDay: true,
+      imageUrl: '/images/holidays/holiday_water_festival.jpg',
       }
     }
     if (khmerInfo.day === 1 && khmerInfo.moonPhase === MoonPhase.Waning) {
@@ -448,6 +471,7 @@ export function getCambodiaHoliday(
         descriptionKh: 'ការប្រណាំងទូកផ្តាច់ព្រ័ត្រ កាត់ព្រ័ត្រ និងការប្រគល់រង្វាន់ជ័យលាភី',
         descriptionEn: 'Final boat races and festive closing ceremonies',
         isOffDay: true,
+      imageUrl: '/images/holidays/holiday_water_festival.jpg',
       }
     }
   }
