@@ -352,32 +352,34 @@ const isCurrentMonthToday = computed(() => {
     </div>
 
     <!-- PWA Install Guidance Dialog (When browser doesn't auto-prompt) -->
-    <div
-      v-if="isInstallHelpOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs"
-      @click.self="isInstallHelpOpen = false"
-    >
+    <Teleport to="body">
       <div
-        class="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl dark:border-slate-800 dark:bg-slate-900 text-center animate-in zoom-in-95 duration-150"
+        v-if="isInstallHelpOpen"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm animate-in fade-in duration-150"
+        @click.self="isInstallHelpOpen = false"
       >
-        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 mb-3">
-          <Download class="h-6 w-6" />
-        </div>
-        <h3 class="text-base font-bold text-slate-900 dark:text-white">
-          របៀបដំឡើងកម្មវិធី (Install as App)
-        </h3>
-        <p class="mt-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed text-left">
-          • <strong>លើ Chrome / Edge:</strong> ចុចលើរូបតំណាង <strong>Install</strong> (រូបកុំព្យូទ័រ/ព្រួញចុះក្រោម) នៅខាងស្តាំនៃរបារអាសយដ្ឋាន (Address Bar)។<br>
-          • <strong>លើ Safari (iPhone/iPad):</strong> ចុចប៊ូតុង <strong>Share</strong> រួចជ្រើសរើស <strong>"Add to Home Screen"</strong>។
-        </p>
-        <button
-          type="button"
-          @click="isInstallHelpOpen = false"
-          class="mt-4 w-full rounded-2xl bg-amber-500 py-2.5 text-xs font-bold text-white shadow-md shadow-amber-500/20"
+        <div
+          class="relative z-10 w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900 text-center animate-in zoom-in-95 duration-150"
         >
-          យល់ព្រម
-        </button>
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 mb-3">
+            <Download class="h-6 w-6" />
+          </div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white">
+            របៀបដំឡើងកម្មវិធី (Install as App)
+          </h3>
+          <p class="mt-2.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed text-left">
+            • <strong>លើ Chrome / Edge:</strong> ចុចលើរូបតំណាង <strong>Install</strong> (រូបកុំព្យូទ័រ/ព្រួញចុះក្រោម) នៅខាងស្តាំនៃរបារអាសយដ្ឋាន (Address Bar)។<br><br>
+            • <strong>លើ Safari (iPhone/iPad):</strong> ចុចប៊ូតុង <strong>Share</strong> រួចជ្រើសរើស <strong>"Add to Home Screen"</strong>។
+          </p>
+          <button
+            type="button"
+            @click="isInstallHelpOpen = false"
+            class="mt-5 w-full rounded-2xl bg-amber-500 py-2.5 text-xs font-bold text-white hover:bg-amber-600 shadow-md shadow-amber-500/20 active:scale-98 transition-all"
+          >
+            យល់ព្រម
+          </button>
+        </div>
       </div>
-    </div>
+    </Teleport>
   </header>
 </template>

@@ -15,6 +15,7 @@ import SeasonAnimation from '@/components/SeasonAnimation.vue'
 import { useCalendarState } from '@/composables/useCalendarState'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { useVisitorCount } from '@/composables/useVisitorCount'
+import { usePwaInstall } from '@/composables/usePwaInstall'
 import { toKhmerNumber } from '@/utils/khmerCalendar'
 
 const {
@@ -32,16 +33,21 @@ const {
 
 useCalendarSettings() // Initializes theme, font scale, start of week
 const { visitorCount } = useVisitorCount()
+const { isInstallHelpOpen } = usePwaInstall()
 
-// Prevent mouse background scrolling when any modal dialog or drawer is open
-const isAnyModalOpen = computed(() =>
-  Boolean(
+const isDesktop = ref(typeof window !== 'undefined' ? window.innerWidth >= 1024 : false)
+
+// Prevent mouse background scrolling when any modal dialog or mobile drawer is open
+const isAnyModalOpen = computed(() => {
+  const isDrawerActive = isHolidaysDrawerOpen.value && !isDesktop.value
+  return Boolean(
     isSearchOpen.value ||
     isSettingsOpen.value ||
-    isHolidaysDrawerOpen.value ||
-    selectedDate.value
+    isDrawerActive ||
+    selectedDate.value ||
+    isInstallHelpOpen.value
   )
-)
+})
 
 watch(
   isAnyModalOpen,
@@ -50,7 +56,8 @@ watch(
       if (open) {
         document.body.style.overflow = 'hidden'
       } else {
-        document.body.style.overflow = ''
+        document.body.style.removeProperty('overflow')
+        document.documentElement.style.removeProperty('overflow')
       }
     }
   },
@@ -95,15 +102,29 @@ function handleKeyDown(e: KeyboardEvent) {
     isSearchOpen.value = false
     isSettingsOpen.value = false
     isHolidaysDrawerOpen.value = false
+    isInstallHelpOpen.value = false
+  }
+}
+
+function handleResize() {
+  isDesktop.value = window.innerWidth >= 1024
+  if (isDesktop.value && isHolidaysDrawerOpen.value) {
+    isHolidaysDrawerOpen.value = false
   }
 }
 
 onMounted(() => {
   window.addEventListener('keydown', handleKeyDown)
+  window.addEventListener('resize', handleResize)
 })
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown)
+  window.removeEventListener('resize', handleResize)
+  if (typeof document !== 'undefined') {
+    document.body.style.removeProperty('overflow')
+    document.documentElement.style.removeProperty('overflow')
+  }
 })
 </script>
 
@@ -187,7 +208,7 @@ onUnmounted(() => {
           </div>
 
           <!-- Cambodian Holidays & Events List for Current Month (Desktop view) -->
-          <div class="hidden lg:block flex-1">
+          <div id="desktop-holidays-sidebar" class="hidden lg:block flex-1">
             <MonthHolidaysList />
           </div>
         </div>
@@ -226,7 +247,11 @@ onUnmounted(() => {
     </footer>
 
     <!-- Mobile Drawer for Holidays & Events (when opened on mobile) -->
-    <div v-if="isHolidaysDrawerOpen" class="fixed inset-0 z-50 flex items-end lg:hidden">
+    <div
+      v-if="isHolidaysDrawerOpen"
+      class="fixed inset-0 z-50 flex items-end lg:hidden"
+      @click.self="isHolidaysDrawerOpen = false"
+    >
       <div
         class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
         @click="isHolidaysDrawerOpen = false"

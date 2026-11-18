@@ -21,6 +21,17 @@ const {
 
 const holidayCount = computed(() => monthHolidays.value.holidays.length)
 const holyDayCount = computed(() => monthHolidays.value.holyDays.length)
+
+function handleOpenHolidays() {
+  if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+    isHolidaysDrawerOpen.value = true
+  } else {
+    const sidebar = document.getElementById('desktop-holidays-sidebar')
+    if (sidebar) {
+      sidebar.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    }
+  }
+}
 </script>
 
 <template>

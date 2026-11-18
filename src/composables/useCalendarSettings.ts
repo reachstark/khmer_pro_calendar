@@ -49,14 +49,27 @@ export function useCalendarSettings() {
   }
 
   function applyFontFamily(family: FontFamilyOption) {
-    const fontClasses = [
-      'font-theme-google-sans',
-      'font-theme-kantumruy',
-      'font-theme-siemreap',
-      'font-theme-moul',
-    ]
-    fontClasses.forEach((cls) => document.documentElement.classList.remove(cls))
-    document.documentElement.classList.add(`font-theme-${family}`)
+    const fontMap: Record<FontFamilyOption, string> = {
+      'google-sans': "'Google Sans', 'Kantumruy Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+      'kantumruy': "'Kantumruy Pro', sans-serif",
+      'siemreap': "'Siemreap', 'Khmer OS Siemreap', sans-serif",
+      'moul': "'Moul', 'Moul Light', 'Khmer OS Moul', cursive, sans-serif",
+    }
+    const selectedFont = fontMap[family] || fontMap['google-sans']
+    if (typeof document !== 'undefined') {
+      document.documentElement.style.setProperty('--app-font-family', selectedFont)
+      if (document.body) {
+        document.body.style.setProperty('--app-font-family', selectedFont)
+      }
+      const fontClasses = [
+        'font-theme-google-sans',
+        'font-theme-kantumruy',
+        'font-theme-siemreap',
+        'font-theme-moul',
+      ]
+      fontClasses.forEach((cls) => document.documentElement.classList.remove(cls))
+      document.documentElement.classList.add(`font-theme-${family}`)
+    }
   }
 
   function init() {
@@ -160,7 +173,10 @@ export function useCalendarSettings() {
     setStartOfWeek: (d: number) => (startOfWeek.value = d),
     toggleWeekNumbers: () => (showWeekNumbers.value = !showWeekNumbers.value),
     setFontSize: (s: FontSizeScale) => (fontSize.value = s),
-    setFontFamily: (f: FontFamilyOption) => (fontFamily.value = f),
+    setFontFamily: (f: FontFamilyOption) => {
+      fontFamily.value = f
+      applyFontFamily(f)
+    },
     toggleSeasonsAnim: () => (enableSeasonsAnim.value = !enableSeasonsAnim.value),
     init,
   }

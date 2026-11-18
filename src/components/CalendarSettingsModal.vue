@@ -59,10 +59,10 @@ const fontSizeOptions: { id: FontSizeScale; labelKh: string; scale: string }[] =
 ]
 
 const fontFamilyOptions: { id: FontFamilyOption; nameKh: string; nameEn: string; fontClass: string }[] = [
-  { id: 'google-sans', nameKh: 'Google Sans & Kantumruy Pro', nameEn: 'Default (លំនាំដើម)', fontClass: 'font-theme-google-sans' },
-  { id: 'kantumruy', nameKh: 'Kantumruy Pro', nameEn: 'កន្ត្រុំរុយ ប្រូ', fontClass: 'font-theme-kantumruy' },
-  { id: 'siemreap', nameKh: 'Khmer OS Siemreap', nameEn: 'សៀមរាប', fontClass: 'font-theme-siemreap' },
-  { id: 'moul', nameKh: 'Moul Light', nameEn: 'មូល ឡាយថ៍', fontClass: 'font-theme-moul' },
+  { id: 'google-sans', nameKh: 'Google Sans & Kantumruy Pro', nameEn: 'Default (លំនាំដើម)', fontClass: 'font-preview-google-sans' },
+  { id: 'kantumruy', nameKh: 'Kantumruy Pro', nameEn: 'កន្ត្រុំរុយ ប្រូ', fontClass: 'font-preview-kantumruy' },
+  { id: 'siemreap', nameKh: 'Khmer OS Siemreap', nameEn: 'សៀមរាប', fontClass: 'font-preview-siemreap' },
+  { id: 'moul', nameKh: 'Moul Light', nameEn: 'មូល ឡាយថ៍', fontClass: 'font-preview-moul' },
 ]
 </script>
 
