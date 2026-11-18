@@ -139,7 +139,7 @@ onUnmounted(() => {
     <CalendarHeader />
 
     <!-- Main Responsive Body Layout -->
-    <main class="flex-1 w-full max-w-7xl mx-auto px-3 py-3 sm:px-6 sm:py-6 pb-20 lg:pb-8">
+    <main class="flex-1 w-full max-w-7xl mx-auto px-3 py-3 sm:px-6 sm:py-6 pb-6 lg:pb-8">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
         <!-- Main Column (Left/Center on Desktop) -->
         <div class="lg:col-span-8 flex flex-col gap-4 sm:gap-5">
@@ -217,7 +217,7 @@ onUnmounted(() => {
 
     <!-- Footer Attribution & Live Visitor Counter -->
     <footer
-      class="w-full border-t border-slate-200/80 bg-white/40 py-3 px-4 text-center text-xs text-slate-500 dark:border-slate-800/80 dark:bg-slate-900/40 dark:text-slate-400 backdrop-blur-sm"
+      class="w-full border-t border-slate-200/80 bg-white/40 pt-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:py-3 px-4 text-center text-xs text-slate-500 dark:border-slate-800/80 dark:bg-slate-900/40 dark:text-slate-400 backdrop-blur-sm"
     >
       <div
         class="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-2 sm:gap-4 font-medium"
