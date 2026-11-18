@@ -33,7 +33,7 @@ function isCellSelected(day: KhmerDayDetail): boolean {
 </script>
 
 <template>
-  <div class="relative w-full overflow-hidden">
+  <div class="relative w-full pb-5 -mb-5" style="overflow-x: clip; overflow-y: visible;">
     <Transition :name="navDirection === 'left' ? 'slide-left' : 'slide-right'" mode="out-in">
       <div :key="monthKey" class="w-full">
         <!-- Calendar Matrix Container -->
@@ -113,10 +113,12 @@ function isCellSelected(day: KhmerDayDetail): boolean {
                     ? 'border-transparent bg-slate-50/50 dark:bg-slate-900/30 text-slate-300 dark:text-slate-700 opacity-40 hover:opacity-75'
                     : // Is Selected Date
                     isCellSelected(day)
-                    ? 'border-amber-500 bg-amber-500/10 shadow-lg shadow-amber-500/15 ring-2 ring-amber-500 dark:bg-amber-500/15'
+                    ? day.isToday
+                      ? 'border-sky-500 bg-sky-100/70 shadow-lg shadow-sky-500/20 ring-2 ring-sky-500 dark:border-sky-400 dark:bg-sky-950/50 dark:ring-sky-400'
+                      : 'border-slate-800 bg-slate-100/80 shadow-lg shadow-slate-900/10 ring-2 ring-slate-800 dark:border-slate-200 dark:bg-slate-800/80 dark:ring-slate-200'
                     : // Is Today
                     day.isToday
-                    ? 'border-amber-400 bg-amber-50/80 shadow-md shadow-amber-500/10 dark:border-amber-500/60 dark:bg-amber-500/10 ring-1 ring-amber-400/50'
+                    ? 'border-sky-500 bg-sky-50/80 hover:bg-sky-50 shadow-md shadow-sky-500/15 ring-2 ring-sky-400/50 dark:border-sky-400/70 dark:bg-sky-950/35 dark:hover:bg-sky-950/45 dark:ring-sky-500/40'
                     : // Has Holiday
                     day.holiday && day.holiday.isOffDay
                     ? 'border-red-200 bg-red-50/50 hover:bg-red-50 dark:border-red-900/40 dark:bg-red-950/20 dark:hover:bg-red-950/40'
@@ -139,7 +141,7 @@ function isCellSelected(day: KhmerDayDetail): boolean {
                           : day.gregorian.dayOfWeek === 0
                             ? 'text-red-500 dark:text-red-400'
                             : day.isToday
-                              ? 'text-amber-600 dark:text-amber-400 font-extrabold'
+                              ? 'text-sky-600 dark:text-sky-400 font-extrabold'
                               : 'text-slate-800 dark:text-slate-100',
                       ]"
                     >
@@ -152,7 +154,7 @@ function isCellSelected(day: KhmerDayDetail): boolean {
                     <!-- Today Badge -->
                     <span
                       v-if="day.isToday"
-                      class="flex h-2 w-2 rounded-full bg-amber-500 animate-pulse"
+                      class="flex h-2 w-2 rounded-full bg-sky-500 ring-2 ring-sky-200 dark:ring-sky-900/60 animate-pulse"
                       title="ថ្ងៃនេះ (Today)"
                     ></span>
 
@@ -187,9 +189,11 @@ function isCellSelected(day: KhmerDayDetail): boolean {
                     :class="[
                       day.isHolyDay
                         ? 'text-amber-700 dark:text-amber-300 font-bold'
-                        : day.khmer.moonPhase === 0
-                          ? 'text-emerald-700 dark:text-emerald-400'
-                          : 'text-indigo-700 dark:text-indigo-300',
+                        : day.isToday
+                          ? 'text-sky-700 dark:text-sky-300 font-bold'
+                          : day.khmer.moonPhase === 0
+                            ? 'text-emerald-700 dark:text-emerald-400'
+                            : 'text-indigo-700 dark:text-indigo-300',
                     ]"
                   >
                     <!-- Full moon highlight -->
@@ -228,6 +232,14 @@ function isCellSelected(day: KhmerDayDetail): boolean {
                         class="h-2.5 w-2.5 shrink-0 object-contain"
                       />
                       <span class="truncate">{{ day.holyDayLabel }}</span>
+                    </span>
+                  </div>
+                  <div v-else-if="day.isToday" class="hidden sm:block mt-1">
+                    <span
+                      class="inline-flex items-center gap-1 max-w-full truncate rounded-md bg-sky-500/15 px-1.5 py-0.5 text-[9px] font-bold text-sky-700 dark:text-sky-300 border border-sky-500/20"
+                    >
+                      <span class="h-1.5 w-1.5 rounded-full bg-sky-500"></span>
+                      <span>ថ្ងៃនេះ</span>
                     </span>
                   </div>
                   <!-- Lunar month name in small font if start of lunar month -->

@@ -152,11 +152,11 @@ onUnmounted(() => {
         <div class="lg:col-span-4 flex flex-col gap-4 sm:gap-5">
           <!-- Today's Live Khmer Lunar Date Card (Desktop Quick Widget) -->
           <div
-            class="rounded-3xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-amber-500/15 p-4 sm:p-5 shadow-lg shadow-amber-500/5 dark:from-amber-500/15 dark:to-orange-500/10 transition-colors"
+            class="rounded-3xl border border-sky-500/30 bg-gradient-to-br from-sky-500/10 via-blue-500/5 to-indigo-500/10 p-4 sm:p-5 shadow-lg shadow-sky-500/5 dark:from-sky-500/15 dark:to-blue-500/10 transition-colors"
           >
             <div class="flex items-center justify-between mb-2">
               <span
-                class="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider"
+                class="flex items-center gap-1.5 text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-wider"
               >
                 <Sparkles class="h-3.5 w-3.5" />
                 កាលបរិច្ឆេទថ្ងៃនេះ
@@ -166,7 +166,7 @@ onUnmounted(() => {
               <button
                 type="button"
                 @click="copyTodayDate"
-                class="flex items-center gap-1 rounded-xl px-2.5 py-1 text-[11px] font-bold text-amber-800 dark:text-amber-300 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 transition-all active:scale-95"
+                class="flex items-center gap-1 rounded-xl px-2.5 py-1 text-[11px] font-bold text-sky-800 dark:text-sky-300 bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/30 transition-all active:scale-95"
                 title="ចម្លងថ្ងៃនេះ (Copy Today)"
               >
                 <component :is="isTodayCopied ? Check : Copy" class="h-3 w-3" />
@@ -189,7 +189,7 @@ onUnmounted(() => {
 
             <!-- Quick Day Badge Row -->
             <div
-              class="mt-3 flex items-center justify-between pt-2.5 border-t border-amber-500/20 text-[11px] text-amber-900 dark:text-amber-200"
+              class="mt-3 flex items-center justify-between pt-2.5 border-t border-sky-500/20 text-[11px] text-sky-900 dark:text-sky-200"
             >
               <span class="font-semibold">
                 {{ todayDetail.khmer.animalYearName }} {{ todayDetail.khmer.animalYearEmoji }} •
@@ -198,7 +198,7 @@ onUnmounted(() => {
               <button
                 type="button"
                 @click="selectDate(todayDetail)"
-                class="text-amber-600 dark:text-amber-400 font-bold hover:underline"
+                class="text-sky-600 dark:text-sky-400 font-bold hover:underline"
               >
                 មើលលម្អិត &rarr;
               </button>

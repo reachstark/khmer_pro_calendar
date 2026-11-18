@@ -225,7 +225,7 @@ const isCurrentMonthToday = computed(() => {
           class="flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs font-semibold shadow-sm transition-all active:scale-95"
           :class="
             isCurrentMonthToday
-              ? 'bg-amber-500 text-white hover:bg-amber-600 shadow-amber-500/20'
+              ? 'bg-sky-500 text-white hover:bg-sky-600 shadow-sky-500/20'
               : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
           "
           title="Navigate to Today (ថ្ងៃនេះ)"

@@ -29,12 +29,12 @@ const holidayCount = computed(() => monthHolidays.value.holidays.length)
       <button
         type="button"
         @click="goToToday"
-        class="flex flex-1 flex-col items-center justify-center gap-1 rounded-2xl py-1 px-1 text-slate-600 hover:text-amber-600 dark:text-slate-300 dark:hover:text-amber-400 active:scale-95 transition-transform"
+        class="flex flex-1 flex-col items-center justify-center gap-1 rounded-2xl py-1 px-1 text-slate-600 hover:text-sky-600 dark:text-slate-300 dark:hover:text-sky-400 active:scale-95 transition-transform"
       >
         <div class="relative">
-          <Sparkles class="h-5 w-5 text-amber-500" />
+          <Sparkles class="h-5 w-5 text-sky-500" />
           <span
-            class="absolute -top-1 -right-2.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[8px] font-extrabold text-white shadow-xs font-mono"
+            class="absolute -top-1 -right-2.5 flex h-4 w-4 items-center justify-center rounded-full bg-sky-500 text-[8px] font-extrabold text-white shadow-xs font-mono"
           >
             {{ todayDetail.gregorian.day }}
           </span>
