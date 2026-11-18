@@ -1,0 +1,22 @@
+{
+  "name": "ប្រតិទិនខ្មែរ - Khmer Lunar Calendar",
+  "short_name": "ប្រតិទិនខ្មែរ",
+  "description": "Modernized Khmer Lunar Calendar (ប្រតិទិនចន្ទគតិខ្មែរ) - Chhankitek, Buddhist holy days, and Cambodian public holidays.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icons/holy_day.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

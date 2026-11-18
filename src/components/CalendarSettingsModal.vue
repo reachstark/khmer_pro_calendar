@@ -10,12 +10,14 @@ import {
   Layers,
   Sparkles,
   Eye,
+  CloudRain,
 } from 'lucide-vue-next'
 import { useCalendarState } from '@/composables/useCalendarState'
 import {
   useCalendarSettings,
   type AppTheme,
   type FontSizeScale,
+  type FontFamilyOption,
 } from '@/composables/useCalendarSettings'
 import { useVisitorCount } from '@/composables/useVisitorCount'
 import { toKhmerNumber } from '@/utils/khmerCalendar'
@@ -31,6 +33,10 @@ const {
   toggleWeekNumbers,
   fontSize,
   setFontSize,
+  fontFamily,
+  setFontFamily,
+  enableSeasonsAnim,
+  toggleSeasonsAnim,
 } = useCalendarSettings()
 
 const themeOptions: { id: AppTheme; labelKh: string; labelEn: string; icon: any }[] = [
@@ -50,6 +56,13 @@ const fontSizeOptions: { id: FontSizeScale; labelKh: string; scale: string }[] =
   { id: 'md', labelKh: 'មធ្យម (Normal)', scale: '16px' },
   { id: 'lg', labelKh: 'ធំ (Large)', scale: '18px' },
   { id: 'xl', labelKh: 'ធំខ្លាំង (Extra Large)', scale: '20px' },
+]
+
+const fontFamilyOptions: { id: FontFamilyOption; nameKh: string; nameEn: string; fontClass: string }[] = [
+  { id: 'google-sans', nameKh: 'Google Sans & Kantumruy Pro', nameEn: 'Default (លំនាំដើម)', fontClass: 'font-theme-google-sans' },
+  { id: 'kantumruy', nameKh: 'Kantumruy Pro', nameEn: 'កន្ត្រុំរុយ ប្រូ', fontClass: 'font-theme-kantumruy' },
+  { id: 'siemreap', nameKh: 'Khmer OS Siemreap', nameEn: 'សៀមរាប', fontClass: 'font-theme-siemreap' },
+  { id: 'moul', nameKh: 'Moul Light', nameEn: 'មូល ឡាយថ៍', fontClass: 'font-theme-moul' },
 ]
 </script>
 
@@ -186,7 +199,35 @@ const fontSizeOptions: { id: FontSizeScale; labelKh: string; scale: string }[] =
           </button>
         </div>
 
-        <!-- 4. Font Size Customizations -->
+        <!-- 4. Font Family Selector -->
+        <div>
+          <label
+            class="flex items-center gap-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 mb-2"
+          >
+            <Type class="h-4 w-4 text-purple-500" />
+            <span>ពុម្ពអក្សរ (Font Family)</span>
+          </label>
+          <div class="grid grid-cols-2 gap-2">
+            <button
+              v-for="opt in fontFamilyOptions"
+              :key="opt.id"
+              type="button"
+              @click="setFontFamily(opt.id)"
+              class="flex flex-col items-start justify-center rounded-2xl border p-2.5 sm:p-3 text-left transition-all"
+              :class="[
+                fontFamily === opt.id
+                  ? 'border-amber-500 bg-amber-500/15 text-amber-700 dark:text-amber-300 font-bold shadow-sm'
+                  : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:bg-slate-800',
+                opt.fontClass,
+              ]"
+            >
+              <span class="text-xs sm:text-sm font-bold leading-tight">{{ opt.nameKh }}</span>
+              <span class="text-[10px] opacity-75 font-normal mt-0.5">{{ opt.nameEn }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. Font Size Customizations -->
         <div>
           <label
             class="flex items-center gap-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 mb-2"
@@ -217,12 +258,46 @@ const fontSizeOptions: { id: FontSizeScale; labelKh: string; scale: string }[] =
             class="mt-2.5 rounded-xl border border-slate-200/70 bg-slate-50/70 p-3 text-center dark:border-slate-800 dark:bg-slate-800/30"
           >
             <p class="text-slate-700 dark:text-slate-200 font-bold">
-              គំរូអក្សរ Google Sans & Kantumruy Pro
+              គំរូអក្សរដែលបានជ្រើសរើស
             </p>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               ថ្ងៃពុធ ៩កើត ខែកត្តិក ឆ្នាំមមី អដ្ឋស័ក ពុទ្ធសករាជ ២៥៧០
             </p>
           </div>
+        </div>
+
+        <!-- 6. Cambodia Seasons Animation Toggle (Rainy & Dry) -->
+        <div
+          class="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 p-3.5 dark:border-slate-800 dark:bg-slate-800/50"
+        >
+          <div class="flex items-center gap-2.5">
+            <div
+              class="flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-600 dark:text-cyan-400"
+            >
+              <CloudRain class="h-4 w-4" />
+            </div>
+            <div>
+              <p class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100">
+                ចលនារដូវកាលកម្ពុជា (Cambodia Seasons Animation)
+              </p>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                បង្ហាញចលនាភ្លៀងធ្លាក់ក្នុងរដូវវស្សា (ឧសភា-តុលា) និងពន្លឺថ្ងៃរំហើយក្នុងរដូវប្រាំង (វិច្ឆិកា-មេសា)
+              </p>
+            </div>
+          </div>
+
+          <!-- Switch Toggle -->
+          <button
+            type="button"
+            @click="toggleSeasonsAnim"
+            class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+            :class="enableSeasonsAnim ? 'bg-amber-500' : 'bg-slate-300 dark:bg-slate-700'"
+          >
+            <span
+              class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+              :class="enableSeasonsAnim ? 'translate-x-5' : 'translate-x-0'"
+            ></span>
+          </button>
         </div>
       </div>
 

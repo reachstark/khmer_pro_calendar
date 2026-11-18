@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref, computed, watch } from 'vue'
 import { Calendar, Sparkles, Copy, Check, Moon, Info, Eye } from 'lucide-vue-next'
 import confetti from 'canvas-confetti'
 import CalendarHeader from '@/components/CalendarHeader.vue'
@@ -10,12 +10,12 @@ import DateDetailsModal from '@/components/DateDetailsModal.vue'
 import SearchDateModal from '@/components/SearchDateModal.vue'
 import CalendarSettingsModal from '@/components/CalendarSettingsModal.vue'
 import MobileBottomNav from '@/components/MobileBottomNav.vue'
+import SeasonAnimation from '@/components/SeasonAnimation.vue'
 
 import { useCalendarState } from '@/composables/useCalendarState'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { useVisitorCount } from '@/composables/useVisitorCount'
 import { toKhmerNumber } from '@/utils/khmerCalendar'
-import { ref } from 'vue'
 
 const {
   todayDetail,
@@ -32,6 +32,30 @@ const {
 
 useCalendarSettings() // Initializes theme, font scale, start of week
 const { visitorCount } = useVisitorCount()
+
+// Prevent mouse background scrolling when any modal dialog or drawer is open
+const isAnyModalOpen = computed(() =>
+  Boolean(
+    isSearchOpen.value ||
+    isSettingsOpen.value ||
+    isHolidaysDrawerOpen.value ||
+    selectedDate.value
+  )
+)
+
+watch(
+  isAnyModalOpen,
+  (open) => {
+    if (typeof document !== 'undefined') {
+      if (open) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = ''
+      }
+    }
+  },
+  { immediate: true }
+)
 
 const isTodayCopied = ref(false)
 
@@ -87,6 +111,9 @@ onUnmounted(() => {
   <div
     class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-300"
   >
+    <!-- Seasonal & Exclusive December Snow Atmosphere -->
+    <SeasonAnimation />
+
     <!-- Top Sticky Header Bar -->
     <CalendarHeader />
 

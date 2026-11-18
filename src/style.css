@@ -104,6 +104,20 @@ input[type="reset"] {
   transform: scale(0.94) translateY(12px);
 }
 
+/* Font theme overrides */
+html.font-theme-google-sans, body.font-theme-google-sans {
+  font-family: 'Google Sans', 'Kantumruy Pro', sans-serif !important;
+}
+html.font-theme-kantumruy, body.font-theme-kantumruy {
+  font-family: 'Kantumruy Pro', sans-serif !important;
+}
+html.font-theme-siemreap, body.font-theme-siemreap {
+  font-family: 'Siemreap', 'Khmer OS Siemreap', sans-serif !important;
+}
+html.font-theme-moul, body.font-theme-moul {
+  font-family: 'Moul', 'Moul Light', 'Khmer OS Moul', cursive, sans-serif !important;
+}
+
 /* Glassmorphism helpers */
 .glass-panel {
   background: rgba(255, 255, 255, 0.75);
@@ -115,3 +129,56 @@ input[type="reset"] {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
+
+/* Seasonal & Snow Animations */
+@keyframes snowfall {
+  0% {
+    transform: translateY(-20px) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  85% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(105vh) translateX(50px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes rain-fall {
+  0% {
+    transform: translateY(-60px) translateX(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.55;
+  }
+  90% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateY(105vh) translateX(-40px);
+    opacity: 0;
+  }
+}
+
+@keyframes dry-float {
+  0% {
+    transform: translateY(105vh) translateX(0) scale(0.7);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.4;
+  }
+  75% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-40px) translateX(35px) scale(1.15);
+    opacity: 0;
+  }
+}
+

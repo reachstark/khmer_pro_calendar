@@ -2,17 +2,22 @@ import { ref, watch, onMounted } from 'vue'
 
 export type AppTheme = 'light' | 'dark' | 'system'
 export type FontSizeScale = 'sm' | 'md' | 'lg' | 'xl'
+export type FontFamilyOption = 'google-sans' | 'kantumruy' | 'siemreap' | 'moul'
 
 const THEME_STORAGE_KEY = 'khmer_calendar_theme'
 const START_OF_WEEK_KEY = 'khmer_calendar_start_of_week'
 const SHOW_WEEK_NUM_KEY = 'khmer_calendar_show_week_num'
 const FONT_SIZE_KEY = 'khmer_calendar_font_size'
+const FONT_FAMILY_KEY = 'khmer_calendar_font_family'
+const SEASONS_ANIM_KEY = 'khmer_calendar_seasons_anim'
 
 // Global reactive states so all components share the exact same instance
 const theme = ref<AppTheme>('system')
 const startOfWeek = ref<number>(0) // 0: Sunday, 1: Monday, 6: Saturday
 const showWeekNumbers = ref<boolean>(true)
 const fontSize = ref<FontSizeScale>('md')
+const fontFamily = ref<FontFamilyOption>('google-sans')
+const enableSeasonsAnim = ref<boolean>(true)
 
 const fontSizeValues: Record<FontSizeScale, string> = {
   sm: '14px',
@@ -41,6 +46,17 @@ export function useCalendarSettings() {
   function applyFontSize(size: FontSizeScale) {
     const px = fontSizeValues[size] || '16px'
     document.documentElement.style.setProperty('--app-font-size', px)
+  }
+
+  function applyFontFamily(family: FontFamilyOption) {
+    const fontClasses = [
+      'font-theme-google-sans',
+      'font-theme-kantumruy',
+      'font-theme-siemreap',
+      'font-theme-moul',
+    ]
+    fontClasses.forEach((cls) => document.documentElement.classList.remove(cls))
+    document.documentElement.classList.add(`font-theme-${family}`)
   }
 
   function init() {
@@ -74,8 +90,21 @@ export function useCalendarSettings() {
       fontSize.value = savedFontSize
     }
 
+    // Load font family
+    const savedFontFamily = localStorage.getItem(FONT_FAMILY_KEY) as FontFamilyOption | null
+    if (savedFontFamily && ['google-sans', 'kantumruy', 'siemreap', 'moul'].includes(savedFontFamily)) {
+      fontFamily.value = savedFontFamily
+    }
+
+    // Load seasons animation toggle
+    const savedSeasons = localStorage.getItem(SEASONS_ANIM_KEY)
+    if (savedSeasons !== null) {
+      enableSeasonsAnim.value = savedSeasons === 'true'
+    }
+
     applyTheme(theme.value)
     applyFontSize(fontSize.value)
+    applyFontFamily(fontFamily.value)
 
     // Watch system color scheme changes
     if (window.matchMedia) {
@@ -107,6 +136,15 @@ export function useCalendarSettings() {
     applyFontSize(newSize)
   })
 
+  watch(fontFamily, (newFamily) => {
+    localStorage.setItem(FONT_FAMILY_KEY, newFamily)
+    applyFontFamily(newFamily)
+  })
+
+  watch(enableSeasonsAnim, (enable) => {
+    localStorage.setItem(SEASONS_ANIM_KEY, enable.toString())
+  })
+
   onMounted(() => {
     init()
   })
@@ -116,10 +154,14 @@ export function useCalendarSettings() {
     startOfWeek,
     showWeekNumbers,
     fontSize,
+    fontFamily,
+    enableSeasonsAnim,
     setTheme: (t: AppTheme) => (theme.value = t),
     setStartOfWeek: (d: number) => (startOfWeek.value = d),
     toggleWeekNumbers: () => (showWeekNumbers.value = !showWeekNumbers.value),
     setFontSize: (s: FontSizeScale) => (fontSize.value = s),
+    setFontFamily: (f: FontFamilyOption) => (fontFamily.value = f),
+    toggleSeasonsAnim: () => (enableSeasonsAnim.value = !enableSeasonsAnim.value),
     init,
   }
 }
