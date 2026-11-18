@@ -11,6 +11,7 @@ import SearchDateModal from '@/components/SearchDateModal.vue'
 import CalendarSettingsModal from '@/components/CalendarSettingsModal.vue'
 import MobileBottomNav from '@/components/MobileBottomNav.vue'
 import SeasonAnimation from '@/components/SeasonAnimation.vue'
+import { inject } from '@vercel/analytics'
 
 import { useCalendarState } from '@/composables/useCalendarState'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
@@ -114,6 +115,8 @@ function handleResize() {
 onMounted(() => {
   window.addEventListener('keydown', handleKeyDown)
   window.addEventListener('resize', handleResize)
+  // Initialize Vercel Web Analytics
+  inject({ framework: 'vue' })
 })
 
 onUnmounted(() => {
