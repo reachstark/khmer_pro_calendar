@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Moon, Sparkles } from 'lucide-vue-next'
 import { useCalendarState } from '@/composables/useCalendarState'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { KHMER_WEEKDAYS, toKhmerNumber, type KhmerDayDetail } from '@/utils/khmerCalendar'
@@ -12,7 +11,6 @@ const {
   navDirection,
   selectedDate,
   selectDate,
-  currentMonthTheme,
 } = useCalendarState()
 
 const { startOfWeek, showWeekNumbers } = useCalendarSettings()

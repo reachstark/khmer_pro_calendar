@@ -4,15 +4,12 @@ import {
   Search,
   X,
   Calendar,
-  Sparkles,
-  ChevronRight,
   ArrowRight,
 } from 'lucide-vue-next'
 import { useCalendarState } from '@/composables/useCalendarState'
 import {
   KHMER_SOLAR_MONTHS,
   getKhmerDayDetail,
-  toKhmerNumber,
   type KhmerDayDetail,
 } from '@/utils/khmerCalendar'
 

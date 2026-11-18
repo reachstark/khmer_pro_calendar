@@ -2,14 +2,12 @@
 import { ref, computed } from 'vue'
 import {
   CalendarDays,
-  Moon,
   Sparkles,
   ChevronRight,
   X,
-  Filter,
 } from 'lucide-vue-next'
 import { useCalendarState } from '@/composables/useCalendarState'
-import { toKhmerNumber, type KhmerDayDetail } from '@/utils/khmerCalendar'
+import type { KhmerDayDetail } from '@/utils/khmerCalendar'
 
 const {
   currentMonthTheme,

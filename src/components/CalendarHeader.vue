@@ -13,12 +13,11 @@ import {
   Menu,
   X,
   Download,
-  Check,
 } from 'lucide-vue-next'
 import { useCalendarState } from '@/composables/useCalendarState'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { usePwaInstall } from '@/composables/usePwaInstall'
-import { KHMER_SOLAR_MONTHS, toKhmerNumber } from '@/utils/khmerCalendar'
+import { KHMER_SOLAR_MONTHS } from '@/utils/khmerCalendar'
 
 const {
   currentYear,
@@ -27,12 +26,10 @@ const {
   goToToday,
   isSearchOpen,
   isSettingsOpen,
-  isHolidaysDrawerOpen,
-  monthHolidays,
 } = useCalendarState()
 
 const { theme, setTheme, showWeekNumbers, toggleWeekNumbers } = useCalendarSettings()
-const { canInstall, isInstalled, isInstallHelpOpen, triggerInstall } = usePwaInstall()
+const { isInstallHelpOpen, triggerInstall } = usePwaInstall()
 
 const isMonthDropdownOpen = ref(false)
 const isYearDropdownOpen = ref(false)

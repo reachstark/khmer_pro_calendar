@@ -1,7 +1,6 @@
 import {
   fromGregorian,
   fromDate,
-  format,
   getNewYear,
   constants,
   MoonPhase,
@@ -641,7 +640,7 @@ export function generateMonthCalendar(
   const firstDayOfWeek = firstDayOfMonth.getDay()
 
   // Leading days from previous month
-  let leadingDaysCount = (firstDayOfWeek - startOfWeek + 7) % 7
+  const leadingDaysCount = (firstDayOfWeek - startOfWeek + 7) % 7
 
   const weeks: CalendarGridWeek[] = []
   let currentWeekDays: (KhmerDayDetail & { isCurrentMonth: boolean; isToday: boolean })[] = []

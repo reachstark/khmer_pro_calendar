@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import {
-  Calendar,
   Search,
   CalendarDays,
   Settings,
   Sparkles,
 } from 'lucide-vue-next'
 import { useCalendarState } from '@/composables/useCalendarState'
-import { toKhmerNumber } from '@/utils/khmerCalendar'
 
 const {
   todayDetail,

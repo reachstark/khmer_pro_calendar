@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Component } from 'vue'
 import {
   X,
   Settings,
@@ -8,7 +9,6 @@ import {
   Type,
   Calendar,
   Layers,
-  Sparkles,
   Eye,
   CloudRain,
 } from 'lucide-vue-next'
@@ -20,7 +20,6 @@ import {
   type FontFamilyOption,
 } from '@/composables/useCalendarSettings'
 import { useVisitorCount } from '@/composables/useVisitorCount'
-import { toKhmerNumber } from '@/utils/khmerCalendar'
 
 const { isSettingsOpen } = useCalendarState()
 const { visitorCount } = useVisitorCount()
@@ -39,7 +38,7 @@ const {
   toggleSeasonsAnim,
 } = useCalendarSettings()
 
-const themeOptions: { id: AppTheme; labelKh: string; labelEn: string; icon: any }[] = [
+const themeOptions: { id: AppTheme; labelKh: string; labelEn: string; icon: Component }[] = [
   { id: 'light', labelKh: 'ពន្លឺ', labelEn: 'Light', icon: Sun },
   { id: 'dark', labelKh: 'ងងឹត', labelEn: 'Dark', icon: Moon },
   { id: 'system', labelKh: 'តាមប្រព័ន្ធ', labelEn: 'System', icon: Monitor },

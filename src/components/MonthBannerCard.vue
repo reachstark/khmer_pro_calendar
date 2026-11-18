@@ -5,7 +5,6 @@ import {
   ChevronRight,
   Sparkles,
   CalendarDays,
-  Moon,
 } from 'lucide-vue-next'
 import { useCalendarState } from '@/composables/useCalendarState'
 import { toKhmerNumber } from '@/utils/khmerCalendar'
@@ -130,7 +129,7 @@ function handleOpenHolidays() {
           <!-- Holiday badge -->
           <button
             type="button"
-            @click="isHolidaysDrawerOpen = true"
+            @click="handleOpenHolidays"
             class="flex items-center gap-1.5 rounded-xl bg-white/20 backdrop-blur-md px-2.5 py-1 text-xs font-semibold hover:bg-white/30 border border-white/25 transition-colors shadow-sm"
           >
             <CalendarDays class="h-3.5 w-3.5 text-red-200" />
@@ -140,7 +139,7 @@ function handleOpenHolidays() {
           <!-- Buddhist Holy Days badge -->
           <button
             type="button"
-            @click="isHolidaysDrawerOpen = true"
+            @click="handleOpenHolidays"
             class="flex items-center gap-1.5 rounded-xl bg-white/20 backdrop-blur-md px-2.5 py-1 text-xs font-semibold hover:bg-white/30 border border-white/25 transition-colors shadow-sm"
           >
             <img src="/icons/holy_day.png" alt="" class="h-3.5 w-3.5 object-contain" />

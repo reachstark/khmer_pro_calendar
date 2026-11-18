@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, computed, watch } from 'vue'
-import { Calendar, Sparkles, Copy, Check, Moon, Info, Eye } from 'lucide-vue-next'
+import { Sparkles, Copy, Check, Eye } from 'lucide-vue-next'
 import confetti from 'canvas-confetti'
 import CalendarHeader from '@/components/CalendarHeader.vue'
 import MonthBannerCard from '@/components/MonthBannerCard.vue'
@@ -16,7 +16,6 @@ import { useCalendarState } from '@/composables/useCalendarState'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { useVisitorCount } from '@/composables/useVisitorCount'
 import { usePwaInstall } from '@/composables/usePwaInstall'
-import { toKhmerNumber } from '@/utils/khmerCalendar'
 
 const {
   todayDetail,
@@ -27,7 +26,6 @@ const {
   isSettingsOpen,
   isHolidaysDrawerOpen,
   selectedDate,
-  currentMonthTheme,
   selectDate,
 } = useCalendarState()
 
