@@ -40,6 +40,17 @@ const filteredList = computed(() => {
   return combined.sort((a, b) => a.gregorian.day - b.gregorian.day)
 })
 
+const allCount = computed(() => {
+  const { holidays, holyDays } = monthHolidays.value
+  const combined = [...holidays]
+  for (const h of holyDays) {
+    if (!combined.some((item) => item.gregorian.day === h.gregorian.day)) {
+      combined.push(h)
+    }
+  }
+  return combined.length
+})
+
 function handleSelect(item: KhmerDayDetail) {
   selectDate(item)
   isHolidaysDrawerOpen.value = false
@@ -47,7 +58,7 @@ function handleSelect(item: KhmerDayDetail) {
 </script>
 
 <template>
-  <div class="flex flex-col h-full rounded-3xl border border-slate-200/90 bg-white/90 p-4 shadow-xl shadow-slate-200/50 dark:border-slate-800/90 dark:bg-slate-900/90 dark:shadow-none backdrop-blur-md transition-colors">
+  <div class="flex flex-col flex-1 h-full min-h-0 rounded-3xl border border-slate-200/90 bg-white/90 p-4 shadow-xl shadow-slate-200/50 dark:border-slate-800/90 dark:bg-slate-900/90 dark:shadow-none backdrop-blur-md transition-colors">
     <!-- Header -->
     <div class="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
       <div class="flex items-center gap-2">
@@ -87,7 +98,7 @@ function handleSelect(item: KhmerDayDetail) {
             : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
         "
       >
-        ទាំងអស់ ({{ monthHolidays.holidays.length + monthHolidays.holyDays.length }})
+        ទាំងអស់ ({{ allCount }})
       </button>
 
       <button
@@ -118,7 +129,7 @@ function handleSelect(item: KhmerDayDetail) {
     </div>
 
     <!-- Events List Container -->
-    <div class="flex-1 overflow-y-auto space-y-2 px-1 py-1 max-h-[380px] lg:max-h-[500px]">
+    <div class="flex-1 overflow-y-auto space-y-1.5 sm:space-y-2 px-1 py-1 pr-1.5 pb-3 min-h-0 max-h-[420px] lg:max-h-none">
       <div v-if="filteredList.length === 0" class="flex flex-col items-center justify-center py-10 text-center">
         <Sparkles class="h-8 w-8 text-slate-300 dark:text-slate-700 mb-2" />
         <p class="text-xs text-slate-500 dark:text-slate-400">
@@ -131,7 +142,7 @@ function handleSelect(item: KhmerDayDetail) {
         :key="item.gregorian.isoDateString"
         type="button"
         @click="handleSelect(item)"
-        class="group flex w-full items-center justify-between rounded-2xl sm:rounded-3xl border p-3 sm:p-3.5 text-left transition-all duration-150 hover:shadow-md cursor-pointer"
+        class="group flex w-full items-center justify-between rounded-2xl border p-2 sm:p-2.5 sm:px-3 text-left transition-all duration-150 hover:shadow-md cursor-pointer"
         :class="[
           item.holiday && item.holiday.isOffDay
             ? 'border-red-100/90 bg-[#fef7f7] hover:bg-red-50 hover:border-red-200 dark:border-slate-800 dark:bg-[#121826] dark:hover:bg-[#182032] dark:hover:border-slate-700'
@@ -140,10 +151,10 @@ function handleSelect(item: KhmerDayDetail) {
               : 'border-amber-100/80 bg-[#fffdf7] hover:bg-amber-50/70 hover:border-amber-200 dark:border-slate-800 dark:bg-[#121826] dark:hover:bg-[#182032] dark:hover:border-slate-700',
         ]"
       >
-        <div class="flex items-center gap-3 sm:gap-3.5 min-w-0 flex-1 mr-2">
+        <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1 mr-2">
           <!-- Date Badge Column (Squircle with Latin Numeral + Khmer Weekday) -->
           <div
-            class="flex flex-col items-center justify-center rounded-2xl w-12 h-12 sm:w-13 sm:h-13 shrink-0 text-center shadow-xs transition-transform group-hover:scale-105"
+            class="flex flex-col items-center justify-center rounded-xl sm:rounded-2xl w-10 h-10 sm:w-11 sm:h-11 shrink-0 text-center shadow-xs transition-transform group-hover:scale-105"
             :class="
               item.holiday && item.holiday.isOffDay
                 ? 'bg-red-500 text-white'
@@ -152,17 +163,17 @@ function handleSelect(item: KhmerDayDetail) {
                   : 'bg-blue-500 text-white'
             "
           >
-            <span class="text-base sm:text-lg font-bold leading-none font-sans tracking-tight">
+            <span class="text-sm sm:text-base font-bold leading-none font-sans tracking-tight">
               {{ item.gregorian.day }}
             </span>
-            <span class="text-[10px] sm:text-[11px] font-semibold leading-none mt-1 opacity-95">
+            <span class="text-[9px] sm:text-[10px] font-semibold leading-none mt-0.5 opacity-95">
               {{ item.khmer.dayOfWeekName }}
             </span>
           </div>
 
           <!-- Description Column -->
           <div class="min-w-0 flex-1">
-            <div class="flex items-center gap-2 flex-wrap">
+            <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
               <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
                 {{ item.holiday ? item.holiday.titleKh : item.holyDayLabel }}
               </h4>
@@ -170,20 +181,28 @@ function handleSelect(item: KhmerDayDetail) {
               <!-- Tag for official off-day -->
               <span
                 v-if="item.holiday && item.holiday.isOffDay"
-                class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] sm:text-[11px] font-bold text-red-600 dark:bg-red-950/60 dark:text-red-400"
+                class="rounded-full bg-red-100 px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold text-red-600 dark:bg-red-950/60 dark:text-red-400"
               >
                 ឈប់សម្រាក
+              </span>
+
+              <!-- Tag for Holy Day if also a holiday -->
+              <span
+                v-if="item.holiday && item.isHolyDay"
+                class="rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold text-amber-700 dark:bg-amber-950/60 dark:text-amber-400"
+              >
+                {{ item.holyDayLabel }}
               </span>
             </div>
 
             <!-- Lunar Date Subtext -->
-            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-normal mt-1">
+            <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-normal mt-0.5">
               {{ item.formattedShortKhmer }} • {{ item.khmer.animalYearName }}
             </p>
           </div>
         </div>
 
-        <ChevronRight class="h-4.5 w-4.5 sm:h-5 sm:w-5 text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-200 group-hover:translate-x-0.5 transition-all shrink-0" />
+        <ChevronRight class="h-4 w-4 sm:h-4.5 sm:w-4.5 text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-200 group-hover:translate-x-0.5 transition-all shrink-0" />
       </button>
     </div>
   </div>

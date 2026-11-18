@@ -206,7 +206,7 @@ onUnmounted(() => {
           </div>
 
           <!-- Cambodian Holidays & Events List for Current Month (Desktop view) -->
-          <div id="desktop-holidays-sidebar" class="hidden lg:block flex-1">
+          <div id="desktop-holidays-sidebar" class="hidden lg:flex flex-1 flex-col min-h-0">
             <MonthHolidaysList />
           </div>
         </div>
