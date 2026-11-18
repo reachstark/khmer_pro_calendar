@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import {
   X,
   Copy,
@@ -17,6 +17,105 @@ import { toKhmerNumber } from '@/utils/khmerCalendar'
 const { selectedDate, closeModal, selectPrevDay, selectNextDay } = useCalendarState()
 
 const isCopied = ref(false)
+
+// Mobile draggable bottom sheet state
+const sheetEl = ref<HTMLElement | null>(null)
+const dragOffsetY = ref(0)
+const isDragging = ref(false)
+let touchStartY = 0
+let touchStartX = 0
+let lastTouchY = 0
+let lastTouchTime = 0
+let dragVelocity = 0
+
+function handleTouchStart(e: TouchEvent) {
+  if (typeof window !== 'undefined' && window.innerWidth >= 640) return
+  const touch = e.touches[0]
+  if (!touch) return
+
+  // Don't drag if body is scrolled down
+  if (sheetEl.value && sheetEl.value.scrollTop > 5) return
+
+  touchStartY = touch.clientY
+  touchStartX = touch.clientX
+  lastTouchY = touch.clientY
+  lastTouchTime = Date.now()
+  dragVelocity = 0
+  isDragging.value = false
+}
+
+function handleTouchMove(e: TouchEvent) {
+  if (typeof window !== 'undefined' && window.innerWidth >= 640) return
+  const touch = e.touches[0]
+  if (!touch) return
+
+  const deltaY = touch.clientY - touchStartY
+  const deltaX = Math.abs(touch.clientX - touchStartX)
+
+  // Only start drag if scrolled to top and moving downward
+  if (sheetEl.value && sheetEl.value.scrollTop > 0) return
+
+  if (deltaY > 6 && deltaY > deltaX) {
+    isDragging.value = true
+    if (e.cancelable) e.preventDefault()
+
+    dragOffsetY.value = deltaY
+
+    const now = Date.now()
+    const dt = now - lastTouchTime
+    if (dt > 0) {
+      dragVelocity = (touch.clientY - lastTouchY) / dt
+    }
+    lastTouchY = touch.clientY
+    lastTouchTime = now
+  }
+}
+
+function handleTouchEnd() {
+  if (!isDragging.value) return
+  isDragging.value = false
+
+  // Dismiss if dragged down > 80px or fast flick downwards
+  if (dragOffsetY.value > 80 || dragVelocity > 0.4) {
+    dragOffsetY.value = 500
+    setTimeout(() => {
+      closeModal()
+      dragOffsetY.value = 0
+    }, 180)
+  } else {
+    // Snap back
+    dragOffsetY.value = 0
+  }
+}
+
+// Special Festive Date Checks
+const isJan01 = computed(() => {
+  if (!selectedDate.value) return false
+  return selectedDate.value.gregorian.month === 1 && selectedDate.value.gregorian.day === 1
+})
+
+const isCNY = computed(() => {
+  if (!selectedDate.value) return false
+  return selectedDate.value.holiday?.id.startsWith('cny-')
+})
+
+const isValentines = computed(() => {
+  if (!selectedDate.value) return false
+  return selectedDate.value.gregorian.month === 2 && selectedDate.value.gregorian.day === 14
+})
+
+const isHalloween = computed(() => {
+  if (!selectedDate.value) return false
+  return selectedDate.value.gregorian.month === 10 && selectedDate.value.gregorian.day === 31
+})
+
+const isChristmas = computed(() => {
+  if (!selectedDate.value) return false
+  return (
+    selectedDate.value.gregorian.month === 12 &&
+    (selectedDate.value.gregorian.day === 24 || selectedDate.value.gregorian.day === 25)
+  )
+})
 
 function copyKhmerDate() {
   if (!selectedDate.value) return
@@ -57,19 +156,35 @@ function shareDate() {
     v-if="selectedDate"
     class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
   >
-    <!-- Backdrop overlay -->
+    <!-- Backdrop overlay with dynamic drag opacity -->
     <div
       class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+      :style="{
+        opacity: dragOffsetY > 0 ? Math.max(0.1, 1 - dragOffsetY / 350) : undefined,
+      }"
       @click="closeModal"
     ></div>
 
     <!-- Modal Content: Bottom Sheet on Mobile, Centered Dialog on Desktop -->
     <div
-      class="relative z-10 w-full max-w-2xl max-h-[92vh] sm:max-h-[85vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border border-slate-200 bg-white p-4 sm:p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900 animate-in fade-in slide-in-from-bottom sm:zoom-in-95 duration-200 transition-colors"
+      ref="sheetEl"
+      @touchstart="handleTouchStart"
+      @touchmove="handleTouchMove"
+      @touchend="handleTouchEnd"
+      :style="{
+        transform: dragOffsetY > 0 ? `translateY(${dragOffsetY}px)` : undefined,
+        transition: isDragging ? 'none' : 'transform 0.22s cubic-bezier(0.2, 0.9, 0.4, 1.1)',
+      }"
+      class="relative z-10 w-full max-w-2xl max-h-[92vh] sm:max-h-[85vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border border-slate-200 bg-white p-4 sm:p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900 duration-200 transition-colors"
     >
-      <!-- Mobile Pull Bar Indicator -->
-      <div class="sm:hidden flex justify-center mb-2">
-        <div class="h-1.5 w-12 rounded-full bg-slate-300 dark:bg-slate-700"></div>
+      <!-- Mobile Pull Bar Indicator (Draggable Handle) -->
+      <div
+        class="sm:hidden flex justify-center py-2 -mt-2 -mx-4 mb-1 cursor-grab active:cursor-grabbing select-none touch-none"
+      >
+        <div
+          class="h-1.5 rounded-full transition-all duration-150"
+          :class="isDragging ? 'w-16 bg-amber-500' : 'w-12 bg-slate-300 dark:bg-slate-700'"
+        ></div>
       </div>
 
       <!-- Header: Controls & Close -->
@@ -167,6 +282,157 @@ function shareDate() {
           >
             {{ selectedDate.solarFullText }}
           </p>
+        </div>
+      </div>
+
+      <!-- Special Celebratory Holiday UI Decorations -->
+      <!-- 1. Jan-01: International New Year Celebration Decor -->
+      <div
+        v-if="isJan01"
+        class="mt-3.5 relative overflow-hidden rounded-2xl border border-amber-400/60 bg-gradient-to-r from-amber-500/25 via-yellow-500/20 to-rose-500/25 p-4 shadow-lg shadow-amber-500/15 dark:border-amber-400/50 dark:from-amber-950/50 dark:via-yellow-950/40 dark:to-rose-950/50 animate-gradient"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-500/20 text-2xl border border-amber-400/50 shadow-inner"
+          >
+            🎆
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                ឆ្លងឆ្នាំសកល • Happy New Year
+              </span>
+              <span class="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:text-amber-200">
+                {{ selectedDate.gregorian.year }}
+              </span>
+            </div>
+            <h4 class="text-base font-bold text-slate-900 dark:text-white">
+              រីករាយទិវាចូលឆ្នាំសកល {{ toKhmerNumber(selectedDate.gregorian.year) }}! 🎉
+            </h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+              សូមជូនពរឆ្នាំថ្មីពោរពេញដោយសុខភាពល្អ សុភមង្គល និងជោគជ័យគ្រប់ភារកិច្ច!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Chinese New Year Celebration Decor -->
+      <div
+        v-else-if="isCNY"
+        class="mt-3.5 relative overflow-hidden rounded-2xl border border-red-500/60 bg-gradient-to-r from-red-600/25 via-amber-500/20 to-red-600/25 p-4 shadow-lg shadow-red-500/15 dark:border-red-500/50 dark:from-red-950/50 dark:via-amber-950/40 dark:to-red-950/50 animate-gradient"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-500/20 text-2xl border border-red-400/50 shadow-inner"
+          >
+            🧧
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-red-700 dark:text-red-300">
+                ពិធីបុណ្យចូលឆ្នាំចិន • Chinese New Year
+              </span>
+              <span class="rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-bold text-red-800 dark:text-red-200">
+                恭喜发财
+              </span>
+            </div>
+            <h4 class="text-base font-bold text-slate-900 dark:text-white">
+              រីករាយពិធីបុណ្យចូលឆ្នាំថ្មីប្រពៃណីចិន! 🏮
+            </h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+              ហេង ហេង សំណាងល្អ សិរីសួស្តី វិបុលសុខ និងសម្បូរសប្បាយពេញមួយឆ្នាំ!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Valentine's Day Celebration Decor (Feb 14) -->
+      <div
+        v-else-if="isValentines"
+        class="mt-3.5 relative overflow-hidden rounded-2xl border border-pink-400/60 bg-gradient-to-r from-pink-500/25 via-rose-500/20 to-pink-500/25 p-4 shadow-lg shadow-pink-500/15 dark:border-pink-400/50 dark:from-pink-950/50 dark:via-rose-950/40 dark:to-pink-950/50 animate-gradient"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-pink-500/20 text-2xl border border-pink-400/50 shadow-inner"
+          >
+            💖
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-pink-700 dark:text-pink-300">
+                ទិវានៃក្ដីស្រឡាញ់ • Valentine's Day
+              </span>
+              <span class="rounded-full bg-pink-500/20 px-2 py-0.5 text-[10px] font-bold text-pink-800 dark:text-pink-200">
+                ១៤ កុម្ភៈ
+              </span>
+            </div>
+            <h4 class="text-base font-bold text-slate-900 dark:text-white">
+              រីករាយទិវានៃក្ដីស្រឡាញ់! 💕🌹
+            </h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+              អបអរសាទរក្ដីស្រឡាញ់ មិត្តភាពដ៏បរិសុទ្ធ និងការចែករំលែកសេចក្ដីល្អចំពោះមនុស្សជាទីស្រឡាញ់ និងមាតាបិតា!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Halloween Celebration Decor (Oct 31) -->
+      <div
+        v-else-if="isHalloween"
+        class="mt-3.5 relative overflow-hidden rounded-2xl border border-orange-500/60 bg-gradient-to-r from-orange-500/25 via-purple-600/25 to-orange-500/25 p-4 shadow-lg shadow-orange-500/15 dark:border-orange-500/50 dark:from-orange-950/50 dark:via-purple-950/50 dark:to-orange-950/50 animate-gradient"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-500/20 text-2xl border border-orange-400/50 shadow-inner"
+          >
+            🎃
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-orange-700 dark:text-orange-300">
+                ពិធីបុណ្យហាឡូវីន • Halloween
+              </span>
+              <span class="rounded-full bg-orange-500/20 px-2 py-0.5 text-[10px] font-bold text-orange-800 dark:text-orange-200">
+                Trick or Treat
+              </span>
+            </div>
+            <h4 class="text-base font-bold text-slate-900 dark:text-white">
+              រីករាយរាត្រីបុណ្យហាឡូវីន! 🦇👻
+            </h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+              រាត្រីនៃការកម្សាន្ត ការតុបតែងលម្អម៉ូដប្លែកៗ ពាក់ម៉ាស់កំប្លែង និងការចែករំលែកស្ករគ្រាប់!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Christmas Celebration Decor (Dec 24 / 25) -->
+      <div
+        v-else-if="isChristmas"
+        class="mt-3.5 relative overflow-hidden rounded-2xl border border-emerald-500/60 bg-gradient-to-r from-emerald-600/25 via-red-500/25 to-emerald-600/25 p-4 shadow-lg shadow-emerald-500/15 dark:border-emerald-500/50 dark:from-emerald-950/50 dark:via-red-950/50 dark:to-emerald-950/50 animate-gradient"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/20 text-2xl border border-emerald-400/50 shadow-inner"
+          >
+            🎄
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+                បុណ្យណូអែល • Christmas Celebration
+              </span>
+              <span class="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-200">
+                Merry Christmas
+              </span>
+            </div>
+            <h4 class="text-base font-bold text-slate-900 dark:text-white">
+              រីករាយពិធីបុណ្យគ្រីស្ទម៉ាស់! 🎅🎁❄️
+            </h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+              សូមឱ្យពិធីបុណ្យណូអែលនាំមកនូវសន្តិភាព សេចក្តីស្រឡាញ់ ភាពកក់ក្តៅ និងស្នាមញញឹមដល់គ្រប់ក្រុមគ្រួសារ!
+            </p>
+          </div>
         </div>
       </div>
 

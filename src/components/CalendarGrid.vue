@@ -30,6 +30,18 @@ function isCellSelected(day: KhmerDayDetail): boolean {
   if (!selectedDate.value) return false
   return selectedDate.value.gregorian.isoDateString === day.gregorian.isoDateString
 }
+
+function isJan01(day: KhmerDayDetail): boolean {
+  return day.gregorian.month === 1 && day.gregorian.day === 1
+}
+
+function isValentinesDay(day: KhmerDayDetail): boolean {
+  return day.gregorian.month === 2 && day.gregorian.day === 14
+}
+
+function isHalloweenDay(day: KhmerDayDetail): boolean {
+  return day.gregorian.month === 10 && day.gregorian.day === 31
+}
 </script>
 
 <template>
@@ -119,6 +131,15 @@ function isCellSelected(day: KhmerDayDetail): boolean {
                     : // Is Today
                     day.isToday
                     ? 'border-sky-500 bg-sky-50/80 hover:bg-sky-50 shadow-md shadow-sky-500/15 ring-2 ring-sky-400/50 dark:border-sky-400/70 dark:bg-sky-950/35 dark:hover:bg-sky-950/45 dark:ring-sky-500/40'
+                    : // Jan-01: Looping Fireworks Day Cell
+                    isJan01(day)
+                    ? 'border-amber-400/70 bg-gradient-to-br from-amber-500/15 via-rose-500/10 to-amber-500/15 hover:bg-amber-100/50 dark:border-amber-400/50 dark:from-amber-950/30 dark:to-rose-950/20 shadow-xs ring-1 ring-amber-400/30'
+                    : // Feb-14: Valentine's Cute Hearts Day Cell
+                    isValentinesDay(day)
+                    ? 'border-pink-300/80 bg-gradient-to-br from-pink-500/15 via-rose-400/10 to-pink-500/15 hover:bg-pink-100/50 dark:border-pink-400/50 dark:from-pink-950/30 dark:to-rose-950/20 shadow-xs ring-1 ring-pink-400/30'
+                    : // Oct-31: Halloween Spooky Day Cell
+                    isHalloweenDay(day)
+                    ? 'border-orange-400/70 bg-gradient-to-br from-orange-500/15 via-purple-950/15 to-orange-500/15 hover:bg-orange-100/50 dark:border-purple-400/50 dark:from-orange-950/30 dark:to-purple-950/30 shadow-xs ring-1 ring-orange-400/30'
                     : // Has Holiday
                     day.holiday && day.holiday.isOffDay
                     ? 'border-red-200 bg-red-50/50 hover:bg-red-50 dark:border-red-900/40 dark:bg-red-950/20 dark:hover:bg-red-950/40'
@@ -138,11 +159,17 @@ function isCellSelected(day: KhmerDayDetail): boolean {
                       :class="[
                         day.holiday && day.holiday.isOffDay
                           ? 'text-red-600 dark:text-red-400 font-extrabold'
-                          : day.gregorian.dayOfWeek === 0
-                            ? 'text-red-500 dark:text-red-400'
-                            : day.isToday
-                              ? 'text-sky-600 dark:text-sky-400 font-extrabold'
-                              : 'text-slate-800 dark:text-slate-100',
+                          : isJan01(day)
+                            ? 'text-amber-600 dark:text-amber-400 font-extrabold'
+                            : isValentinesDay(day)
+                              ? 'text-pink-600 dark:text-pink-400 font-extrabold'
+                              : isHalloweenDay(day)
+                                ? 'text-orange-600 dark:text-orange-400 font-extrabold'
+                                : day.gregorian.dayOfWeek === 0
+                                  ? 'text-red-500 dark:text-red-400'
+                                  : day.isToday
+                                    ? 'text-sky-600 dark:text-sky-400 font-extrabold'
+                                    : 'text-slate-800 dark:text-slate-100',
                       ]"
                     >
                       {{ day.gregorian.day }}
@@ -151,6 +178,37 @@ function isCellSelected(day: KhmerDayDetail): boolean {
 
                   <!-- Badges and Indicators -->
                   <div class="flex items-center gap-1">
+                    <!-- Jan-01: Looping Fireworks Animation -->
+                    <div
+                      v-if="isJan01(day)"
+                      class="relative flex items-center justify-center"
+                      title="ចូលឆ្នាំសកល (Happy New Year)"
+                    >
+                      <span class="anim-firework-burst text-xs sm:text-sm inline-block select-none">🎆</span>
+                      <span class="anim-firework-twinkle absolute -top-1.5 -right-1 text-[8px] sm:text-[9px] pointer-events-none select-none">✨</span>
+                    </div>
+
+                    <!-- Feb-14: Valentine's Cute Hearts Looping Animation -->
+                    <div
+                      v-else-if="isValentinesDay(day)"
+                      class="relative flex items-center justify-center"
+                      title="ទិវានៃក្ដីស្រឡាញ់ (Valentine’s Day)"
+                    >
+                      <span class="anim-heart-pulse text-xs sm:text-sm inline-block select-none">💖</span>
+                      <span class="anim-heart-float-1 absolute -top-2 -right-1 text-[8px] pointer-events-none select-none">💕</span>
+                      <span class="anim-heart-float-2 absolute -top-1 -left-1 text-[7px] pointer-events-none select-none">❤️</span>
+                    </div>
+
+                    <!-- Oct-31: Halloween Spooky Bats & Pumpkin Looping Animation -->
+                    <div
+                      v-else-if="isHalloweenDay(day)"
+                      class="relative flex items-center justify-center"
+                      title="ពិធីបុណ្យហាឡូវីន (Halloween)"
+                    >
+                      <span class="anim-bat-hover text-[11px] sm:text-xs inline-block select-none">🦇</span>
+                      <span class="anim-pumpkin-glow text-xs sm:text-sm inline-block ml-0.5 select-none">🎃</span>
+                    </div>
+
                     <!-- Today Badge -->
                     <span
                       v-if="day.isToday"

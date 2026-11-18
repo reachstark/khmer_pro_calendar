@@ -211,3 +211,124 @@ body.font-theme-moul *,
   }
 }
 
+/* --- Special Holiday Date Cell Looping Animations --- */
+
+/* Jan-01: Fireworks Loop */
+@keyframes firework-burst-loop {
+  0% {
+    transform: scale(0.3) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  65% {
+    transform: scale(1.18) rotate(18deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.35) rotate(36deg);
+    opacity: 0;
+  }
+}
+
+@keyframes firework-twinkle {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.anim-firework-burst {
+  animation: firework-burst-loop 2s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+}
+
+.anim-firework-twinkle {
+  animation: firework-twinkle 1.4s ease-in-out infinite;
+}
+
+/* Feb-14: Valentine's Cute Hearts Loop */
+@keyframes cute-heart-float {
+  0% {
+    transform: translateY(10px) scale(0.6) rotate(-8deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.95;
+  }
+  80% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateY(-20px) scale(1.05) rotate(14deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heart-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  40% {
+    transform: scale(1.06);
+  }
+  55% {
+    transform: scale(1.18);
+  }
+}
+
+.anim-heart-float-1 {
+  animation: cute-heart-float 2.4s ease-in-out infinite;
+}
+
+.anim-heart-float-2 {
+  animation: cute-heart-float 2.4s ease-in-out infinite 0.8s;
+}
+
+.anim-heart-float-3 {
+  animation: cute-heart-float 2.4s ease-in-out infinite 1.6s;
+}
+
+.anim-heart-pulse {
+  animation: heart-pulse 1.6s ease-in-out infinite;
+}
+
+/* Oct-31: Halloween Spooky Bats & Pumpkin Loop */
+@keyframes bat-hover-loop {
+  0%, 100% {
+    transform: translateY(0) translateX(0) rotate(-6deg);
+  }
+  35% {
+    transform: translateY(-5px) translateX(3px) rotate(8deg);
+  }
+  70% {
+    transform: translateY(-2px) translateX(-2px) rotate(-4deg);
+  }
+}
+
+@keyframes pumpkin-glow-pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 2px rgba(249, 115, 22, 0.4));
+  }
+  50% {
+    transform: scale(1.14);
+    filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.95));
+  }
+}
+
+.anim-bat-hover {
+  animation: bat-hover-loop 2.2s ease-in-out infinite;
+}
+
+.anim-pumpkin-glow {
+  animation: pumpkin-glow-pulse 1.8s ease-in-out infinite;
+}
+

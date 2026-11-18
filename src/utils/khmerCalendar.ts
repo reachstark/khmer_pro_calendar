@@ -142,6 +142,93 @@ export function getHolyDayInfo(
   return { isHolyDay: false }
 }
 
+// Astronomical dates for Chinese Lunar New Year (Day 1) from 2020 to 2035
+export const CHINESE_NEW_YEAR_MAP: Record<number, { month: number; day: number }> = {
+  2020: { month: 1, day: 25 },
+  2021: { month: 2, day: 12 },
+  2022: { month: 2, day: 1 },
+  2023: { month: 1, day: 22 },
+  2024: { month: 2, day: 10 },
+  2025: { month: 1, day: 29 },
+  2026: { month: 2, day: 17 },
+  2027: { month: 2, day: 6 },
+  2028: { month: 1, day: 26 },
+  2029: { month: 2, day: 13 },
+  2030: { month: 2, day: 3 },
+  2031: { month: 1, day: 23 },
+  2032: { month: 2, day: 11 },
+  2033: { month: 1, day: 31 },
+  2034: { month: 2, day: 19 },
+  2035: { month: 2, day: 8 },
+}
+
+export function getChineseNewYearHoliday(
+  year: number,
+  month: number,
+  day: number
+): HolidayEvent | undefined {
+  const cny = CHINESE_NEW_YEAR_MAP[year]
+  if (!cny) return undefined
+
+  const day1Date = new Date(year, cny.month - 1, cny.day)
+  const currentDate = new Date(year, month - 1, day)
+  const diffDays = Math.round((currentDate.getTime() - day1Date.getTime()) / (1000 * 60 * 60 * 24))
+
+  if (diffDays === -1) {
+    return {
+      id: 'cny-eve',
+      titleKh: 'ពិធីបុណ្យចូលឆ្នាំចិន (ថ្ងៃសែន)',
+      titleEn: "Chinese New Year's Eve",
+      type: 'traditional',
+      descriptionKh: 'ថ្ងៃសែនចូលឆ្នាំប្រពៃណីចិន-វៀតណាម ជួបជុំសមាជិកគ្រួសារ និងសែនដូនតា',
+      descriptionEn: 'Eve of Chinese Lunar New Year featuring family reunion dinner and ancestral prayers',
+      isOffDay: false,
+      imageUrl: '/images/holidays/holiday_chinese_new_year.jpg',
+    }
+  }
+
+  if (diffDays === 0) {
+    return {
+      id: 'cny-day-1',
+      titleKh: 'ពិធីបុណ្យចូលឆ្នាំចិន (ថ្ងៃទី១)',
+      titleEn: 'Chinese New Year (Day 1)',
+      type: 'traditional',
+      descriptionKh: 'ថ្ងៃដំបូងនៃពិធីបុណ្យចូលឆ្នាំថ្មីប្រពៃណីចិន ជូនពរជ័យ និងចែកអាំងប៉ាវ',
+      descriptionEn: 'First day of Chinese Lunar New Year, visiting elders, lion dances, and red envelopes',
+      isOffDay: false,
+      imageUrl: '/images/holidays/holiday_chinese_new_year.jpg',
+    }
+  }
+
+  if (diffDays === 1) {
+    return {
+      id: 'cny-day-2',
+      titleKh: 'ពិធីបុណ្យចូលឆ្នាំចិន (ថ្ងៃទី២)',
+      titleEn: 'Chinese New Year (Day 2)',
+      type: 'traditional',
+      descriptionKh: 'ថ្ងៃទីពីរនៃពិធីបុណ្យចូលឆ្នាំប្រពៃណីចិន-វៀតណាម ដើរកម្សាន្ត និងជួបជុំសាច់ញាតិ',
+      descriptionEn: 'Second day of Chinese New Year festivities',
+      isOffDay: false,
+      imageUrl: '/images/holidays/holiday_chinese_new_year.jpg',
+    }
+  }
+
+  if (diffDays === 2) {
+    return {
+      id: 'cny-day-3',
+      titleKh: 'ពិធីបុណ្យចូលឆ្នាំចិន (ថ្ងៃទី៣)',
+      titleEn: 'Chinese New Year (Day 3)',
+      type: 'traditional',
+      descriptionKh: 'ថ្ងៃទីបីនៃពិធីបុណ្យចូលឆ្នាំប្រពៃណីចិន-វៀតណាម',
+      descriptionEn: 'Third day of Chinese New Year celebration',
+      isOffDay: false,
+      imageUrl: '/images/holidays/holiday_chinese_new_year.jpg',
+    }
+  }
+
+  return undefined
+}
+
 /**
  * Get Cambodian National Holidays and Observances for a given Gregorian date
  */
@@ -151,6 +238,10 @@ export function getCambodiaHoliday(
   day: number,
   khmerInfo: KhmerConversionResult['khmer']
 ): HolidayEvent | undefined {
+  // Check Chinese New Year (Traditional celebration widely observed in Cambodia)
+  const cny = getChineseNewYearHoliday(year, month, day)
+  if (cny) return cny
+
   // --- Fixed Solar Holidays ---
   if (month === 1 && day === 1) {
     return {
@@ -175,6 +266,19 @@ export function getCambodiaHoliday(
       descriptionEn: 'Commemoration of the fall of the Khmer Rouge regime in 1979',
       isOffDay: true,
       imageUrl: '/images/holidays/holiday_victory_day.jpg',
+    }
+  }
+
+  if (month === 2 && day === 14) {
+    return {
+      id: 'valentines-day',
+      titleKh: 'ទិវានៃក្ដីស្រឡាញ់ (Valentine’s Day)',
+      titleEn: "Valentine's Day",
+      type: 'observance',
+      descriptionKh: 'ទិវានៃក្ដីស្រឡាញ់ អបអរសាទរមិត្តភាព ក្ដីស្រឡាញ់ និងការចែករំលែកសេចក្ដីល្អចំពោះមនុស្សជាទីស្រឡាញ់ និងមាតាបិតា',
+      descriptionEn: 'Celebration of love, romance, and friendship celebrated annually on February 14',
+      isOffDay: false,
+      imageUrl: '/images/holidays/holiday_valentines.jpg',
     }
   }
 
@@ -301,6 +405,19 @@ export function getCambodiaHoliday(
     }
   }
 
+  if (month === 10 && day === 31) {
+    return {
+      id: 'halloween',
+      titleKh: 'ពិធីបុណ្យហាឡូវីន (Halloween)',
+      titleEn: 'Halloween',
+      type: 'observance',
+      descriptionKh: 'ពិធីបុណ្យហាឡូវីន ប្រារព្ធឡើងដោយការតុបតែងលម្អបែបខ្មោចព្រាយ ពាក់ម៉ាស់កំប្លែង និងការលេង Trick or Treat',
+      descriptionEn: 'Halloween celebration featuring spooky costumes, pumpkin carvings, and festive gatherings',
+      isOffDay: false,
+      imageUrl: '/images/holidays/holiday_halloween.jpg',
+    }
+  }
+
   if (month === 11 && day === 9) {
     return {
       id: 'independence-day',
@@ -311,6 +428,32 @@ export function getCambodiaHoliday(
       descriptionEn: 'Celebration of Cambodia gaining full independence from France in 1953',
       isOffDay: true,
       imageUrl: '/images/holidays/holiday_independence_day.jpg',
+    }
+  }
+
+  if (month === 12 && day === 24) {
+    return {
+      id: 'christmas-eve',
+      titleKh: 'បុណ្យគ្រីស្ទម៉ាស់ (រាត្រីមុនថ្ងៃបុណ្យ)',
+      titleEn: 'Christmas Eve',
+      type: 'observance',
+      descriptionKh: 'រាត្រីមុនថ្ងៃបុណ្យណូអែល ជួបជុំគ្រួសារ ទទួលទានអាហារ និងរង់ចាំការមកដល់នៃថ្ងៃបុណ្យគ្រីស្ទម៉ាស់',
+      descriptionEn: 'Christmas Eve celebration with family gatherings, festive dinners, and anticipation of Christmas Day',
+      isOffDay: false,
+      imageUrl: '/images/holidays/holiday_christmas.jpg',
+    }
+  }
+
+  if (month === 12 && day === 25) {
+    return {
+      id: 'christmas-day',
+      titleKh: 'ពិធីបុណ្យណូអែល / គ្រីស្ទម៉ាស់ (Christmas Day)',
+      titleEn: 'Christmas Day',
+      type: 'observance',
+      descriptionKh: 'ពិធីបុណ្យណូអែល រំលឹកដល់ការប្រសូតរបស់ព្រះយេស៊ូវគ្រីស្ទ និងការចែករំលែកសេចក្តីស្រឡាញ់ កាដូ និងសេចក្តីរីករាយ',
+      descriptionEn: 'Worldwide celebration of Christmas, exchange of gifts, and holiday joy',
+      isOffDay: false,
+      imageUrl: '/images/holidays/holiday_christmas.jpg',
     }
   }
 

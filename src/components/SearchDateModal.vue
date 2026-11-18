@@ -78,10 +78,14 @@ function handleSelectEvent(item: KhmerDayDetail) {
 
 const quickQueries = [
   { label: 'ចូលឆ្នាំខ្មែរ', query: 'ចូលឆ្នាំ' },
+  { label: 'ចូលឆ្នាំចិន', query: 'ចិន' },
   { label: 'បុណ្យអុំទូក', query: 'អុំទូក' },
   { label: 'ភ្ជុំបិណ្ឌ', query: 'ភ្ជុំបិណ្ឌ' },
   { label: 'វិសាខបូជា', query: 'វិសាខបូជា' },
   { label: 'មាឃបូជា', query: 'មាឃបូជា' },
+  { label: 'ណូអែល', query: 'ណូអែល' },
+  { label: 'ក្ដីស្រឡាញ់', query: 'ស្រឡាញ់' },
+  { label: 'ហាឡូវីន', query: 'ហាឡូវីន' },
   { label: 'ឯករាជ្យជាតិ', query: 'ឯករាជ្យ' },
   { label: 'ទិវាសន្តិភាព', query: 'សន្តិភាព' },
   { label: 'ថ្ងៃសីល', query: 'សីល' },
