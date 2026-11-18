@@ -83,6 +83,7 @@ const quickQueries = [
   { label: 'វិសាខបូជា', query: 'វិសាខបូជា' },
   { label: 'មាឃបូជា', query: 'មាឃបូជា' },
   { label: 'ឯករាជ្យជាតិ', query: 'ឯករាជ្យ' },
+  { label: 'ទិវាសន្តិភាព', query: 'សន្តិភាព' },
   { label: 'ថ្ងៃសីល', query: 'សីល' },
 ]
 </script>

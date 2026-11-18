@@ -192,6 +192,25 @@ export function getCambodiaHoliday(
   }
 
   if (month === 5 && day === 1) {
+    // Check if Visak Bochea coincides with Labour Day (such as in 2026: 15 waxing Pisakh)
+    const isVisakBochea =
+      khmerInfo.monthIndex === 5 &&
+      khmerInfo.day === 15 &&
+      khmerInfo.moonPhase === MoonPhase.Waxing
+
+    if (isVisakBochea) {
+      return {
+        id: 'visak-bochea-labour-day',
+        titleKh: 'ពិធីបុណ្យវិសាខបូជា & ទិវាពលកម្មអន្តរជាតិ',
+        titleEn: 'Visak Bochea Day & International Labour Day',
+        type: 'public_holiday',
+        descriptionKh: 'ពិធីបុណ្យវិសាខបូជា (រំលឹកព្រះសម្មាសម្ពុទ្ធ ប្រសូត ត្រាស់ដឹង បរិនិព្វាន) ស្របនឹងទិវាពលកម្មអន្តរជាតិ',
+        descriptionEn: 'Sacred Buddhist Visak Bochea Day coincident with International Labour Day',
+        isOffDay: true,
+        imageUrl: '/images/holidays/holiday_visak_bochea.jpg',
+      }
+    }
+
     return {
       id: 'labour-day',
       titleKh: 'ទិវាពលកម្មអន្តរជាតិ',
@@ -295,6 +314,19 @@ export function getCambodiaHoliday(
     }
   }
 
+  if (month === 12 && day === 29) {
+    return {
+      id: 'peace-day',
+      titleKh: 'ទិវាសន្តិភាពនៅកម្ពុជា',
+      titleEn: 'Peace Day in Cambodia',
+      type: 'public_holiday',
+      descriptionKh: 'រំលឹកខួបនៃការបញ្ចប់សង្គ្រាមស៊ីវិលទាំងស្រុង និងការសម្រេចបានសន្តិភាពពេញលេញ តាមរយៈនយោបាយឈ្នះ-ឈ្នះ (២៩ ធ្នូ ១៩៩៨)',
+      descriptionEn: 'Commemoration of the complete end of the civil war and full peace achieved through the Win-Win Policy in 1998',
+      isOffDay: true,
+      imageUrl: '/images/holidays/holiday_peace_day.jpg',
+    }
+  }
+
   // --- Khmer New Year (Solar Calculated via astronomical algorithm) ---
   const ny = getNewYear(year)
   if (ny && ny.month === month) {
@@ -352,11 +384,11 @@ export function getCambodiaHoliday(
     }
   }
 
-  // 2. Visak Bochea (បុណ្យវិសាខបូជា) - 15 waxing Pisakh (ខែពិសាខ index 5)
+  // 2. Visak Bochea (ពិធីបុណ្យវិសាខបូជា) - 15 waxing Pisakh (ខែពិសាខ index 5)
   if (khmerInfo.monthIndex === 5 && khmerInfo.day === 15 && khmerInfo.moonPhase === MoonPhase.Waxing) {
     return {
       id: 'visak-bochea',
-      titleKh: 'បុណ្យវិសាខបូជា',
+      titleKh: 'ពិធីបុណ្យវិសាខបូជា',
       titleEn: 'Visak Bochea Day',
       type: 'public_holiday',
       descriptionKh: 'រំលឹកដល់ព្រឹត្តិការណ៍សំខាន់ ៣ របស់ព្រះសម្មាសម្ពុទ្ធ៖ ប្រសូត ត្រាស់ដឹង និងបរិនិព្វាន',
