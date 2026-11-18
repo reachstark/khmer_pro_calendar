@@ -62,9 +62,7 @@ export interface HolidayEvent {
 // Convert western digits to Khmer numerals
 export function toKhmerNumber(num: number | string): string {
   const khmerDigits = ['០', '១', '២', '៣', '៤', '៥', '៦', '៧', '៨', '៩']
-  return num
-    .toString()
-    .replace(/[0-9]/g, (digit) => khmerDigits[parseInt(digit, 10)] ?? digit)
+  return num.toString().replace(/[0-9]/g, (digit) => khmerDigits[parseInt(digit, 10)] ?? digit)
 }
 
 // Khmer Day Names (0: Sunday to 6: Saturday)
@@ -107,8 +105,12 @@ export function getHolyDayInfo(
   year: number,
   month: number,
   day: number,
-  khmerInfo: KhmerConversionResult['khmer']
-): { isHolyDay: boolean; type?: 'waxing_8' | 'full_moon' | 'waning_8' | 'new_moon'; label?: string } {
+  khmerInfo: KhmerConversionResult['khmer'],
+): {
+  isHolyDay: boolean
+  type?: 'waxing_8' | 'full_moon' | 'waning_8' | 'new_moon'
+  label?: string
+} {
   // 1. 8th day of waxing moon (៨កើត)
   if (khmerInfo.day === 8 && khmerInfo.moonPhase === MoonPhase.Waxing) {
     return { isHolyDay: true, type: 'waxing_8', label: 'ថ្ងៃសីល ៨កើត' }
@@ -165,7 +167,7 @@ export const CHINESE_NEW_YEAR_MAP: Record<number, { month: number; day: number }
 export function getChineseNewYearHoliday(
   year: number,
   month: number,
-  day: number
+  day: number,
 ): HolidayEvent | undefined {
   const cny = CHINESE_NEW_YEAR_MAP[year]
   if (!cny) return undefined
@@ -181,7 +183,8 @@ export function getChineseNewYearHoliday(
       titleEn: "Chinese New Year's Eve",
       type: 'traditional',
       descriptionKh: 'ថ្ងៃសែនចូលឆ្នាំប្រពៃណីចិន-វៀតណាម ជួបជុំសមាជិកគ្រួសារ និងសែនដូនតា',
-      descriptionEn: 'Eve of Chinese Lunar New Year featuring family reunion dinner and ancestral prayers',
+      descriptionEn:
+        'Eve of Chinese Lunar New Year featuring family reunion dinner and ancestral prayers',
       isOffDay: false,
       imageUrl: '/images/holidays/holiday_chinese_new_year.jpg',
     }
@@ -194,7 +197,8 @@ export function getChineseNewYearHoliday(
       titleEn: 'Chinese New Year (Day 1)',
       type: 'traditional',
       descriptionKh: 'ថ្ងៃដំបូងនៃពិធីបុណ្យចូលឆ្នាំថ្មីប្រពៃណីចិន ជូនពរជ័យ និងចែកអាំងប៉ាវ',
-      descriptionEn: 'First day of Chinese Lunar New Year, visiting elders, lion dances, and red envelopes',
+      descriptionEn:
+        'First day of Chinese Lunar New Year, visiting elders, lion dances, and red envelopes',
       isOffDay: false,
       imageUrl: '/images/holidays/holiday_chinese_new_year.jpg',
     }
@@ -236,7 +240,7 @@ export function getCambodiaHoliday(
   year: number,
   month: number,
   day: number,
-  khmerInfo: KhmerConversionResult['khmer']
+  khmerInfo: KhmerConversionResult['khmer'],
 ): HolidayEvent | undefined {
   // Check Chinese New Year (Traditional celebration widely observed in Cambodia)
   const cny = getChineseNewYearHoliday(year, month, day)
@@ -275,8 +279,10 @@ export function getCambodiaHoliday(
       titleKh: 'ទិវានៃក្ដីស្រឡាញ់ (Valentine’s Day)',
       titleEn: "Valentine's Day",
       type: 'observance',
-      descriptionKh: 'ទិវានៃក្ដីស្រឡាញ់ អបអរសាទរមិត្តភាព ក្ដីស្រឡាញ់ និងការចែករំលែកសេចក្ដីល្អចំពោះមនុស្សជាទីស្រឡាញ់ និងមាតាបិតា',
-      descriptionEn: 'Celebration of love, romance, and friendship celebrated annually on February 14',
+      descriptionKh:
+        'ទិវានៃក្ដីស្រឡាញ់ អបអរសាទរមិត្តភាព ក្ដីស្រឡាញ់ និងការចែករំលែកសេចក្ដីល្អចំពោះមនុស្សជាទីស្រឡាញ់ និងមាតាបិតា',
+      descriptionEn:
+        'Celebration of love, romance, and friendship celebrated annually on February 14',
       isOffDay: false,
       imageUrl: '/images/holidays/holiday_valentines.jpg',
     }
@@ -289,7 +295,8 @@ export function getCambodiaHoliday(
       titleEn: "International Women's Rights Day",
       type: 'public_holiday',
       descriptionKh: 'អបអរសាទរសិទ្ធិ និងសមភាពស្ត្រីទូទាំងពិភពលោក',
-      descriptionEn: 'Global celebration of social, economic, cultural, and political achievements of women',
+      descriptionEn:
+        'Global celebration of social, economic, cultural, and political achievements of women',
       isOffDay: true,
       imageUrl: '/images/holidays/holiday_womens_day.jpg',
     }
@@ -298,9 +305,7 @@ export function getCambodiaHoliday(
   if (month === 5 && day === 1) {
     // Check if Visak Bochea coincides with Labour Day (such as in 2026: 15 waxing Pisakh)
     const isVisakBochea =
-      khmerInfo.monthIndex === 5 &&
-      khmerInfo.day === 15 &&
-      khmerInfo.moonPhase === MoonPhase.Waxing
+      khmerInfo.monthIndex === 5 && khmerInfo.day === 15 && khmerInfo.moonPhase === MoonPhase.Waxing
 
     if (isVisakBochea) {
       return {
@@ -308,7 +313,8 @@ export function getCambodiaHoliday(
         titleKh: 'ពិធីបុណ្យវិសាខបូជា & ទិវាពលកម្មអន្តរជាតិ',
         titleEn: 'Visak Bochea Day & International Labour Day',
         type: 'public_holiday',
-        descriptionKh: 'ពិធីបុណ្យវិសាខបូជា (រំលឹកព្រះសម្មាសម្ពុទ្ធ ប្រសូត ត្រាស់ដឹង បរិនិព្វាន) ស្របនឹងទិវាពលកម្មអន្តរជាតិ',
+        descriptionKh:
+          'ពិធីបុណ្យវិសាខបូជា (រំលឹកព្រះសម្មាសម្ពុទ្ធ ប្រសូត ត្រាស់ដឹង បរិនិព្វាន) ស្របនឹងទិវាពលកម្មអន្តរជាតិ',
         descriptionEn: 'Sacred Buddhist Visak Bochea Day coincident with International Labour Day',
         isOffDay: true,
         imageUrl: '/images/holidays/holiday_visak_bochea.jpg',
@@ -359,7 +365,8 @@ export function getCambodiaHoliday(
       titleKh: 'ព្រះរាជពិធីបុណ្យចម្រើនព្រះជន្ម សម្តេចម៉ែ',
       titleEn: "Queen Mother Norodom Monineath Sihanouk's Birthday",
       type: 'public_holiday',
-      descriptionKh: 'ព្រះរាជពិធីបុណ្យចម្រើនព្រះជន្ម សម្តេចព្រះមហាក្សត្រី នរោត្តម មុនិនាថ សីហនុ ព្រះវររាជមាតាជាតិខ្មែរ',
+      descriptionKh:
+        'ព្រះរាជពិធីបុណ្យចម្រើនព្រះជន្ម សម្តេចព្រះមហាក្សត្រី នរោត្តម មុនិនាថ សីហនុ ព្រះវររាជមាតាជាតិខ្មែរ',
       descriptionEn: 'Official birthday of Her Majesty Queen Mother Norodom Monineath Sihanouk',
       isOffDay: true,
       imageUrl: '/images/holidays/holiday_queen_mother_birthday.jpg',
@@ -385,7 +392,8 @@ export function getCambodiaHoliday(
       titleKh: 'ទិវាគោរពព្រះវិញ្ញាណក្ខន្ធ ព្រះបរមរតនកោដ្ឋ',
       titleEn: 'Commemoration Day of King Father Norodom Sihanouk',
       type: 'public_holiday',
-      descriptionKh: 'ទិវាប្រារព្ធពិធីគោរពព្រះវិញ្ញាណក្ខន្ធ ព្រះករុណា ព្រះបាទសម្តេចព្រះ នរោត្តម សីហនុ',
+      descriptionKh:
+        'ទិវាប្រារព្ធពិធីគោរពព្រះវិញ្ញាណក្ខន្ធ ព្រះករុណា ព្រះបាទសម្តេចព្រះ នរោត្តម សីហនុ',
       descriptionEn: 'Memorial day honoring King Father Norodom Sihanouk',
       isOffDay: true,
       imageUrl: '/images/holidays/holiday_king_father_commemoration.jpg',
@@ -398,7 +406,8 @@ export function getCambodiaHoliday(
       titleKh: 'ព្រះរាជពិធីគ្រងព្រះបរមរាជសម្បត្តិ ព្រះមហាក្សត្រ',
       titleEn: "King's Coronation Day",
       type: 'public_holiday',
-      descriptionKh: 'រំលឹកខួបនៃការឡើងគ្រងរាជសម្បត្តិរបស់ ព្រះករុណា ព្រះបាទសម្តេចព្រះបរមនាថ នរោត្តម សីហមុនី',
+      descriptionKh:
+        'រំលឹកខួបនៃការឡើងគ្រងរាជសម្បត្តិរបស់ ព្រះករុណា ព្រះបាទសម្តេចព្រះបរមនាថ នរោត្តម សីហមុនី',
       descriptionEn: 'Coronation anniversary of His Majesty King Norodom Sihamoni',
       isOffDay: true,
       imageUrl: '/images/holidays/holiday_coronation_day.jpg',
@@ -411,8 +420,10 @@ export function getCambodiaHoliday(
       titleKh: 'ពិធីបុណ្យហាឡូវីន (Halloween)',
       titleEn: 'Halloween',
       type: 'observance',
-      descriptionKh: 'ពិធីបុណ្យហាឡូវីន ប្រារព្ធឡើងដោយការតុបតែងលម្អបែបខ្មោចព្រាយ ពាក់ម៉ាស់កំប្លែង និងការលេង Trick or Treat',
-      descriptionEn: 'Halloween celebration featuring spooky costumes, pumpkin carvings, and festive gatherings',
+      descriptionKh:
+        'ពិធីបុណ្យហាឡូវីន ប្រារព្ធឡើងដោយការតុបតែងលម្អបែបខ្មោចព្រាយ ពាក់ម៉ាស់កំប្លែង និងការលេង Trick or Treat',
+      descriptionEn:
+        'Halloween celebration featuring spooky costumes, pumpkin carvings, and festive gatherings',
       isOffDay: false,
       imageUrl: '/images/holidays/holiday_halloween.jpg',
     }
@@ -437,8 +448,10 @@ export function getCambodiaHoliday(
       titleKh: 'បុណ្យគ្រីស្ទម៉ាស់ (រាត្រីមុនថ្ងៃបុណ្យ)',
       titleEn: 'Christmas Eve',
       type: 'observance',
-      descriptionKh: 'រាត្រីមុនថ្ងៃបុណ្យណូអែល ជួបជុំគ្រួសារ ទទួលទានអាហារ និងរង់ចាំការមកដល់នៃថ្ងៃបុណ្យគ្រីស្ទម៉ាស់',
-      descriptionEn: 'Christmas Eve celebration with family gatherings, festive dinners, and anticipation of Christmas Day',
+      descriptionKh:
+        'រាត្រីមុនថ្ងៃបុណ្យណូអែល ជួបជុំគ្រួសារ ទទួលទានអាហារ និងរង់ចាំការមកដល់នៃថ្ងៃបុណ្យគ្រីស្ទម៉ាស់',
+      descriptionEn:
+        'Christmas Eve celebration with family gatherings, festive dinners, and anticipation of Christmas Day',
       isOffDay: false,
       imageUrl: '/images/holidays/holiday_christmas.jpg',
     }
@@ -450,7 +463,8 @@ export function getCambodiaHoliday(
       titleKh: 'ពិធីបុណ្យណូអែល / គ្រីស្ទម៉ាស់ (Christmas Day)',
       titleEn: 'Christmas Day',
       type: 'observance',
-      descriptionKh: 'ពិធីបុណ្យណូអែល រំលឹកដល់ការប្រសូតរបស់ព្រះយេស៊ូវគ្រីស្ទ និងការចែករំលែកសេចក្តីស្រឡាញ់ កាដូ និងសេចក្តីរីករាយ',
+      descriptionKh:
+        'ពិធីបុណ្យណូអែល រំលឹកដល់ការប្រសូតរបស់ព្រះយេស៊ូវគ្រីស្ទ និងការចែករំលែកសេចក្តីស្រឡាញ់ កាដូ និងសេចក្តីរីករាយ',
       descriptionEn: 'Worldwide celebration of Christmas, exchange of gifts, and holiday joy',
       isOffDay: false,
       imageUrl: '/images/holidays/holiday_christmas.jpg',
@@ -463,8 +477,10 @@ export function getCambodiaHoliday(
       titleKh: 'ទិវាសន្តិភាពនៅកម្ពុជា',
       titleEn: 'Peace Day in Cambodia',
       type: 'public_holiday',
-      descriptionKh: 'រំលឹកខួបនៃការបញ្ចប់សង្គ្រាមស៊ីវិលទាំងស្រុង និងការសម្រេចបានសន្តិភាពពេញលេញ តាមរយៈនយោបាយឈ្នះ-ឈ្នះ (២៩ ធ្នូ ១៩៩៨)',
-      descriptionEn: 'Commemoration of the complete end of the civil war and full peace achieved through the Win-Win Policy in 1998',
+      descriptionKh:
+        'រំលឹកខួបនៃការបញ្ចប់សង្គ្រាមស៊ីវិលទាំងស្រុង និងការសម្រេចបានសន្តិភាពពេញលេញ តាមរយៈនយោបាយឈ្នះ-ឈ្នះ (២៩ ធ្នូ ១៩៩៨)',
+      descriptionEn:
+        'Commemoration of the complete end of the civil war and full peace achieved through the Win-Win Policy in 1998',
       isOffDay: true,
       imageUrl: '/images/holidays/holiday_peace_day.jpg',
     }
@@ -479,10 +495,11 @@ export function getCambodiaHoliday(
         titleKh: 'ពិធីបុណ្យចូលឆ្នាំថ្មី (មហាសង្ក្រាន្ត)',
         titleEn: 'Khmer New Year (Moha Songkran)',
         type: 'public_holiday',
-        descriptionKh: 'ថ្ងៃដំបូងនៃពិធីបុណ្យចូលឆ្នាំថ្មីប្រពៃណីជាតិ ទេវតាឆ្នាំថ្មីចុះមកគ្រប់គ្រងផែនដី',
+        descriptionKh:
+          'ថ្ងៃដំបូងនៃពិធីបុណ្យចូលឆ្នាំថ្មីប្រពៃណីជាតិ ទេវតាឆ្នាំថ្មីចុះមកគ្រប់គ្រងផែនដី',
         descriptionEn: 'First day of Khmer New Year welcoming the new year Angel (Devada)',
         isOffDay: true,
-      imageUrl: '/images/holidays/holiday_khmer_new_year.jpg',
+        imageUrl: '/images/holidays/holiday_khmer_new_year.jpg',
       }
     }
     if (day === ny.day + 1) {
@@ -494,7 +511,7 @@ export function getCambodiaHoliday(
         descriptionKh: 'ថ្ងៃទីពីរនៃពិធីបុណ្យចូលឆ្នាំថ្មី ធ្វើបុណ្យដាក់បាត្រ និងចែកទានដល់ជនក្រីក្រ',
         descriptionEn: 'Second day of Khmer New Year, day of giving gifts to parents and elders',
         isOffDay: true,
-      imageUrl: '/images/holidays/holiday_khmer_new_year.jpg',
+        imageUrl: '/images/holidays/holiday_khmer_new_year.jpg',
       }
     }
     if (day === ny.day + 2) {
@@ -506,7 +523,7 @@ export function getCambodiaHoliday(
         descriptionKh: 'ថ្ងៃឡើងស័កថ្មី ស្រង់ព្រះពុទ្ធរូប ងូតទឹកជូនមាតាបិតា និងពូនភ្នំខ្សាច់',
         descriptionEn: 'Final day of Khmer New Year, washing Buddha statues and seeking blessings',
         isOffDay: true,
-      imageUrl: '/images/holidays/holiday_khmer_new_year.jpg',
+        imageUrl: '/images/holidays/holiday_khmer_new_year.jpg',
       }
     }
   }
@@ -514,7 +531,11 @@ export function getCambodiaHoliday(
   // --- Dynamic Lunar Holidays ---
 
   // 1. Meak Bochea (បុណ្យមាឃបូជា) - 15 waxing Meak (ខែមាឃ index 2)
-  if (khmerInfo.monthIndex === 2 && khmerInfo.day === 15 && khmerInfo.moonPhase === MoonPhase.Waxing) {
+  if (
+    khmerInfo.monthIndex === 2 &&
+    khmerInfo.day === 15 &&
+    khmerInfo.moonPhase === MoonPhase.Waxing
+  ) {
     return {
       id: 'meak-bochea',
       titleKh: 'បុណ្យមាឃបូជា',
@@ -528,27 +549,38 @@ export function getCambodiaHoliday(
   }
 
   // 2. Visak Bochea (ពិធីបុណ្យវិសាខបូជា) - 15 waxing Pisakh (ខែពិសាខ index 5)
-  if (khmerInfo.monthIndex === 5 && khmerInfo.day === 15 && khmerInfo.moonPhase === MoonPhase.Waxing) {
+  if (
+    khmerInfo.monthIndex === 5 &&
+    khmerInfo.day === 15 &&
+    khmerInfo.moonPhase === MoonPhase.Waxing
+  ) {
     return {
       id: 'visak-bochea',
       titleKh: 'ពិធីបុណ្យវិសាខបូជា',
       titleEn: 'Visak Bochea Day',
       type: 'public_holiday',
-      descriptionKh: 'រំលឹកដល់ព្រឹត្តិការណ៍សំខាន់ ៣ របស់ព្រះសម្មាសម្ពុទ្ធ៖ ប្រសូត ត្រាស់ដឹង និងបរិនិព្វាន',
-      descriptionEn: 'The most sacred Buddhist day commemorating the Birth, Enlightenment, and Nirvana of Buddha',
+      descriptionKh:
+        'រំលឹកដល់ព្រឹត្តិការណ៍សំខាន់ ៣ របស់ព្រះសម្មាសម្ពុទ្ធ៖ ប្រសូត ត្រាស់ដឹង និងបរិនិព្វាន',
+      descriptionEn:
+        'The most sacred Buddhist day commemorating the Birth, Enlightenment, and Nirvana of Buddha',
       isOffDay: true,
       imageUrl: '/images/holidays/holiday_visak_bochea.jpg',
     }
   }
 
   // 3. Royal Ploughing Ceremony (ព្រះរាជពិធីច្រត់ព្រះនង្គ័ល) - 4 waning Pisakh (ខែពិសាខ index 5)
-  if (khmerInfo.monthIndex === 5 && khmerInfo.day === 4 && khmerInfo.moonPhase === MoonPhase.Waning) {
+  if (
+    khmerInfo.monthIndex === 5 &&
+    khmerInfo.day === 4 &&
+    khmerInfo.moonPhase === MoonPhase.Waning
+  ) {
     return {
       id: 'royal-ploughing',
       titleKh: 'ព្រះរាជពិធីច្រត់ព្រះនង្គ័ល',
       titleEn: 'Royal Ploughing Ceremony',
       type: 'public_holiday',
-      descriptionKh: 'ព្រះរាជពិធីប្រពៃណីប្រកាសចាប់ផ្តើមរដូវបង្កបង្កើនផល និងទស្សន៍ទាយភោគផលកសិកម្មតាមរយៈគោឧសភរាជ',
+      descriptionKh:
+        'ព្រះរាជពិធីប្រពៃណីប្រកាសចាប់ផ្តើមរដូវបង្កបង្កើនផល និងទស្សន៍ទាយភោគផលកសិកម្មតាមរយៈគោឧសភរាជ',
       descriptionEn: 'Ancient royal ceremony marking the beginning of the rice-planting season',
       isOffDay: true,
       imageUrl: '/images/holidays/holiday_royal_ploughing.jpg',
@@ -567,7 +599,7 @@ export function getCambodiaHoliday(
         descriptionKh: 'ថ្ងៃទីមួយនៃថ្ងៃឈប់សម្រាកផ្លូវការបុណ្យភ្ជុំបិណ្ឌ',
         descriptionEn: 'First official holiday day of the Pchum Ben ancestral festival',
         isOffDay: true,
-      imageUrl: '/images/holidays/holiday_pchum_ben.jpg',
+        imageUrl: '/images/holidays/holiday_pchum_ben.jpg',
       }
     }
     if (khmerInfo.day === 15) {
@@ -579,7 +611,7 @@ export function getCambodiaHoliday(
         descriptionKh: 'ថ្ងៃបុណ្យភ្ជុំបិណ្ឌធំ ឧទ្ទិសកុសលជូនបុព្វការីជន និងញាតិកាលទាំង ៧ សន្តាន',
         descriptionEn: 'Main Pchum Ben Day honoring ancestors and making offerings at pagodas',
         isOffDay: true,
-      imageUrl: '/images/holidays/holiday_pchum_ben.jpg',
+        imageUrl: '/images/holidays/holiday_pchum_ben.jpg',
       }
     }
     if (khmerInfo.day >= 1 && khmerInfo.day <= 13) {
@@ -596,7 +628,11 @@ export function getCambodiaHoliday(
   }
 
   // Day after Pchum Ben (1 waxing Assoch / អស្សុជ index 10)
-  if (khmerInfo.monthIndex === 10 && khmerInfo.day === 1 && khmerInfo.moonPhase === MoonPhase.Waxing) {
+  if (
+    khmerInfo.monthIndex === 10 &&
+    khmerInfo.day === 1 &&
+    khmerInfo.moonPhase === MoonPhase.Waxing
+  ) {
     return {
       id: 'pchum-ben-day-3',
       titleKh: 'ពិធីបុណ្យភ្ជុំបិណ្ឌ (ថ្ងៃបញ្ចប់)',
@@ -621,7 +657,7 @@ export function getCambodiaHoliday(
         descriptionKh: 'បើកការប្រណាំងទូកង និងការបណ្តែតប្រទីបអបអរសាទរ',
         descriptionEn: 'First day of Water Festival, dragon boat races opening ceremonies',
         isOffDay: true,
-      imageUrl: '/images/holidays/holiday_water_festival.jpg',
+        imageUrl: '/images/holidays/holiday_water_festival.jpg',
       }
     }
     if (khmerInfo.day === 15 && khmerInfo.moonPhase === MoonPhase.Waxing) {
@@ -631,9 +667,10 @@ export function getCambodiaHoliday(
         titleEn: 'Water Festival, Sampeas Preah Khe & Ok Ambok',
         type: 'public_holiday',
         descriptionKh: 'ថ្ងៃពេញបូណ៌មីសំពះព្រះខែ អកអំបុក និងបណ្តែតប្រទីបដ៏មហោឡារិក',
-        descriptionEn: 'Main Water Festival day: Full moon salutation, flattened rice eating, and illuminated flotillas',
+        descriptionEn:
+          'Main Water Festival day: Full moon salutation, flattened rice eating, and illuminated flotillas',
         isOffDay: true,
-      imageUrl: '/images/holidays/holiday_water_festival.jpg',
+        imageUrl: '/images/holidays/holiday_water_festival.jpg',
       }
     }
     if (khmerInfo.day === 1 && khmerInfo.moonPhase === MoonPhase.Waning) {
@@ -645,7 +682,7 @@ export function getCambodiaHoliday(
         descriptionKh: 'ការប្រណាំងទូកផ្តាច់ព្រ័ត្រ កាត់ព្រ័ត្រ និងការប្រគល់រង្វាន់ជ័យលាភី',
         descriptionEn: 'Final boat races and festive closing ceremonies',
         isOffDay: true,
-      imageUrl: '/images/holidays/holiday_water_festival.jpg',
+        imageUrl: '/images/holidays/holiday_water_festival.jpg',
       }
     }
   }
@@ -659,7 +696,7 @@ export function getCambodiaHoliday(
  */
 export function formatExactKhmerDateString(
   khmerInfo: KhmerConversionResult['khmer'],
-  gregorian: { year: number; month: number; day: number; dayOfWeek: number }
+  gregorian: { year: number; month: number; day: number; dayOfWeek: number },
 ): string {
   const weekday = khmerInfo.dayOfWeekName.startsWith('ថ្ងៃ')
     ? khmerInfo.dayOfWeekName
@@ -681,9 +718,7 @@ export function formatExactKhmerDateString(
  * Format copy Khmer date string strictly as requested:
  * "ថ្ងៃពុធ ៩កើត ខែកត្តិក ឆ្នាំមមី អដ្ឋស័ក ព.ស.២៥៧០"
  */
-export function formatCopyKhmerDateString(
-  khmerInfo: KhmerConversionResult['khmer']
-): string {
+export function formatCopyKhmerDateString(khmerInfo: KhmerConversionResult['khmer']): string {
   const weekday = khmerInfo.dayOfWeekName.startsWith('ថ្ងៃ')
     ? khmerInfo.dayOfWeekName
     : `ថ្ងៃ${khmerInfo.dayOfWeekName}`
@@ -718,9 +753,7 @@ export function getKhmerDayDetail(date: Date): KhmerDayDetail {
     dayOfWeek: g.dayOfWeek,
   })
 
-  const weekday = k.dayOfWeekName.startsWith('ថ្ងៃ')
-    ? k.dayOfWeekName
-    : `ថ្ងៃ${k.dayOfWeekName}`
+  const weekday = k.dayOfWeekName.startsWith('ថ្ងៃ') ? k.dayOfWeekName : `ថ្ងៃ${k.dayOfWeekName}`
   const lunarDay = `${toKhmerNumber(k.day)}${k.moonPhaseName}`
   const lunarMonth = `ខែ${normalizeKhmerMonthName(k.monthName)}`
   const animalYear = `ឆ្នាំ${k.animalYearName}`
@@ -800,7 +833,7 @@ export interface CalendarGridWeek {
 export function generateMonthCalendar(
   year: number,
   monthIndex: number, // 0-11
-  startOfWeek: number = 0
+  startOfWeek: number = 0,
 ): CalendarGridWeek[] {
   const today = new Date()
   const todayYear = today.getFullYear()
@@ -826,9 +859,7 @@ export function generateMonthCalendar(
     const d = new Date(year, monthIndex - 1, prevMonthLastDay - i)
     const detail = getKhmerDayDetail(d)
     const isToday =
-      d.getFullYear() === todayYear &&
-      d.getMonth() === todayMonth &&
-      d.getDate() === todayDate
+      d.getFullYear() === todayYear && d.getMonth() === todayMonth && d.getDate() === todayDate
     currentWeekDays.push({ ...detail, isCurrentMonth: false, isToday })
   }
 
@@ -836,8 +867,7 @@ export function generateMonthCalendar(
   for (let day = 1; day <= totalDaysInMonth; day++) {
     const d = new Date(year, monthIndex, day)
     const detail = getKhmerDayDetail(d)
-    const isToday =
-      year === todayYear && monthIndex === todayMonth && day === todayDate
+    const isToday = year === todayYear && monthIndex === todayMonth && day === todayDate
     currentWeekDays.push({ ...detail, isCurrentMonth: true, isToday })
 
     if (currentWeekDays.length === 7) {
@@ -857,9 +887,7 @@ export function generateMonthCalendar(
       const d = new Date(year, monthIndex + 1, nextMonthDay++)
       const detail = getKhmerDayDetail(d)
       const isToday =
-        d.getFullYear() === todayYear &&
-        d.getMonth() === todayMonth &&
-        d.getDate() === todayDate
+        d.getFullYear() === todayYear && d.getMonth() === todayMonth && d.getDate() === todayDate
       currentWeekDays.push({ ...detail, isCurrentMonth: false, isToday })
     }
     const midWeekDate = new Date(year, monthIndex, totalDaysInMonth)
@@ -875,7 +903,10 @@ export function generateMonthCalendar(
 /**
  * Get all holidays & ថ្ងៃសីល for a given year & month (0-11)
  */
-export function getMonthHolidaysAndEvents(year: number, monthIndex: number): {
+export function getMonthHolidaysAndEvents(
+  year: number,
+  monthIndex: number,
+): {
   holidays: KhmerDayDetail[]
   holyDays: KhmerDayDetail[]
 } {

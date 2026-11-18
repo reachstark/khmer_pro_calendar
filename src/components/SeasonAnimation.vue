@@ -119,7 +119,7 @@ watch(
       if (wave2Timer) clearTimeout(wave2Timer)
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 onUnmounted(() => {
@@ -132,7 +132,9 @@ onUnmounted(() => {
 // Rainy Season (រដូវវស្សា): May (4) to October (9)
 // Dry Season (រដូវប្រាំង): November (10) to April (3)
 const isRainySeason = computed(() => currentMonth.value >= 4 && currentMonth.value <= 9)
-const isDrySeason = computed(() => !isDecember.value && (currentMonth.value <= 3 || currentMonth.value === 10))
+const isDrySeason = computed(
+  () => !isDecember.value && (currentMonth.value <= 3 || currentMonth.value === 10),
+)
 
 // Generate static deterministic particles for performance
 const snowflakes = Array.from({ length: 32 }, (_, i) => ({
@@ -220,23 +222,27 @@ const dryParticles = Array.from({ length: 24 }, (_, i) => ({
         ></div>
       </template>
     </template>
+  </div>
 
-    <!-- 3. January Happy New Year Floating Celebration Banner -->
+  <!-- 3. January Happy New Year Floating Celebration Banner (Teleported to body with z-[60] so it NEVER appears behind the top bar) -->
+  <Teleport to="body">
     <Transition
       enter-active-class="transition duration-500 ease-out"
-      enter-from-class="transform -translate-y-10 opacity-0 scale-95"
+      enter-from-class="transform -translate-y-12 opacity-0 scale-95"
       enter-to-class="transform translate-y-0 opacity-100 scale-100"
       leave-active-class="transition duration-300 ease-in"
       leave-from-class="transform translate-y-0 opacity-100 scale-100"
-      leave-to-class="transform -translate-y-10 opacity-0 scale-95"
+      leave-to-class="transform -translate-y-12 opacity-0 scale-95"
     >
       <div
         v-if="showNewYearBanner && currentMonth === 0"
-        class="pointer-events-auto fixed top-[72px] sm:top-[80px] left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 sm:gap-3.5 px-4 py-2.5 sm:px-6 sm:py-3 rounded-full bg-slate-900/95 text-white shadow-2xl shadow-amber-500/30 border border-amber-400/50 backdrop-blur-xl"
+        class="pointer-events-auto fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2.5 sm:gap-3.5 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full bg-slate-900/95 text-white shadow-2xl shadow-amber-500/40 border border-amber-400/60 backdrop-blur-xl animate-in fade-in"
       >
         <span class="text-xl sm:text-2xl animate-bounce select-none">🎆</span>
         <div class="text-center sm:text-left">
-          <div class="text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-300 via-rose-300 to-yellow-200 bg-clip-text text-transparent">
+          <div
+            class="text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-300 via-rose-300 to-yellow-200 bg-clip-text text-transparent"
+          >
             រីករាយឆ្នាំថ្មី {{ toKhmerNumber(currentYear) }}!
           </div>
           <div class="text-[10px] sm:text-xs font-semibold text-slate-200">
@@ -254,5 +260,5 @@ const dryParticles = Array.from({ length: 24 }, (_, i) => ({
         </button>
       </div>
     </Transition>
-  </div>
+  </Teleport>
 </template>
