@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bgGrad)" />
+  <!-- Crescent Moon -->
+  <path d="M38 12C28.0589 12 20 20.0589 20 30C20 39.9411 28.0589 48 38 48C40.6622 48 43.1932 47.4223 45.4746 46.3879C39.6917 44.8217 35.3333 39.5256 35.3333 33.2222C35.3333 26.9189 39.6917 21.6227 45.4746 20.0565C43.1932 19.0221 40.6622 18.4444 38 18.4444" fill="url(#goldGrad)" opacity="0.9" />
+  <!-- Star / Lotus spark -->
+  <polygon points="44,22 46,26 50,28 46,30 44,34 42,30 38,28 42,26" fill="#FCD34D" />
+  <circle cx="28" cy="38" r="2" fill="#FDE68A" />
+</svg>

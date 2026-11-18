@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Google Sans', 'Kantumruy Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-khmer: 'Kantumruy Pro', 'Google Sans', sans-serif;
+}
+
+:root {
+  --app-font-size: 16px;
+}
+
+html {
+  font-family: 'Google Sans', 'Kantumruy Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-size: var(--app-font-size);
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Google Sans', 'Kantumruy Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+/* Ensure cursor-pointer for all buttons across the web app */
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  cursor: pointer !important;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.4);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}
+
+/* Animated Gradients */
+@keyframes gradient-pan {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 250% 250%;
+  animation: gradient-pan 8s ease infinite;
+}
+
+/* Slide Left Animations */
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: all 0.28s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.slide-left-enter-from {
+  opacity: 0;
+  transform: translateX(36px) scale(0.98);
+}
+.slide-left-leave-to {
+  opacity: 0;
+  transform: translateX(-36px) scale(0.98);
+}
+
+/* Slide Right Animations */
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: all 0.28s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.slide-right-enter-from {
+  opacity: 0;
+  transform: translateX(-36px) scale(0.98);
+}
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(36px) scale(0.98);
+}
+
+/* Fade Scale Modal Animation */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+  transform: scale(0.94) translateY(12px);
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
