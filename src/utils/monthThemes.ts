@@ -14,13 +14,15 @@ export interface MonthTheme {
   badgeClass: string
   accentText: string
   glowShadow: string
-  svgIcon: string // SVG illustration markup
+  svgIcon?: string // SVG illustration markup (legacy fallback)
+  imageUrl: string // High-resolution month representation image
 }
 
 export const MONTH_THEMES: MonthTheme[] = [
   // 1. January (មករា)
   {
     monthIndex: 0,
+    imageUrl: '/images/months/month_01.jpg',
     khmerName: 'មករា',
     englishName: 'January',
     lunarSpanKh: 'បុស្ស - មាឃ',
@@ -81,6 +83,7 @@ export const MONTH_THEMES: MonthTheme[] = [
   // 2. February (កុម្ភៈ)
   {
     monthIndex: 1,
+    imageUrl: '/images/months/month_02.jpg',
     khmerName: 'កុម្ភៈ',
     englishName: 'February',
     lunarSpanKh: 'មាឃ - ផល្គុន',
@@ -135,6 +138,7 @@ export const MONTH_THEMES: MonthTheme[] = [
   // 3. March (មីនា)
   {
     monthIndex: 2,
+    imageUrl: '/images/months/month_03.jpg',
     khmerName: 'មីនា',
     englishName: 'March',
     lunarSpanKh: 'ផល្គុន - ចេត្រ',
@@ -188,6 +192,7 @@ export const MONTH_THEMES: MonthTheme[] = [
   // 4. April (មេសា)
   {
     monthIndex: 3,
+    imageUrl: '/images/months/month_04.jpg',
     khmerName: 'មេសា',
     englishName: 'April',
     lunarSpanKh: 'ចេត្រ - ពិសាខ',
@@ -246,6 +251,7 @@ export const MONTH_THEMES: MonthTheme[] = [
   // 5. May (ឧសភា)
   {
     monthIndex: 4,
+    imageUrl: '/images/months/month_05.jpg',
     khmerName: 'ឧសភា',
     englishName: 'May',
     lunarSpanKh: 'ពិសាខ - ជេស្ឋ',
@@ -295,6 +301,7 @@ export const MONTH_THEMES: MonthTheme[] = [
   // 6. June (មិថុនា)
   {
     monthIndex: 5,
+    imageUrl: '/images/months/month_06.jpg',
     khmerName: 'មិថុនា',
     englishName: 'June',
     lunarSpanKh: 'ជេស្ឋ - អាសាឍ',
@@ -338,6 +345,7 @@ export const MONTH_THEMES: MonthTheme[] = [
   // 7. July (កក្កដា)
   {
     monthIndex: 6,
+    imageUrl: '/images/months/month_07.jpg',
     khmerName: 'កក្កដា',
     englishName: 'July',
     lunarSpanKh: 'អាសាឍ - ស្រាពណ៍',
@@ -380,6 +388,7 @@ export const MONTH_THEMES: MonthTheme[] = [
   // 8. August (សីហា)
   {
     monthIndex: 7,
+    imageUrl: '/images/months/month_08.jpg',
     khmerName: 'សីហា',
     englishName: 'August',
     lunarSpanKh: 'ស្រាពណ៍ - ភទ្របទ',
@@ -426,6 +435,7 @@ export const MONTH_THEMES: MonthTheme[] = [
   // 9. September (កញ្ញា)
   {
     monthIndex: 8,
+    imageUrl: '/images/months/month_09.jpg',
     khmerName: 'កញ្ញា',
     englishName: 'September',
     lunarSpanKh: 'ភទ្របទ - អស្សុជ',
@@ -479,6 +489,7 @@ export const MONTH_THEMES: MonthTheme[] = [
   // 10. October (តុលា)
   {
     monthIndex: 9,
+    imageUrl: '/images/months/month_10.jpg',
     khmerName: 'តុលា',
     englishName: 'October',
     lunarSpanKh: 'អស្សុជ - កត្តិក',
@@ -531,6 +542,7 @@ export const MONTH_THEMES: MonthTheme[] = [
   // 11. November (វិច្ឆិកា)
   {
     monthIndex: 10,
+    imageUrl: '/images/months/month_11.jpg',
     khmerName: 'វិច្ឆិកា',
     englishName: 'November',
     lunarSpanKh: 'កត្តិក - មិគសិរ',
@@ -590,6 +602,7 @@ export const MONTH_THEMES: MonthTheme[] = [
   // 12. December (ធ្នូ)
   {
     monthIndex: 11,
+    imageUrl: '/images/months/month_12.jpg',
     khmerName: 'ធ្នូ',
     englishName: 'December',
     lunarSpanKh: 'មិគសិរ - បុស្ស',

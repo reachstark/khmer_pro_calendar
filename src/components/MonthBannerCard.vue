@@ -43,11 +43,23 @@ function handleOpenHolidays() {
       'bg-gradient-to-r ' + currentMonthTheme.gradientHeader,
     ]"
   >
-    <!-- Background SVG Artwork representing the Cambodia month -->
-    <div
-      class="absolute inset-0 w-full h-full pointer-events-none opacity-45 mix-blend-overlay transition-opacity duration-700 [&>svg]:w-full [&>svg]:h-full overflow-hidden"
-      v-html="currentMonthTheme.svgIcon"
-    ></div>
+    <!-- Background Image Artwork representing the Cambodia month -->
+    <div class="absolute inset-0 w-full h-full pointer-events-none overflow-hidden">
+      <img
+        :src="currentMonthTheme.imageUrl"
+        :alt="currentMonthTheme.themeTitleKh"
+        class="w-full h-full object-cover object-center transition-all duration-700 ease-out"
+        loading="eager"
+      />
+      <!-- Ambient Theme Gradient Tint Overlay -->
+      <div
+        class="absolute inset-0 bg-gradient-to-r transition-colors duration-500 opacity-60 mix-blend-multiply"
+        :class="currentMonthTheme.gradientHeader"
+      ></div>
+      <!-- Vignette and Contrast Scrim for Text Legibility -->
+      <div class="absolute inset-0 bg-slate-950/35"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30"></div>
+    </div>
 
     <!-- Soft radial glow overlay -->
     <div
