@@ -67,8 +67,16 @@ export function useCalendarSettings() {
         'font-theme-siemreap',
         'font-theme-moul',
       ]
-      fontClasses.forEach((cls) => document.documentElement.classList.remove(cls))
+      fontClasses.forEach((cls) => {
+        document.documentElement.classList.remove(cls)
+        if (document.body) {
+          document.body.classList.remove(cls)
+        }
+      })
       document.documentElement.classList.add(`font-theme-${family}`)
+      if (document.body) {
+        document.body.classList.add(`font-theme-${family}`)
+      }
     }
   }
 

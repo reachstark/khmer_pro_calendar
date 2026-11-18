@@ -119,6 +119,20 @@ html.font-theme-moul {
   --app-font-family: 'Moul', 'Moul Light', 'Khmer OS Moul', cursive, sans-serif;
 }
 
+/* Exclusively for Moul Light font style: do not apply font weight bold because the glyphs are inherently heavy.
+   Disabling bold / faux-bold keeps letters crisp, distinct, and readable instead of smudged. */
+html.font-theme-moul,
+html.font-theme-moul *,
+body.font-theme-moul,
+body.font-theme-moul *,
+.font-preview-moul,
+.font-preview-moul * {
+  font-weight: 400 !important;
+  font-synthesis: none !important;
+  font-synthesis-weight: none !important;
+  -webkit-font-synthesis: none !important;
+}
+
 /* Individual preview badges in Settings */
 .font-preview-google-sans {
   font-family: 'Google Sans', 'Kantumruy Pro', sans-serif !important;
