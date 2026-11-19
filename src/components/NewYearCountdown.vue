@@ -2,6 +2,9 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Sparkles, ChevronDown, ChevronUp, X } from 'lucide-vue-next'
 import { toKhmerNumber } from '@/utils/khmerCalendar'
+import { useCalendarSettings } from '@/composables/useCalendarSettings'
+
+const { previewCountdown } = useCalendarSettings()
 
 const isCollapsed = ref(false)
 const isDismissed = ref(false)
@@ -23,6 +26,7 @@ onUnmounted(() => {
 const isPreviewMode = computed(() => {
   if (typeof window === 'undefined') return false
   return (
+    previewCountdown.value ||
     new URLSearchParams(window.location.search).get('previewCountdown') === 'true' ||
     localStorage.getItem('khmer_calendar_preview_countdown') === 'true'
   )
@@ -44,14 +48,14 @@ const targetDate = computed(() => {
 
 // Live time remaining until New Year (Jan 1, 00:00:00)
 const timeRemaining = computed(() => {
-  // If preview mode is forced for testing while outside the 15-day window, provide a sample 15-day progression
+  // If preview mode is forced for testing while outside the 1-week window, provide a sample 7-day progression
   if (isPreviewMode.value) {
     const rawDiff = targetDate.value.getTime() - now.value.getTime()
     const rawDays = Math.floor(rawDiff / (1000 * 60 * 60 * 24))
-    if (rawDays > 15) {
+    if (rawDays > 7) {
       return {
         isCelebration: false,
-        days: 15,
+        days: 7,
         hours: 12,
         minutes: 30,
         seconds: 45,
@@ -96,9 +100,8 @@ const timeRemaining = computed(() => {
   }
 })
 
-// Feature displays ONLY when exactly 15 days or fewer remain until New Year
-// (e.g. from Dec 16 countdown down to Dec 31/Jan 1).
-// Since current date is 18-Nov-2026 (~43 days away), it remains completely hidden.
+// Feature displays ONLY when exactly 1 week (7 days) or fewer remain until New Year
+// (e.g. from Dec 25 countdown down to Dec 31/Jan 1).
 const isCountdownActive = computed(() => {
   if (isDismissed.value) return false
   if (isPreviewMode.value) return true
@@ -112,8 +115,8 @@ const isCountdownActive = computed(() => {
   if (diff <= 0) return false
 
   const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-  // Starts counting down 15 days until New Year's Eve / New Year
-  return days <= 15
+  // Starts counting down 1 week (7 days) until New Year's Eve / New Year
+  return days <= 7
 })
 </script>
 
@@ -164,7 +167,8 @@ const isCountdownActive = computed(() => {
               <h3
                 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight"
               >
-                ស្វាគមន៍ឆ្នាំថ្មី {{ toKhmerNumber(targetYear) }} (Happy New Year {{ targetYear }}) 🎆
+                ស្វាគមន៍ឆ្នាំថ្មី {{ toKhmerNumber(targetYear) }} (Happy New Year {{ targetYear }})
+                🎆
               </h3>
             </div>
           </div>
@@ -223,7 +227,9 @@ const isCountdownActive = computed(() => {
             >
               {{ toKhmerNumber(timeRemaining.hours) }} ម៉ោង
             </span>
-            <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase font-medium">Hours</span>
+            <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase font-medium"
+              >Hours</span
+            >
           </div>
 
           <!-- 3. Minutes -->

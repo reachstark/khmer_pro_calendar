@@ -11,6 +11,11 @@ import {
   Layers,
   Eye,
   CloudRain,
+  Sparkles,
+  Snowflake,
+  Heart,
+  Gift,
+  FlaskConical,
 } from 'lucide-vue-next'
 import { useCalendarState } from '@/composables/useCalendarState'
 import {
@@ -36,6 +41,14 @@ const {
   setFontFamily,
   enableSeasonsAnim,
   toggleSeasonsAnim,
+  previewCountdown,
+  togglePreviewCountdown,
+  previewDecember,
+  togglePreviewDecember,
+  previewValentine,
+  togglePreviewValentine,
+  previewCNY,
+  togglePreviewCNY,
 } = useCalendarSettings()
 
 const themeOptions: { id: AppTheme; labelKh: string; labelEn: string; icon: Component }[] = [
@@ -57,10 +70,30 @@ const fontSizeOptions: { id: FontSizeScale; labelKh: string; scale: string }[] =
   { id: 'xl', labelKh: 'ធំខ្លាំង (Extra Large)', scale: '20px' },
 ]
 
-const fontFamilyOptions: { id: FontFamilyOption; nameKh: string; nameEn: string; fontClass: string }[] = [
-  { id: 'google-sans', nameKh: 'Google Sans & Kantumruy Pro', nameEn: 'Default (លំនាំដើម)', fontClass: 'font-preview-google-sans' },
-  { id: 'kantumruy', nameKh: 'Kantumruy Pro', nameEn: 'កន្ត្រុំរុយ ប្រូ', fontClass: 'font-preview-kantumruy' },
-  { id: 'siemreap', nameKh: 'Khmer OS Siemreap', nameEn: 'សៀមរាប', fontClass: 'font-preview-siemreap' },
+const fontFamilyOptions: {
+  id: FontFamilyOption
+  nameKh: string
+  nameEn: string
+  fontClass: string
+}[] = [
+  {
+    id: 'google-sans',
+    nameKh: 'Google Sans & Kantumruy Pro',
+    nameEn: 'Default (លំនាំដើម)',
+    fontClass: 'font-preview-google-sans',
+  },
+  {
+    id: 'kantumruy',
+    nameKh: 'Kantumruy Pro',
+    nameEn: 'កន្ត្រុំរុយ ប្រូ',
+    fontClass: 'font-preview-kantumruy',
+  },
+  {
+    id: 'siemreap',
+    nameKh: 'Khmer OS Siemreap',
+    nameEn: 'សៀមរាប',
+    fontClass: 'font-preview-siemreap',
+  },
   { id: 'moul', nameKh: 'Moul Light', nameEn: 'មូល ឡាយថ៍', fontClass: 'font-preview-moul' },
 ]
 </script>
@@ -256,9 +289,7 @@ const fontFamilyOptions: { id: FontFamilyOption; nameKh: string; nameEn: string;
           <div
             class="mt-2.5 rounded-xl border border-slate-200/70 bg-slate-50/70 p-3 text-center dark:border-slate-800 dark:bg-slate-800/30"
           >
-            <p class="text-slate-700 dark:text-slate-200 font-bold">
-              គំរូអក្សរដែលបានជ្រើសរើស
-            </p>
+            <p class="text-slate-700 dark:text-slate-200 font-bold">គំរូអក្សរដែលបានជ្រើសរើស</p>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               ថ្ងៃពុធ ៩កើត ខែកត្តិក ឆ្នាំមមី អដ្ឋស័ក ពុទ្ធសករាជ ២៥៧០
             </p>
@@ -280,7 +311,8 @@ const fontFamilyOptions: { id: FontFamilyOption; nameKh: string; nameEn: string;
                 ចលនារដូវកាលកម្ពុជា (Cambodia Seasons Animation)
               </p>
               <p class="text-[11px] text-slate-500 dark:text-slate-400">
-                បង្ហាញចលនាភ្លៀងធ្លាក់ក្នុងរដូវវស្សា (ឧសភា-តុលា) និងពន្លឺថ្ងៃរំហើយក្នុងរដូវប្រាំង (វិច្ឆិកា-មេសា)
+                បង្ហាញចលនាភ្លៀងធ្លាក់ក្នុងរដូវវស្សា (ឧសភា-តុលា) និងពន្លឺថ្ងៃរំហើយក្នុងរដូវប្រាំង
+                (វិច្ឆិកា-មេសា)
               </p>
             </div>
           </div>
@@ -297,6 +329,124 @@ const fontFamilyOptions: { id: FontFamilyOption; nameKh: string; nameEn: string;
               :class="enableSeasonsAnim ? 'translate-x-5' : 'translate-x-0'"
             ></span>
           </button>
+        </div>
+
+        <!-- 7. Festive & Demo Previews (LocalStorage Keys) -->
+        <div
+          class="rounded-2xl border border-amber-300/60 dark:border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10 p-3.5 space-y-3"
+        >
+          <div
+            class="flex items-center gap-2 pb-2 border-b border-amber-200/60 dark:border-amber-500/20"
+          >
+            <FlaskConical class="h-4 w-4 text-amber-600 dark:text-amber-400" />
+            <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+              សាកល្បងមុខងារបុណ្យទាន (Demo Festive Previews)
+            </p>
+          </div>
+
+          <!-- Preview 1: New Year Countdown (1 Week) -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <Sparkles class="h-4 w-4 text-amber-500 shrink-0" />
+              <div>
+                <p class="text-xs font-bold text-slate-800 dark:text-slate-200">
+                  រាប់ថយក្រោយឆ្លងឆ្នាំ (New Year Countdown 1 Week)
+                </p>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                  khmer_calendar_preview_countdown
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              @click="togglePreviewCountdown"
+              class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+              :class="previewCountdown ? 'bg-amber-500' : 'bg-slate-300 dark:bg-slate-700'"
+            >
+              <span
+                class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                :class="previewCountdown ? 'translate-x-4' : 'translate-x-0'"
+              ></span>
+            </button>
+          </div>
+
+          <!-- Preview 2: December Snow, Snowman & Trees -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <Snowflake class="h-4 w-4 text-sky-500 shrink-0" />
+              <div>
+                <p class="text-xs font-bold text-slate-800 dark:text-slate-200">
+                  ធ្លាក់ព្រិល មនុស្សព្រិល & ដើមណូអែល (December Snow & Decor)
+                </p>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                  khmer_calendar_preview_december
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              @click="togglePreviewDecember"
+              class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+              :class="previewDecember ? 'bg-sky-500' : 'bg-slate-300 dark:bg-slate-700'"
+            >
+              <span
+                class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                :class="previewDecember ? 'translate-x-4' : 'translate-x-0'"
+              ></span>
+            </button>
+          </div>
+
+          <!-- Preview 3: Valentine Falling Hearts -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <Heart class="h-4 w-4 text-rose-500 shrink-0" />
+              <div>
+                <p class="text-xs font-bold text-slate-800 dark:text-slate-200">
+                  ធ្លាក់បេះដូង ថ្ងៃនៃក្តីស្រលាញ់ (Valentine Falling Hearts)
+                </p>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                  khmer_calendar_preview_valentine
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              @click="togglePreviewValentine"
+              class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+              :class="previewValentine ? 'bg-rose-500' : 'bg-slate-300 dark:bg-slate-700'"
+            >
+              <span
+                class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                :class="previewValentine ? 'translate-x-4' : 'translate-x-0'"
+              ></span>
+            </button>
+          </div>
+
+          <!-- Preview 4: CNY Falling Red Envelopes -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <Gift class="h-4 w-4 text-red-500 shrink-0" />
+              <div>
+                <p class="text-xs font-bold text-slate-800 dark:text-slate-200">
+                  ធ្លាក់អាំងប៉ាវ ចូលឆ្នាំចិន (CNY Falling Red Envelopes)
+                </p>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                  khmer_calendar_preview_cny
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              @click="togglePreviewCNY"
+              class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+              :class="previewCNY ? 'bg-red-500' : 'bg-slate-300 dark:bg-slate-700'"
+            >
+              <span
+                class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                :class="previewCNY ? 'translate-x-4' : 'translate-x-0'"
+              ></span>
+            </button>
+          </div>
         </div>
       </div>
 

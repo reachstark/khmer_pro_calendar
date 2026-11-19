@@ -11,6 +11,12 @@ const FONT_SIZE_KEY = 'khmer_calendar_font_size'
 const FONT_FAMILY_KEY = 'khmer_calendar_font_family'
 const SEASONS_ANIM_KEY = 'khmer_calendar_seasons_anim'
 
+// LocalStorage demo preview keys
+export const PREVIEW_COUNTDOWN_KEY = 'khmer_calendar_preview_countdown'
+export const PREVIEW_DECEMBER_KEY = 'khmer_calendar_preview_december'
+export const PREVIEW_VALENTINE_KEY = 'khmer_calendar_preview_valentine'
+export const PREVIEW_CNY_KEY = 'khmer_calendar_preview_cny'
+
 // Global reactive states so all components share the exact same instance
 const theme = ref<AppTheme>('system')
 const startOfWeek = ref<number>(0) // 0: Sunday, 1: Monday, 6: Saturday
@@ -18,6 +24,12 @@ const showWeekNumbers = ref<boolean>(true)
 const fontSize = ref<FontSizeScale>('md')
 const fontFamily = ref<FontFamilyOption>('google-sans')
 const enableSeasonsAnim = ref<boolean>(true)
+
+// Demo preview states for festive features
+const previewCountdown = ref<boolean>(false)
+const previewDecember = ref<boolean>(false)
+const previewValentine = ref<boolean>(false)
+const previewCNY = ref<boolean>(false)
 
 const fontSizeValues: Record<FontSizeScale, string> = {
   sm: '14px',
@@ -50,10 +62,11 @@ export function useCalendarSettings() {
 
   function applyFontFamily(family: FontFamilyOption) {
     const fontMap: Record<FontFamilyOption, string> = {
-      'google-sans': "'Google Sans', 'Kantumruy Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-      'kantumruy': "'Kantumruy Pro', sans-serif",
-      'siemreap': "'Siemreap', 'Khmer OS Siemreap', sans-serif",
-      'moul': "'Moul', 'Moul Light', 'Khmer OS Moul', cursive, sans-serif",
+      'google-sans':
+        "'Google Sans', 'Kantumruy Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+      kantumruy: "'Kantumruy Pro', sans-serif",
+      siemreap: "'Siemreap', 'Khmer OS Siemreap', sans-serif",
+      moul: "'Moul', 'Moul Light', 'Khmer OS Moul', cursive, sans-serif",
     }
     const selectedFont = fontMap[family] || fontMap['google-sans']
     if (typeof document !== 'undefined') {
@@ -113,7 +126,10 @@ export function useCalendarSettings() {
 
     // Load font family
     const savedFontFamily = localStorage.getItem(FONT_FAMILY_KEY) as FontFamilyOption | null
-    if (savedFontFamily && ['google-sans', 'kantumruy', 'siemreap', 'moul'].includes(savedFontFamily)) {
+    if (
+      savedFontFamily &&
+      ['google-sans', 'kantumruy', 'siemreap', 'moul'].includes(savedFontFamily)
+    ) {
       fontFamily.value = savedFontFamily
     }
 
@@ -122,6 +138,29 @@ export function useCalendarSettings() {
     if (savedSeasons !== null) {
       enableSeasonsAnim.value = savedSeasons === 'true'
     }
+
+    // Load demo / preview flags from localStorage or URL query parameters
+    const urlParams =
+      typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null
+
+    previewCountdown.value =
+      urlParams?.get('previewCountdown') === 'true' ||
+      localStorage.getItem(PREVIEW_COUNTDOWN_KEY) === 'true'
+
+    previewDecember.value =
+      urlParams?.get('previewDecember') === 'true' ||
+      urlParams?.get('previewSnow') === 'true' ||
+      localStorage.getItem(PREVIEW_DECEMBER_KEY) === 'true'
+
+    previewValentine.value =
+      urlParams?.get('previewValentine') === 'true' ||
+      urlParams?.get('previewHearts') === 'true' ||
+      localStorage.getItem(PREVIEW_VALENTINE_KEY) === 'true'
+
+    previewCNY.value =
+      urlParams?.get('previewCNY') === 'true' ||
+      urlParams?.get('previewHongbao') === 'true' ||
+      localStorage.getItem(PREVIEW_CNY_KEY) === 'true'
 
     applyTheme(theme.value)
     applyFontSize(fontSize.value)
@@ -166,8 +205,38 @@ export function useCalendarSettings() {
     localStorage.setItem(SEASONS_ANIM_KEY, enable.toString())
   })
 
+  watch(previewCountdown, (val) => {
+    localStorage.setItem(PREVIEW_COUNTDOWN_KEY, val.toString())
+  })
+
+  watch(previewDecember, (val) => {
+    localStorage.setItem(PREVIEW_DECEMBER_KEY, val.toString())
+  })
+
+  watch(previewValentine, (val) => {
+    localStorage.setItem(PREVIEW_VALENTINE_KEY, val.toString())
+  })
+
+  watch(previewCNY, (val) => {
+    localStorage.setItem(PREVIEW_CNY_KEY, val.toString())
+  })
+
   onMounted(() => {
     init()
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', (e) => {
+        if (e.key === PREVIEW_COUNTDOWN_KEY) {
+          previewCountdown.value = e.newValue === 'true'
+        } else if (e.key === PREVIEW_DECEMBER_KEY) {
+          previewDecember.value = e.newValue === 'true'
+        } else if (e.key === PREVIEW_VALENTINE_KEY) {
+          previewValentine.value = e.newValue === 'true'
+        } else if (e.key === PREVIEW_CNY_KEY) {
+          previewCNY.value = e.newValue === 'true'
+        }
+      })
+    }
   })
 
   return {
@@ -177,6 +246,10 @@ export function useCalendarSettings() {
     fontSize,
     fontFamily,
     enableSeasonsAnim,
+    previewCountdown,
+    previewDecember,
+    previewValentine,
+    previewCNY,
     setTheme: (t: AppTheme) => (theme.value = t),
     setStartOfWeek: (d: number) => (startOfWeek.value = d),
     toggleWeekNumbers: () => (showWeekNumbers.value = !showWeekNumbers.value),
@@ -186,6 +259,10 @@ export function useCalendarSettings() {
       applyFontFamily(f)
     },
     toggleSeasonsAnim: () => (enableSeasonsAnim.value = !enableSeasonsAnim.value),
+    togglePreviewCountdown: () => (previewCountdown.value = !previewCountdown.value),
+    togglePreviewDecember: () => (previewDecember.value = !previewDecember.value),
+    togglePreviewValentine: () => (previewValentine.value = !previewValentine.value),
+    togglePreviewCNY: () => (previewCNY.value = !previewCNY.value),
     init,
   }
 }

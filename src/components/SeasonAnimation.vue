@@ -4,14 +4,40 @@ import { X } from 'lucide-vue-next'
 import confetti from 'canvas-confetti'
 import { useCalendarState } from '@/composables/useCalendarState'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
-import { toKhmerNumber } from '@/utils/khmerCalendar'
+import { toKhmerNumber, CHINESE_NEW_YEAR_MAP } from '@/utils/khmerCalendar'
 import snowflakeAsset from '@/assets/snowflake.png'
+import snowmanAsset from '@/assets/snowman.png'
+import christmasTreeAsset from '@/assets/christmas_tree.png'
+import heartAsset from '@/assets/heart.png'
+import redEnvelopeAsset from '@/assets/red_envelope.png'
 
 const { currentMonth, currentYear } = useCalendarState()
-const { enableSeasonsAnim } = useCalendarSettings()
+const { enableSeasonsAnim, previewDecember, previewValentine, previewCNY } = useCalendarSettings()
 
-// December has exclusive snowing animation
+const now = ref(new Date())
+
+// December has exclusive snowing animation + snowman + Christmas trees
 const isDecember = computed(() => currentMonth.value === 11)
+const isDecemberActive = computed(() => isDecember.value || previewDecember.value)
+
+// Valentine's Day falling hearts (Feb 14 or preview)
+const isRealValentineToday = computed(
+  () => now.value.getMonth() === 1 && now.value.getDate() === 14,
+)
+const isValentineActive = computed(() => isRealValentineToday.value || previewValentine.value)
+
+// Chinese New Year falling red envelopes (CNY days: Eve to Day 3 or preview)
+function isDateInChineseNewYear(date: Date): boolean {
+  const year = date.getFullYear()
+  const cny = CHINESE_NEW_YEAR_MAP[year]
+  if (!cny) return false
+  const day1Date = new Date(year, cny.month - 1, cny.day)
+  const currentDate = new Date(year, date.getMonth(), date.getDate())
+  const diffDays = Math.round((currentDate.getTime() - day1Date.getTime()) / (1000 * 60 * 60 * 24))
+  return diffDays >= -1 && diffDays <= 2
+}
+
+const isCNYActive = computed(() => isDateInChineseNewYear(now.value) || previewCNY.value)
 
 // January New Year Celebration & Fireworks
 const isJanuary = computed(() => currentMonth.value === 0)
@@ -162,12 +188,34 @@ const dryParticles = Array.from({ length: 24 }, (_, i) => ({
   delay: `${Number(((i * 0.35) % 5).toFixed(2))}s`,
   opacity: Number((0.3 + (i % 4) * 0.1).toFixed(2)),
 }))
+
+// Valentine's Day falling hearts:
+const hearts = Array.from({ length: 36 }, (_, i) => ({
+  id: i,
+  left: `${Number(((i * 2.78 + (i % 7) * 3.8) % 98).toFixed(2))}%`,
+  size: 18 + (i % 6) * 3.5, // 18px to 35.5px
+  duration: `${Number((5.6 + (i % 5) * 1.3).toFixed(1))}s`, // 5.6s to 10.8s
+  delay: `${Number(((i * 0.28) % 6).toFixed(2))}s`, // 0s to 6s
+  opacity: Number((0.78 + (i % 4) * 0.06).toFixed(2)), // 0.78 to 0.96
+  flutterDuration: `${Number((2.4 + (i % 4) * 0.5).toFixed(1))}s`,
+}))
+
+// Chinese New Year falling red envelopes (Hongbao):
+const envelopes = Array.from({ length: 32 }, (_, i) => ({
+  id: i,
+  left: `${Number(((i * 3.12 + (i % 6) * 3.6) % 98).toFixed(2))}%`,
+  width: 24 + (i % 5) * 4, // 24px to 40px
+  duration: `${Number((6.5 + (i % 6) * 1.2).toFixed(1))}s`, // 6.5s to 12.5s
+  delay: `${Number(((i * 0.32) % 6).toFixed(2))}s`, // 0s to 6s
+  opacity: Number((0.82 + (i % 4) * 0.05).toFixed(2)), // 0.82 to 0.97
+  swayDuration: `${Number((2.8 + (i % 4) * 0.6).toFixed(1))}s`,
+}))
 </script>
 
 <template>
   <div class="fixed inset-0 pointer-events-none z-20 overflow-hidden" aria-hidden="true">
-    <!-- 1. December Snowing Animation (Falling Snowflakes using custom asset) -->
-    <template v-if="isDecember">
+    <!-- 1. December Snowing Animation (Falling Snowflakes, Snowman & Christmas Trees) -->
+    <template v-if="isDecemberActive">
       <div
         v-for="flake in snowflakes"
         :key="'snow-' + flake.id"
@@ -193,10 +241,43 @@ const dryParticles = Array.from({ length: 24 }, (_, i) => ({
         />
       </div>
 
-      <!-- 2. Sticky Piles of Snow at the Bottom of the Screen (Desktop full-width landscape) -->
+      <!-- 2. Sticky Piles of Snow at the Bottom with Snowman & Christmas Trees (Desktop) -->
       <div
         class="fixed bottom-0 left-0 right-0 pointer-events-none z-20 select-none hidden lg:block overflow-hidden"
       >
+        <!-- Festive Snowman on Left Snowbank -->
+        <div
+          class="absolute left-6 xl:left-14 bottom-1 z-30 pointer-events-none select-none anim-snowman-idle drop-shadow-md"
+        >
+          <img
+            :src="snowmanAsset"
+            alt="Snowman"
+            class="h-20 xl:h-24 w-auto object-contain select-none pointer-events-none"
+          />
+        </div>
+
+        <!-- Secondary Small Christmas Tree on Left Snowbank -->
+        <div
+          class="absolute left-24 xl:left-36 bottom-2 z-20 pointer-events-none select-none anim-tree-sway opacity-90 drop-shadow-sm"
+        >
+          <img
+            :src="christmasTreeAsset"
+            alt="Christmas Tree"
+            class="h-14 xl:h-18 w-auto object-contain select-none pointer-events-none"
+          />
+        </div>
+
+        <!-- Festive Decorated Christmas Tree on Right Snowbank -->
+        <div
+          class="absolute right-6 xl:right-14 bottom-1 z-30 pointer-events-none select-none anim-tree-sway drop-shadow-lg"
+        >
+          <img
+            :src="christmasTreeAsset"
+            alt="Christmas Tree"
+            class="h-24 xl:h-30 w-auto object-contain select-none pointer-events-none anim-tree-glow"
+          />
+        </div>
+
         <svg
           class="w-full h-14 xl:h-18 anim-snow-pile"
           viewBox="0 0 1440 68"
@@ -307,10 +388,32 @@ const dryParticles = Array.from({ length: 24 }, (_, i) => ({
         </svg>
       </div>
 
-      <!-- 3. Sticky Piles of Snow on Mobile (Resting atop the mobile bottom nav bar & screen edge) -->
+      <!-- 3. Sticky Piles of Snow on Mobile with Snowman & Christmas Tree -->
       <div
         class="fixed bottom-[54px] sm:bottom-[60px] left-0 right-0 pointer-events-none z-30 select-none lg:hidden overflow-hidden"
       >
+        <!-- Mobile Snowman on Left edge of snow pile -->
+        <div
+          class="absolute left-2.5 bottom-0 z-30 pointer-events-none select-none anim-snowman-idle drop-shadow-sm"
+        >
+          <img
+            :src="snowmanAsset"
+            alt="Snowman"
+            class="h-9 sm:h-11 w-auto object-contain select-none pointer-events-none"
+          />
+        </div>
+
+        <!-- Mobile Christmas Tree on Right edge of snow pile -->
+        <div
+          class="absolute right-2.5 bottom-0 z-30 pointer-events-none select-none anim-tree-sway drop-shadow-sm"
+        >
+          <img
+            :src="christmasTreeAsset"
+            alt="Christmas Tree"
+            class="h-10 sm:h-12 w-auto object-contain select-none pointer-events-none"
+          />
+        </div>
+
         <svg class="w-full h-7 sm:h-9" viewBox="0 0 390 32" preserveAspectRatio="none" fill="none">
           <path
             d="M0 32 L0 14 Q30 4 65 12 Q100 20 135 8 Q170 2 205 10 Q245 20 285 6 Q320 0 355 10 Q375 16 390 12 L390 32 Z"
@@ -331,6 +434,62 @@ const dryParticles = Array.from({ length: 24 }, (_, i) => ({
             <polygon points="325,4 326,7 329,8 326,9 325,12 324,9 321,8 324,7" fill="#38BDF8" />
           </g>
         </svg>
+      </div>
+    </template>
+
+    <!-- 2. Valentine's Day Falling Hearts Animation -->
+    <template v-if="isValentineActive">
+      <div
+        v-for="heart in hearts"
+        :key="'heart-' + heart.id"
+        class="absolute select-none pointer-events-none"
+        :style="{
+          left: heart.left,
+          top: '-40px',
+          width: heart.size + 'px',
+          height: heart.size + 'px',
+          opacity: heart.opacity,
+          animation: `heart-fall ${heart.duration} linear infinite`,
+          animationDelay: heart.delay,
+        }"
+      >
+        <img
+          :src="heartAsset"
+          alt=""
+          class="w-full h-full object-contain heart-shadow select-none pointer-events-none"
+          :style="{
+            animation: `heart-flutter ${heart.flutterDuration} ease-in-out infinite`,
+            animationDelay: heart.delay,
+          }"
+        />
+      </div>
+    </template>
+
+    <!-- 3. Chinese New Year Falling Red Envelopes (Hongbao) Animation -->
+    <template v-if="isCNYActive">
+      <div
+        v-for="env in envelopes"
+        :key="'env-' + env.id"
+        class="absolute select-none pointer-events-none"
+        :style="{
+          left: env.left,
+          top: '-50px',
+          width: env.width + 'px',
+          height: env.width * 1.5 + 'px',
+          opacity: env.opacity,
+          animation: `envelope-fall ${env.duration} linear infinite`,
+          animationDelay: env.delay,
+        }"
+      >
+        <img
+          :src="redEnvelopeAsset"
+          alt=""
+          class="w-full h-full object-contain envelope-shadow select-none pointer-events-none"
+          :style="{
+            animation: `envelope-sway ${env.swayDuration} ease-in-out infinite`,
+            animationDelay: env.delay,
+          }"
+        />
       </div>
     </template>
 
