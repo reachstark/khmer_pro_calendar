@@ -243,7 +243,7 @@ const envelopes = Array.from({ length: 32 }, (_, i) => ({
 
       <!-- 2. Sticky Piles of Snow at the Bottom with Snowman & Christmas Trees (Desktop) -->
       <div
-        class="fixed bottom-0 left-0 right-0 pointer-events-none z-20 select-none hidden lg:block overflow-hidden"
+        class="fixed bottom-0 left-0 right-0 h-36 xl:h-44 pointer-events-none z-20 select-none hidden lg:block overflow-hidden"
       >
         <!-- Festive Snowman on Left Snowbank -->
         <div
@@ -279,7 +279,7 @@ const envelopes = Array.from({ length: 32 }, (_, i) => ({
         </div>
 
         <svg
-          class="w-full h-14 xl:h-18 anim-snow-pile"
+          class="absolute bottom-0 left-0 right-0 w-full h-14 xl:h-18 anim-snow-pile"
           viewBox="0 0 1440 68"
           preserveAspectRatio="none"
           fill="none"
@@ -390,7 +390,7 @@ const envelopes = Array.from({ length: 32 }, (_, i) => ({
 
       <!-- 3. Sticky Piles of Snow on Mobile with Snowman & Christmas Tree -->
       <div
-        class="fixed bottom-[54px] sm:bottom-[60px] left-0 right-0 pointer-events-none z-30 select-none lg:hidden overflow-hidden"
+        class="fixed bottom-[54px] sm:bottom-[60px] left-0 right-0 h-16 sm:h-20 pointer-events-none z-30 select-none lg:hidden overflow-hidden"
       >
         <!-- Mobile Snowman on Left edge of snow pile -->
         <div
@@ -414,7 +414,12 @@ const envelopes = Array.from({ length: 32 }, (_, i) => ({
           />
         </div>
 
-        <svg class="w-full h-7 sm:h-9" viewBox="0 0 390 32" preserveAspectRatio="none" fill="none">
+        <svg
+          class="absolute bottom-0 left-0 right-0 w-full h-7 sm:h-9"
+          viewBox="0 0 390 32"
+          preserveAspectRatio="none"
+          fill="none"
+        >
           <path
             d="M0 32 L0 14 Q30 4 65 12 Q100 20 135 8 Q170 2 205 10 Q245 20 285 6 Q320 0 355 10 Q375 16 390 12 L390 32 Z"
             class="fill-white dark:fill-slate-900 opacity-90"
