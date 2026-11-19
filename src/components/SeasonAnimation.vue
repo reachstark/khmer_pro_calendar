@@ -59,11 +59,21 @@ function cleanUpLottie() {
   }
   if (lottieAnim) {
     try {
+      lottieAnim.stop()
       lottieAnim.destroy()
     } catch {
       // ignore
     }
     lottieAnim = null
+  }
+  // Ensure lottie animationManager clears all registered instances and cancels RAF loop
+  try {
+    lottie.destroy()
+  } catch {
+    // ignore
+  }
+  if (lottieContainer.value) {
+    lottieContainer.value.innerHTML = ''
   }
   showLottieFireworks.value = false
 }
@@ -78,17 +88,18 @@ async function triggerJanuaryFireworks() {
   await nextTick()
 
   if (lottieContainer.value) {
+    lottieContainer.value.innerHTML = ''
     try {
       lottieAnim = lottie.loadAnimation({
         container: lottieContainer.value,
-        renderer: 'svg',
+        renderer: 'canvas',
         loop: false,
         autoplay: true,
-        animationData: fireworksAnimationData,
+        // Pass a deep clone to prevent lottie-web in-place mutation of the imported JSON singleton
+        animationData: JSON.parse(JSON.stringify(fireworksAnimationData)),
         rendererSettings: {
           preserveAspectRatio: 'xMidYMid meet',
-          progressiveLoad: false,
-          hideOnTransparent: true,
+          clearCanvas: true,
         },
       })
 
@@ -520,25 +531,17 @@ const envelopes = Array.from({ length: 32 }, (_, i) => ({
 
   <!-- 5. January Lottie Fireworks Overlay (Plays once on entry) -->
   <Teleport to="body">
-    <Transition
-      enter-active-class="transition duration-300 ease-out"
-      enter-from-class="opacity-0 scale-95"
-      enter-to-class="opacity-100 scale-100"
-      leave-active-class="transition duration-500 ease-in"
-      leave-from-class="opacity-100 scale-100"
-      leave-to-class="opacity-0 scale-95"
+    <div
+      v-show="showLottieFireworks && isJanuary"
+      class="pointer-events-none fixed inset-0 z-50 flex items-center justify-center overflow-hidden transition-opacity duration-300"
+      :class="showLottieFireworks && isJanuary ? 'opacity-100' : 'opacity-0'"
+      aria-hidden="true"
     >
       <div
-        v-if="showLottieFireworks && isJanuary"
-        class="pointer-events-none fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
-        aria-hidden="true"
-      >
-        <div
-          ref="lottieContainer"
-          class="w-full max-w-4xl h-full max-h-[85vh] aspect-square flex items-center justify-center filter drop-shadow-2xl"
-        ></div>
-      </div>
-    </Transition>
+        ref="lottieContainer"
+        class="w-full max-w-4xl h-full max-h-[85vh] aspect-square flex items-center justify-center pointer-events-none"
+      ></div>
+    </div>
   </Teleport>
 
   <!-- 6. January Happy New Year Floating Celebration Banner -->
