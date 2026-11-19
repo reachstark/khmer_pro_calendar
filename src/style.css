@@ -1,10 +1,12 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --app-font-size: 16px;
-  --app-font-family: 'Google Sans', 'Kantumruy Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --app-font-family:
+    'Google Sans', 'Kantumruy Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
 }
 
 @theme {
@@ -19,16 +21,21 @@ html {
   scroll-behavior: smooth;
 }
 
-body, #app, button, input, select, textarea {
+body,
+#app,
+button,
+input,
+select,
+textarea {
   font-family: var(--app-font-family) !important;
 }
 
 /* Ensure cursor-pointer for all buttons across the web app */
 button,
-[role="button"],
-input[type="button"],
-input[type="submit"],
-input[type="reset"] {
+[role='button'],
+input[type='button'],
+input[type='submit'],
+input[type='reset'] {
   cursor: pointer !important;
 }
 
@@ -217,26 +224,54 @@ body.font-theme-moul *,
 
 /* --- Jan-01: Firework Starburst --- */
 @keyframes firework-icon-spin {
-  0% { transform: rotate(0deg) scale(1); }
-  25% { transform: rotate(8deg) scale(1.1); }
-  50% { transform: rotate(0deg) scale(1); }
-  75% { transform: rotate(-8deg) scale(1.1); }
-  100% { transform: rotate(0deg) scale(1); }
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(8deg) scale(1.1);
+  }
+  50% {
+    transform: rotate(0deg) scale(1);
+  }
+  75% {
+    transform: rotate(-8deg) scale(1.1);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
 }
 
 @keyframes firework-starburst-rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes sparkle-dot-blink {
-  0%, 100% { opacity: 0.2; r: 1; }
-  50% { opacity: 1; r: 2.5; }
+  0%,
+  100% {
+    opacity: 0.2;
+    r: 1;
+  }
+  50% {
+    opacity: 1;
+    r: 2.5;
+  }
 }
 
 @keyframes firework-core-pulse {
-  0%, 100% { r: 2.5; opacity: 0.6; }
-  50% { r: 4; opacity: 1; }
+  0%,
+  100% {
+    r: 2.5;
+    opacity: 0.6;
+  }
+  50% {
+    r: 4;
+    opacity: 1;
+  }
 }
 
 .anim-firework-icon {
@@ -259,34 +294,75 @@ body.font-theme-moul *,
 
 /* --- Feb-14: Valentine's Heart --- */
 @keyframes heart-icon-beat {
-  0%, 100% { transform: scale(1); }
-  15% { transform: scale(1.25); }
-  30% { transform: scale(1.05); }
-  45% { transform: scale(1.2); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.25);
+  }
+  30% {
+    transform: scale(1.05);
+  }
+  45% {
+    transform: scale(1.2);
+  }
 }
 
 @keyframes mini-heart-rise-1 {
-  0% { transform: translateY(4px) scale(0.5); opacity: 0; }
-  20% { opacity: 0.9; }
-  80% { opacity: 0.7; }
-  100% { transform: translateY(-10px) scale(1) rotate(15deg); opacity: 0; }
+  0% {
+    transform: translateY(4px) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.9;
+  }
+  80% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-10px) scale(1) rotate(15deg);
+    opacity: 0;
+  }
 }
 
 @keyframes mini-heart-rise-2 {
-  0% { transform: translateY(2px) scale(0.4); opacity: 0; }
-  25% { opacity: 0.8; }
-  75% { opacity: 0.6; }
-  100% { transform: translateY(-8px) scale(0.9) rotate(-10deg); opacity: 0; }
+  0% {
+    transform: translateY(2px) scale(0.4);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.8;
+  }
+  75% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-8px) scale(0.9) rotate(-10deg);
+    opacity: 0;
+  }
 }
 
 @keyframes heart-bg-pulse {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.05); }
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
 }
 
 @keyframes heart-float-bg {
-  0%, 100% { transform: translateY(0) rotate(-5deg); }
-  50% { transform: translateY(-4px) rotate(5deg); }
+  0%,
+  100% {
+    transform: translateY(0) rotate(-5deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(5deg);
+  }
 }
 
 .anim-heart-icon {
@@ -312,28 +388,60 @@ body.font-theme-moul *,
 
 /* --- Oct-31: Halloween Bat + Pumpkin --- */
 @keyframes bat-fly {
-  0%, 100% { transform: translateY(0) rotate(-3deg); }
-  25% { transform: translateY(-3px) rotate(5deg); }
-  50% { transform: translateY(-1px) rotate(-2deg); }
-  75% { transform: translateY(-4px) rotate(4deg); }
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  25% {
+    transform: translateY(-3px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(-1px) rotate(-2deg);
+  }
+  75% {
+    transform: translateY(-4px) rotate(4deg);
+  }
 }
 
 @keyframes bat-wings-flap {
-  0%, 100% { transform: scaleX(1); }
-  25% { transform: scaleX(0.85); }
-  50% { transform: scaleX(1.05); }
-  75% { transform: scaleX(0.9); }
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  25% {
+    transform: scaleX(0.85);
+  }
+  50% {
+    transform: scaleX(1.05);
+  }
+  75% {
+    transform: scaleX(0.9);
+  }
 }
 
 @keyframes spooky-glow {
-  0%, 100% { opacity: 0.15; transform: scale(1); }
-  50% { opacity: 0.35; transform: scale(1.1); }
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(1.1);
+  }
 }
 
 @keyframes pumpkin-bg-wobble {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(3deg); }
-  75% { transform: rotate(-3deg); }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(3deg);
+  }
+  75% {
+    transform: rotate(-3deg);
+  }
 }
 
 .anim-bat-fly {
@@ -355,29 +463,58 @@ body.font-theme-moul *,
 
 /* --- Dec-25: Christmas Ornament --- */
 @keyframes ornament-swing {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(8deg); }
-  75% { transform: rotate(-8deg); }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(8deg);
+  }
+  75% {
+    transform: rotate(-8deg);
+  }
 }
 
 @keyframes ornament-shine {
-  0%, 100% { filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.3)); }
-  50% { filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.7)); }
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.7));
+  }
 }
 
 @keyframes star-top-twinkle {
-  0%, 100% { opacity: 0.6; r: 2; }
-  50% { opacity: 1; r: 3; }
+  0%,
+  100% {
+    opacity: 0.6;
+    r: 2;
+  }
+  50% {
+    opacity: 1;
+    r: 3;
+  }
 }
 
 @keyframes tree-shimmer {
-  0%, 100% { opacity: 0.85; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 @keyframes ornament-twinkle {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .anim-ornament-swing {
@@ -405,20 +542,41 @@ body.font-theme-moul *,
 
 /* --- Chinese New Year: Lantern & Envelope --- */
 @keyframes lantern-glow {
-  0%, 100% { filter: drop-shadow(0 0 3px rgba(220, 38, 38, 0.3)); opacity: 0.85; }
-  50% { filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.7)); opacity: 1; }
+  0%,
+  100% {
+    filter: drop-shadow(0 0 3px rgba(220, 38, 38, 0.3));
+    opacity: 0.85;
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.7));
+    opacity: 1;
+  }
 }
 
 @keyframes tassel-sway {
-  0%, 100% { transform: rotate(0deg); }
-  30% { transform: rotate(5deg); }
-  70% { transform: rotate(-5deg); }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(5deg);
+  }
+  70% {
+    transform: rotate(-5deg);
+  }
 }
 
 @keyframes envelope-bounce {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-2px) rotate(2deg); }
-  75% { transform: translateY(-1px) rotate(-2deg); }
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-2px) rotate(2deg);
+  }
+  75% {
+    transform: translateY(-1px) rotate(-2deg);
+  }
 }
 
 .anim-lantern-glow {
@@ -437,24 +595,50 @@ body.font-theme-moul *,
 
 /* --- Khmer New Year: Water Splash --- */
 @keyframes water-fill-pulse {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.05); }
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
 }
 
 @keyframes water-splash {
-  0%, 100% { transform: translateY(0); }
-  30% { transform: translateY(-2px) rotate(3deg); }
-  70% { transform: translateY(-1px) rotate(-3deg); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-2px) rotate(3deg);
+  }
+  70% {
+    transform: translateY(-1px) rotate(-3deg);
+  }
 }
 
 @keyframes side-drop-float {
-  0%, 100% { transform: translateY(0) scale(1); opacity: 0.4; }
-  50% { transform: translateY(-4px) scale(1.2); opacity: 0.8; }
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-4px) scale(1.2);
+    opacity: 0.8;
+  }
 }
 
 @keyframes water-drop-shimmer {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 0.8; }
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
 .anim-water-splash {
@@ -479,9 +663,16 @@ body.font-theme-moul *,
    Snowflake Visibility, Wobble & Sticky Snow Piles
    ===================================================== */
 @keyframes snow-wobble {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(8px); }
-  75% { transform: translateX(-8px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(8px);
+  }
+  75% {
+    transform: translateX(-8px);
+  }
 }
 
 .anim-snow-wobble {
@@ -490,16 +681,19 @@ body.font-theme-moul *,
 
 /* Snowflake drop shadows for crisp contrast in both Light & Dark themes */
 .snow-flake-shadow {
-  filter: drop-shadow(0 1px 3px rgba(14, 165, 233, 0.45)) drop-shadow(0 0 1px rgba(15, 23, 42, 0.25));
+  filter: drop-shadow(0 1px 3px rgba(14, 165, 233, 0.45))
+    drop-shadow(0 0 1px rgba(15, 23, 42, 0.25));
 }
 
 .dark .snow-flake-shadow {
-  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 8px rgba(56, 189, 248, 0.65));
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.95))
+    drop-shadow(0 0 8px rgba(56, 189, 248, 0.65));
 }
 
 /* Sticky Snow Pile Shimmer & Sparkles */
 @keyframes snow-sparkle {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.25;
     transform: scale(0.7) rotate(0deg);
   }
@@ -515,7 +709,8 @@ body.font-theme-moul *,
 }
 
 @keyframes snow-drift-glow {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 -3px 8px rgba(56, 189, 248, 0.25));
   }
   50% {
@@ -527,3 +722,22 @@ body.font-theme-moul *,
   animation: snow-drift-glow 4.5s ease-in-out infinite;
 }
 
+/* Sticky Snow Pile Gradients */
+.snow-drift-back {
+  fill: url(#snow-grad-back-light);
+}
+.dark .snow-drift-back {
+  fill: url(#snow-grad-back-dark);
+}
+.snow-drift-mid {
+  fill: url(#snow-grad-mid-light);
+}
+.dark .snow-drift-mid {
+  fill: url(#snow-grad-front-dark);
+}
+.snow-drift-front {
+  fill: url(#snow-grad-front-light);
+}
+.dark .snow-drift-front {
+  fill: url(#snow-grad-front-dark);
+}
