@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, ref, watch, onUnmounted } from 'vue'
+import { computed, ref, watch, onUnmounted, nextTick } from 'vue'
 import { X } from 'lucide-vue-next'
-import confetti from 'canvas-confetti'
+import lottie, { type AnimationItem } from 'lottie-web'
 import { useCalendarState } from '@/composables/useCalendarState'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { toKhmerNumber, CHINESE_NEW_YEAR_MAP } from '@/utils/khmerCalendar'
+import fireworksAnimationData from '@/assets/lottie/fireworks.json'
 import snowflakeAsset from '@/assets/snowflake.png'
 import snowmanAsset from '@/assets/snowman.png'
 import christmasTreeAsset from '@/assets/christmas_tree.png'
@@ -39,89 +40,71 @@ function isDateInChineseNewYear(date: Date): boolean {
 
 const isCNYActive = computed(() => isDateInChineseNewYear(now.value) || previewCNY.value)
 
-// January New Year Celebration & Fireworks
+// January New Year Celebration & Lottie Fireworks
 const isJanuary = computed(() => currentMonth.value === 0)
 const formattedKhmerYear = computed(() => toKhmerNumber(currentYear.value))
 const gregorianYear = computed(() => currentYear.value)
 
 const showNewYearBanner = ref(false)
+const showLottieFireworks = ref(false)
+const lottieContainer = ref<HTMLElement | null>(null)
+let lottieAnim: AnimationItem | null = null
 let bannerTimer: ReturnType<typeof setTimeout> | null = null
-let wave1Timer: ReturnType<typeof setTimeout> | null = null
-let wave2Timer: ReturnType<typeof setTimeout> | null = null
+let lottieTimer: ReturnType<typeof setTimeout> | null = null
 
-function triggerJanuaryFireworks() {
-  showNewYearBanner.value = true
-  if (bannerTimer) clearTimeout(bannerTimer)
-  if (wave1Timer) clearTimeout(wave1Timer)
-  if (wave2Timer) clearTimeout(wave2Timer)
-
-  const count = 180
-  const defaults = { origin: { y: 0.65 }, zIndex: 120 }
-
-  function fire(particleRatio: number, opts: confetti.Options) {
-    confetti({
-      ...defaults,
-      ...opts,
-      particleCount: Math.floor(count * particleRatio),
-    })
+function cleanUpLottie() {
+  if (lottieTimer) {
+    clearTimeout(lottieTimer)
+    lottieTimer = null
   }
+  if (lottieAnim) {
+    try {
+      lottieAnim.destroy()
+    } catch {
+      // ignore
+    }
+    lottieAnim = null
+  }
+  showLottieFireworks.value = false
+}
 
-  fire(0.25, {
-    spread: 26,
-    startVelocity: 55,
-    colors: ['#FFD700', '#FFA500', '#FF4500'],
-  })
-  fire(0.2, {
-    spread: 60,
-    colors: ['#38BDF8', '#818CF8', '#C084FC'],
-  })
-  fire(0.35, {
-    spread: 100,
-    decay: 0.91,
-    scalar: 0.8,
-    colors: ['#34D399', '#F43F5E', '#FBBF24'],
-  })
-  fire(0.1, {
-    spread: 120,
-    startVelocity: 25,
-    decay: 0.92,
-    scalar: 1.2,
-    colors: ['#FDE047', '#A855F7', '#EC4899'],
-  })
-  fire(0.1, {
-    spread: 120,
-    startVelocity: 45,
-    colors: ['#FFFFFF', '#67E8F9', '#F472B6'],
-  })
+async function triggerJanuaryFireworks() {
+  cleanUpLottie()
+  if (bannerTimer) clearTimeout(bannerTimer)
 
-  wave1Timer = setTimeout(() => {
-    confetti({
-      particleCount: 50,
-      angle: 60,
-      spread: 65,
-      origin: { x: 0.05, y: 0.6 },
-      zIndex: 120,
-      colors: ['#FFD700', '#F43F5E', '#38BDF8', '#4ADE80'],
-    })
-    confetti({
-      particleCount: 50,
-      angle: 120,
-      spread: 65,
-      origin: { x: 0.95, y: 0.6 },
-      zIndex: 120,
-      colors: ['#FFD700', '#F43F5E', '#38BDF8', '#A855F7'],
-    })
-  }, 350)
+  showNewYearBanner.value = true
+  showLottieFireworks.value = true
 
-  wave2Timer = setTimeout(() => {
-    confetti({
-      particleCount: 70,
-      spread: 100,
-      origin: { x: 0.5, y: 0.35 },
-      zIndex: 120,
-      colors: ['#FBBF24', '#F59E0B', '#FDE047', '#38BDF8'],
-    })
-  }, 850)
+  await nextTick()
+
+  if (lottieContainer.value) {
+    try {
+      lottieAnim = lottie.loadAnimation({
+        container: lottieContainer.value,
+        renderer: 'svg',
+        loop: false,
+        autoplay: true,
+        animationData: fireworksAnimationData,
+        rendererSettings: {
+          preserveAspectRatio: 'xMidYMid meet',
+          progressiveLoad: false,
+          hideOnTransparent: true,
+        },
+      })
+
+      lottieAnim.addEventListener('complete', () => {
+        cleanUpLottie()
+      })
+
+      // Fallback timeout corresponding to animation duration (4.0s) + grace period
+      lottieTimer = setTimeout(() => {
+        cleanUpLottie()
+      }, 4500)
+    } catch (err) {
+      console.error('Failed to load fireworks lottie animation:', err)
+      cleanUpLottie()
+    }
+  }
 
   bannerTimer = setTimeout(() => {
     showNewYearBanner.value = false
@@ -141,8 +124,7 @@ watch(
     } else {
       showNewYearBanner.value = false
       if (bannerTimer) clearTimeout(bannerTimer)
-      if (wave1Timer) clearTimeout(wave1Timer)
-      if (wave2Timer) clearTimeout(wave2Timer)
+      cleanUpLottie()
     }
   },
   { immediate: true },
@@ -150,8 +132,7 @@ watch(
 
 onUnmounted(() => {
   if (bannerTimer) clearTimeout(bannerTimer)
-  if (wave1Timer) clearTimeout(wave1Timer)
-  if (wave2Timer) clearTimeout(wave2Timer)
+  cleanUpLottie()
 })
 
 // Cambodia Seasons
@@ -537,7 +518,30 @@ const envelopes = Array.from({ length: 32 }, (_, i) => ({
     </template>
   </div>
 
-  <!-- 5. January Happy New Year Floating Celebration Banner -->
+  <!-- 5. January Lottie Fireworks Overlay (Plays once on entry) -->
+  <Teleport to="body">
+    <Transition
+      enter-active-class="transition duration-300 ease-out"
+      enter-from-class="opacity-0 scale-95"
+      enter-to-class="opacity-100 scale-100"
+      leave-active-class="transition duration-500 ease-in"
+      leave-from-class="opacity-100 scale-100"
+      leave-to-class="opacity-0 scale-95"
+    >
+      <div
+        v-if="showLottieFireworks && isJanuary"
+        class="pointer-events-none fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
+        aria-hidden="true"
+      >
+        <div
+          ref="lottieContainer"
+          class="w-full max-w-4xl h-full max-h-[85vh] aspect-square flex items-center justify-center filter drop-shadow-2xl"
+        ></div>
+      </div>
+    </Transition>
+  </Teleport>
+
+  <!-- 6. January Happy New Year Floating Celebration Banner -->
   <Teleport to="body">
     <Transition
       enter-active-class="transition duration-500 ease-out"
