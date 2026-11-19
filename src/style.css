@@ -169,17 +169,17 @@ body.font-theme-moul *,
 /* Seasonal & Snow Animations */
 @keyframes snowfall {
   0% {
-    transform: translateY(-20px) translateX(0) rotate(0deg);
+    transform: translateY(-40px);
     opacity: 0;
   }
-  15% {
-    opacity: 0.9;
+  12% {
+    opacity: 0.95;
   }
-  85% {
-    opacity: 0.9;
+  88% {
+    opacity: 0.95;
   }
   100% {
-    transform: translateY(105vh) translateX(50px) rotate(360deg);
+    transform: translateY(106vh);
     opacity: 0;
   }
 }
@@ -663,15 +663,14 @@ body.font-theme-moul *,
    Snowflake Visibility, Wobble & Sticky Snow Piles
    ===================================================== */
 @keyframes snow-wobble {
-  0%,
+  0% {
+    transform: translateX(-12px) rotate(-16deg);
+  }
+  50% {
+    transform: translateX(12px) rotate(16deg);
+  }
   100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(8px);
-  }
-  75% {
-    transform: translateX(-8px);
+    transform: translateX(-12px) rotate(-16deg);
   }
 }
 
