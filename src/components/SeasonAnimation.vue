@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, onUnmounted } from 'vue'
-import { X, Sparkles } from 'lucide-vue-next'
+import { X } from 'lucide-vue-next'
 import confetti from 'canvas-confetti'
 import { useCalendarState } from '@/composables/useCalendarState'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
@@ -24,7 +24,6 @@ function triggerJanuaryFireworks() {
   if (wave1Timer) clearTimeout(wave1Timer)
   if (wave2Timer) clearTimeout(wave2Timer)
 
-  // Stage 1: Central fireworks burst
   const count = 180
   const defaults = { origin: { y: 0.65 }, zIndex: 120 }
 
@@ -64,7 +63,6 @@ function triggerJanuaryFireworks() {
     colors: ['#FFFFFF', '#67E8F9', '#F472B6'],
   })
 
-  // Stage 2: Left and right fireworks cannons (350ms)
   wave1Timer = setTimeout(() => {
     confetti({
       particleCount: 50,
@@ -84,7 +82,6 @@ function triggerJanuaryFireworks() {
     })
   }, 350)
 
-  // Stage 3: High golden sparkles raining down (850ms)
   wave2Timer = setTimeout(() => {
     confetti({
       particleCount: 70,
@@ -95,7 +92,6 @@ function triggerJanuaryFireworks() {
     })
   }, 850)
 
-  // Auto-dismiss banner after 5.5 seconds
   bannerTimer = setTimeout(() => {
     showNewYearBanner.value = false
   }, 5500)
@@ -106,7 +102,6 @@ function dismissBanner() {
   if (bannerTimer) clearTimeout(bannerTimer)
 }
 
-// Watch for viewing January (entry)
 watch(
   [() => currentMonth.value, () => currentYear.value],
   ([m]) => {
@@ -128,22 +123,26 @@ onUnmounted(() => {
   if (wave2Timer) clearTimeout(wave2Timer)
 })
 
-// Cambodia Seasons:
-// Rainy Season (រដូវវស្សា): May (4) to October (9)
-// Dry Season (រដូវប្រាំង): November (10) to April (3)
+// Cambodia Seasons
 const isRainySeason = computed(() => currentMonth.value >= 4 && currentMonth.value <= 9)
 const isDrySeason = computed(
   () => !isDecember.value && (currentMonth.value <= 3 || currentMonth.value === 10),
 )
 
-// Generate static deterministic particles for performance
-const snowflakes = Array.from({ length: 32 }, (_, i) => ({
+// 4 distinct snowflake archetypes:
+// 0: Soft fluffy snow puff
+// 1: Ornate 6-armed crystal snowflake
+// 2: Crisp 8-point stellar asterisk
+// 3: Faceted diamond ice prism
+const snowflakes = Array.from({ length: 42 }, (_, i) => ({
   id: i,
-  left: `${(i * 3.125 + (i % 5) * 2.5) % 98}%`,
-  size: `${5 + (i % 6) * 2}px`,
-  duration: `${4 + (i % 5) * 1.5}s`,
-  delay: `${(i * 0.28) % 4}s`,
-  opacity: 0.4 + (i % 5) * 0.12,
+  left: `${(i * 2.38 + (i % 7) * 3.4) % 98}%`,
+  size: 7 + (i % 6) * 3, // 7px to 22px
+  duration: `${5.5 + (i % 6) * 1.8}s`,
+  delay: `${(i * 0.24) % 6}s`,
+  opacity: 0.7 + (i % 4) * 0.09, // 0.70 to 0.97 for crisp visibility in light & dark modes
+  type: i % 4,
+  wobbleDuration: `${2.8 + (i % 4) * 0.7}s`,
 }))
 
 const raindrops = Array.from({ length: 36 }, (_, i) => ({
@@ -166,26 +165,229 @@ const dryParticles = Array.from({ length: 24 }, (_, i) => ({
 </script>
 
 <template>
-  <div class="fixed inset-0 pointer-events-none z-10 overflow-hidden" aria-hidden="true">
-    <!-- 1. Exclusive December Snowing Animation -->
+  <div class="fixed inset-0 pointer-events-none z-20 overflow-hidden" aria-hidden="true">
+    <!-- 1. December Snowing Animation (Enhanced Crystalline Snowflakes) -->
     <template v-if="isDecember">
+      <template v-for="flake in snowflakes" :key="'snow-' + flake.id">
+        <!-- Type 0: Fluffy Snow Puff (Round with soft glow) -->
+        <div
+          v-if="flake.type === 0"
+          class="absolute rounded-full snow-flake-shadow bg-white/95 dark:bg-white"
+          :style="{
+            left: flake.left,
+            top: '-24px',
+            width: flake.size + 'px',
+            height: flake.size + 'px',
+            opacity: flake.opacity,
+            animation: `snowfall ${flake.duration} linear infinite, snow-wobble ${flake.wobbleDuration} ease-in-out infinite`,
+            animationDelay: `${flake.delay}, ${flake.delay}`,
+          }"
+        ></div>
+
+        <!-- Type 1: Ornate 6-Armed Crystal Snowflake SVG -->
+        <svg
+          v-else-if="flake.type === 1"
+          class="absolute snow-flake-shadow"
+          :style="{
+            left: flake.left,
+            top: '-24px',
+            width: (flake.size + 4) + 'px',
+            height: (flake.size + 4) + 'px',
+            opacity: flake.opacity,
+            animation: `snowfall ${flake.duration} linear infinite, snow-wobble ${flake.wobbleDuration} ease-in-out infinite`,
+            animationDelay: `${flake.delay}, ${flake.delay}`,
+          }"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <!-- 6 Primary Radial Branches -->
+          <line x1="12" y1="1" x2="12" y2="23" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="2.5" y1="6.5" x2="21.5" y2="17.5" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="2.5" y1="17.5" x2="21.5" y2="6.5" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"/>
+          <!-- Crystal Feathers / V-shapes -->
+          <path d="M10 4 L12 6 L14 4" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" fill="none"/>
+          <path d="M10 20 L12 18 L14 20" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" fill="none"/>
+          <path d="M4.5 9 L6.5 10 L6 12" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" fill="none"/>
+          <path d="M19.5 15 L17.5 14 L18 12" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" fill="none"/>
+          <path d="M4.5 15 L6.5 14 L6 12" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" fill="none"/>
+          <path d="M19.5 9 L17.5 10 L18 12" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" fill="none"/>
+          <!-- Center Ice Core -->
+          <circle cx="12" cy="12" r="1.8" fill="#FFFFFF"/>
+        </svg>
+
+        <!-- Type 2: 8-Point Stellar Asterisk Flake SVG -->
+        <svg
+          v-else-if="flake.type === 2"
+          class="absolute snow-flake-shadow"
+          :style="{
+            left: flake.left,
+            top: '-24px',
+            width: (flake.size + 2) + 'px',
+            height: (flake.size + 2) + 'px',
+            opacity: flake.opacity,
+            animation: `snowfall ${flake.duration} linear infinite, snow-wobble ${flake.wobbleDuration} ease-in-out infinite`,
+            animationDelay: `${flake.delay}, ${flake.delay}`,
+          }"
+          viewBox="0 0 20 20"
+          fill="none"
+        >
+          <line x1="10" y1="1" x2="10" y2="19" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/>
+          <line x1="1" y1="10" x2="19" y2="10" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/>
+          <line x1="3.5" y1="3.5" x2="16.5" y2="16.5" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="16.5" y1="3.5" x2="3.5" y2="16.5" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="10" cy="10" r="1.5" fill="#E0F2FE"/>
+        </svg>
+
+        <!-- Type 3: Faceted Diamond Prism Flake SVG -->
+        <svg
+          v-else
+          class="absolute snow-flake-shadow"
+          :style="{
+            left: flake.left,
+            top: '-24px',
+            width: flake.size + 'px',
+            height: flake.size + 'px',
+            opacity: flake.opacity,
+            animation: `snowfall ${flake.duration} linear infinite, snow-wobble ${flake.wobbleDuration} ease-in-out infinite`,
+            animationDelay: `${flake.delay}, ${flake.delay}`,
+          }"
+          viewBox="0 0 16 16"
+          fill="none"
+        >
+          <polygon points="8,1 15,8 8,15 1,8" fill="#FFFFFF" fill-opacity="0.95" stroke="#BAE6FD" stroke-width="0.8"/>
+          <polygon points="8,4 12,8 8,12 4,8" fill="#E0F2FE" fill-opacity="0.75"/>
+          <circle cx="8" cy="8" r="1" fill="#FFFFFF"/>
+        </svg>
+      </template>
+
+      <!-- 2. Sticky Piles of Snow at the Bottom of the Screen (Desktop full-width landscape) -->
       <div
-        v-for="flake in snowflakes"
-        :key="'snow-' + flake.id"
-        class="absolute rounded-full bg-white dark:bg-sky-100 shadow-xs"
-        :style="{
-          left: flake.left,
-          top: '-20px',
-          width: flake.size,
-          height: flake.size,
-          opacity: flake.opacity,
-          animation: `snowfall ${flake.duration} linear infinite`,
-          animationDelay: flake.delay,
-        }"
-      ></div>
+        class="fixed bottom-0 left-0 right-0 pointer-events-none z-20 select-none hidden lg:block overflow-hidden"
+      >
+        <svg
+          class="w-full h-14 xl:h-18 anim-snow-pile"
+          viewBox="0 0 1440 68"
+          preserveAspectRatio="none"
+          fill="none"
+        >
+          <defs>
+            <!-- Light mode snow drift gradients -->
+            <linearGradient id="snow-grad-back-light" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85"/>
+              <stop offset="60%" stop-color="#E0F2FE" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#BAE6FD" stop-opacity="0.95"/>
+            </linearGradient>
+            <linearGradient id="snow-grad-mid-light" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+              <stop offset="50%" stop-color="#F0F9FF" stop-opacity="0.95"/>
+              <stop offset="100%" stop-color="#E0F2FE" stop-opacity="1"/>
+            </linearGradient>
+            <linearGradient id="snow-grad-front-light" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
+              <stop offset="40%" stop-color="#F8FAFC" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#E2E8F0" stop-opacity="1"/>
+            </linearGradient>
+
+            <!-- Dark mode snow drift gradients -->
+            <linearGradient id="snow-grad-back-dark" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#E0F2FE" stop-opacity="0.6"/>
+              <stop offset="50%" stop-color="#38BDF8" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#0F172A" stop-opacity="0.9"/>
+            </linearGradient>
+            <linearGradient id="snow-grad-front-dark" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+              <stop offset="35%" stop-color="#E0F2FE" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#0F172A" stop-opacity="0.98"/>
+            </linearGradient>
+
+            <!-- Snow highlight filter for crisp edge definition -->
+            <filter id="snow-edge-shadow" x="-5%" y="-15%" width="110%" height="130%">
+              <feDropShadow dx="0" dy="-3" stdDeviation="4" flood-color="#0284c7" flood-opacity="0.25"/>
+            </filter>
+          </defs>
+
+          <!-- Layer 1: Back Undulating Snow Hills (Soft Depth) -->
+          <path
+            d="M0 68 L0 26 Q90 10 200 24 Q320 40 450 18 Q560 2 680 20 Q800 38 930 16 Q1040 0 1170 18 Q1300 36 1440 20 L1440 68 Z"
+            class="fill-[url(#snow-grad-back-light)] dark:fill-[url(#snow-grad-back-dark)] opacity-70"
+          />
+
+          <!-- Layer 2: Mid Puffy Snowdrifts (With realistic humps) -->
+          <path
+            d="M0 68 L0 32 Q120 16 260 28 Q390 40 520 22 Q650 6 780 25 Q910 42 1050 20 Q1190 4 1320 22 Q1380 28 1440 24 L1440 68 Z"
+            class="fill-[url(#snow-grad-mid-light)] dark:fill-[url(#snow-grad-front-dark)] opacity-85"
+            style="filter: url(#snow-edge-shadow);"
+          />
+
+          <!-- Layer 3: Front Crisp Sticky Snowbanks (Full opacity, undulating crests) -->
+          <path
+            d="M0 68 L0 38 Q80 20 180 32 Q280 44 380 26 Q490 10 600 28 Q720 44 840 22 Q960 6 1080 26 Q1200 44 1320 24 Q1380 16 1440 28 L1440 68 Z"
+            class="fill-[url(#snow-grad-front-light)] dark:fill-[url(#snow-grad-front-dark)]"
+          />
+
+          <!-- Glistening Snow Sparkles on the Peaks -->
+          <g class="anim-snow-sparkle" style="--sparkle-delay: 0s">
+            <polygon points="180,24 182,29 187,31 182,33 180,38 178,33 173,31 178,29" fill="#38BDF8"/>
+            <circle cx="180" cy="31" r="1.5" fill="#FFFFFF"/>
+          </g>
+          <g class="anim-snow-sparkle" style="--sparkle-delay: 0.8s">
+            <polygon points="600,20 602,25 607,27 602,29 600,34 598,29 593,27 598,25" fill="#FBBF24"/>
+            <circle cx="600" cy="27" r="1.5" fill="#FFFFFF"/>
+          </g>
+          <g class="anim-snow-sparkle" style="--sparkle-delay: 1.5s">
+            <polygon points="960,18 962,23 967,25 962,27 960,32 958,27 953,25 958,23" fill="#38BDF8"/>
+            <circle cx="960" cy="25" r="1.5" fill="#FFFFFF"/>
+          </g>
+          <g class="anim-snow-sparkle" style="--sparkle-delay: 0.4s">
+            <polygon points="1320,16 1322,21 1327,23 1322,25 1320,30 1318,25 1313,23 1318,21" fill="#FBBF24"/>
+            <circle cx="1320" cy="23" r="1.5" fill="#FFFFFF"/>
+          </g>
+          <g class="anim-snow-sparkle" style="--sparkle-delay: 1.2s">
+            <polygon points="380,20 382,24 386,26 382,28 380,32 378,28 374,26 378,24" fill="#38BDF8"/>
+            <circle cx="380" cy="26" r="1.2" fill="#FFFFFF"/>
+          </g>
+          <g class="anim-snow-sparkle" style="--sparkle-delay: 1.9s">
+            <polygon points="840,16 842,20 846,22 842,24 840,28 838,24 834,22 838,20" fill="#F472B6"/>
+            <circle cx="840" cy="22" r="1.2" fill="#FFFFFF"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- 3. Sticky Piles of Snow on Mobile (Resting atop the mobile bottom nav bar & screen edge) -->
+      <div
+        class="fixed bottom-[54px] sm:bottom-[60px] left-0 right-0 pointer-events-none z-30 select-none lg:hidden overflow-hidden"
+      >
+        <svg
+          class="w-full h-7 sm:h-9"
+          viewBox="0 0 390 32"
+          preserveAspectRatio="none"
+          fill="none"
+        >
+          <!-- Mobile Snow Cap along top edge of navbar -->
+          <path
+            d="M0 32 L0 14 Q30 4 65 12 Q100 20 135 8 Q170 2 205 10 Q245 20 285 6 Q320 0 355 10 Q375 16 390 12 L390 32 Z"
+            class="fill-white dark:fill-slate-900/90"
+            style="filter: drop-shadow(0 -2px 4px rgba(56, 189, 248, 0.35));"
+          />
+          <path
+            d="M0 32 L0 18 Q35 10 70 16 Q110 22 145 12 Q180 6 220 14 Q260 22 295 10 Q335 4 370 14 Q380 16 390 16 L390 32 Z"
+            class="fill-white/95 dark:fill-sky-950/80"
+          />
+          <!-- Mobile Sparkles -->
+          <g class="anim-snow-sparkle" style="--sparkle-delay: 0.3s">
+            <polygon points="70,10 71,13 74,14 71,15 70,18 69,15 66,14 69,13" fill="#38BDF8"/>
+          </g>
+          <g class="anim-snow-sparkle" style="--sparkle-delay: 1.1s">
+            <polygon points="210,6 211,9 214,10 211,11 210,14 209,11 206,10 209,9" fill="#FBBF24"/>
+          </g>
+          <g class="anim-snow-sparkle" style="--sparkle-delay: 1.7s">
+            <polygon points="325,4 326,7 329,8 326,9 325,12 324,9 321,8 324,7" fill="#38BDF8"/>
+          </g>
+        </svg>
+      </div>
     </template>
 
-    <!-- 2. Cambodia Seasonal Animations (Rainy & Dry) -->
+    <!-- 4. Cambodia Seasonal Animations (Rainy & Dry) -->
     <template v-if="enableSeasonsAnim">
       <!-- Rainy Season: May - Oct (រដូវវស្សា) -->
       <template v-if="isRainySeason">
@@ -224,7 +426,7 @@ const dryParticles = Array.from({ length: 24 }, (_, i) => ({
     </template>
   </div>
 
-  <!-- 3. January Happy New Year Floating Celebration Banner (Teleported to body with z-[60] so it NEVER appears behind the top bar) -->
+  <!-- 5. January Happy New Year Floating Celebration Banner -->
   <Teleport to="body">
     <Transition
       enter-active-class="transition duration-500 ease-out"
