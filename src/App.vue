@@ -18,6 +18,7 @@ import { useCalendarState } from '@/composables/useCalendarState'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { useVisitorCount } from '@/composables/useVisitorCount'
 import { usePwaInstall } from '@/composables/usePwaInstall'
+import { useSwipeNavigation } from '@/composables/useSwipeNavigation'
 
 const {
   todayDetail,
@@ -47,8 +48,22 @@ const isAnyModalOpen = computed(() => {
     isSettingsOpen.value ||
     isDrawerActive ||
     selectedDate.value ||
-    isInstallHelpOpen.value
+    isInstallHelpOpen.value,
   )
+})
+
+// Touch Swipe Navigation (Swipe Left -> Next Month, Swipe Right -> Previous Month)
+const {
+  swipeOffsetX,
+  isSwiping,
+  onTouchStart: handleCalendarTouchStart,
+  onTouchMove: handleCalendarTouchMove,
+  onTouchEnd: handleCalendarTouchEnd,
+  onTouchCancel: handleCalendarTouchCancel,
+} = useSwipeNavigation({
+  onSwipeLeft: nextMonth,
+  onSwipeRight: prevMonth,
+  disabled: isAnyModalOpen,
 })
 
 watch(
@@ -63,7 +78,7 @@ watch(
       }
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 const isTodayCopied = ref(false)
@@ -171,12 +186,20 @@ onUnmounted(() => {
     <!-- Main Responsive Body Layout -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-3 py-3 sm:px-6 sm:py-6 pb-6 lg:pb-8">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
-        <!-- Main Column (Left/Center on Desktop) -->
-        <div class="lg:col-span-8 flex flex-col gap-4 sm:gap-5">
+        <!-- Main Column (Left/Center on Desktop) with Touch Swipe Navigation -->
+        <div
+          class="lg:col-span-8 flex flex-col gap-4 sm:gap-5 touch-pan-y"
+          :class="{ 'transition-transform duration-200 ease-out': !isSwiping }"
+          :style="swipeOffsetX !== 0 ? { transform: `translateX(${swipeOffsetX}px)` } : undefined"
+          @touchstart.passive="handleCalendarTouchStart"
+          @touchmove.passive="handleCalendarTouchMove"
+          @touchend.passive="handleCalendarTouchEnd"
+          @touchcancel.passive="handleCalendarTouchCancel"
+        >
           <!-- Month Banner Card (Cambodia Month Artwork & Color Theme) -->
           <MonthBannerCard />
 
-          <!-- New Year Countdown Timer (Visible only 15 days before New Year's Eve) -->
+          <!-- New Year Countdown Timer (Visible 1 week before New Year's Eve) -->
           <NewYearCountdown />
 
           <!-- Calendar Matrix Grid (Animated Month Transitions) -->
