@@ -1,18 +1,145 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
   <defs>
-    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#F59E0B" />
+    <!-- Royal Midnight-Indigo Sky Background -->
+    <linearGradient id="kpc-bg" x1="40" y1="20" x2="472" y2="492" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1E1B4B" />
+      <stop offset="52%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#1C1024" />
+    </linearGradient>
+
+    <!-- Warm Angkor Sunrise Horizon Glow -->
+    <radialGradient id="kpc-horizon" cx="50%" cy="76%" r="58%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.52" />
+      <stop offset="48%" stop-color="#EA580C" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Soft Lunar Aura -->
+    <radialGradient id="kpc-moon-aura" cx="50%" cy="42%" r="30%">
+      <stop offset="0%" stop-color="#FDE68A" stop-opacity="0.28" />
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Polished Royal Gold Gradient -->
+    <linearGradient id="kpc-gold" x1="150" y1="90" x2="370" y2="430" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FEF3C7" />
+      <stop offset="38%" stop-color="#FBBF24" />
+      <stop offset="75%" stop-color="#F59E0B" />
       <stop offset="100%" stop-color="#D97706" />
     </linearGradient>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1E293B" />
-      <stop offset="100%" stop-color="#0F172A" />
+
+    <!-- Header Accent Bar Gradient -->
+    <linearGradient id="kpc-bar" x1="96" y1="112" x2="416" y2="176" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="55%" stop-color="#EA580C" />
+      <stop offset="100%" stop-color="#DC2626" />
     </linearGradient>
+
+    <!-- Angkor Temple Metallic Gold Gradient -->
+    <linearGradient id="kpc-temple" x1="256" y1="258" x2="256" y2="412" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FEF3C7" />
+      <stop offset="45%" stop-color="#FBBF24" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+
+    <!-- Calendar Card Glass Surface -->
+    <linearGradient id="kpc-card" x1="256" y1="108" x2="256" y2="424" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.03" />
+    </linearGradient>
+
+    <clipPath id="kpc-card-clip">
+      <rect x="88" y="108" width="336" height="316" rx="56" />
+    </clipPath>
   </defs>
-  <rect width="64" height="64" rx="16" fill="url(#bgGrad)" />
-  <!-- Crescent Moon -->
-  <path d="M38 12C28.0589 12 20 20.0589 20 30C20 39.9411 28.0589 48 38 48C40.6622 48 43.1932 47.4223 45.4746 46.3879C39.6917 44.8217 35.3333 39.5256 35.3333 33.2222C35.3333 26.9189 39.6917 21.6227 45.4746 20.0565C43.1932 19.0221 40.6622 18.4444 38 18.4444" fill="url(#goldGrad)" opacity="0.9" />
-  <!-- Star / Lotus spark -->
-  <polygon points="44,22 46,26 50,28 46,30 44,34 42,30 38,28 42,26" fill="#FCD34D" />
-  <circle cx="28" cy="38" r="2" fill="#FDE68A" />
+
+  <!-- Base Squircle Background -->
+  <rect width="512" height="512" rx="116" fill="url(#kpc-bg)" />
+  <rect width="512" height="512" rx="116" fill="url(#kpc-horizon)" />
+  <rect width="512" height="512" rx="116" fill="url(#kpc-moon-aura)" />
+
+  <!-- Subtle Outer Rim Highlight -->
+  <rect
+    x="8"
+    y="8"
+    width="496"
+    height="496"
+    rx="110"
+    stroke="url(#kpc-gold)"
+    stroke-opacity="0.28"
+    stroke-width="4"
+  />
+
+  <!-- Calendar Card Shell -->
+  <g clip-path="url(#kpc-card-clip)">
+    <rect x="88" y="108" width="336" height="316" rx="56" fill="url(#kpc-card)" />
+    <!-- Top Calendar Header Ribbon -->
+    <rect x="88" y="108" width="336" height="62" fill="url(#kpc-bar)" />
+    <line x1="88" y1="170" x2="424" y2="170" stroke="#FDE68A" stroke-opacity="0.45" stroke-width="2.5" />
+  </g>
+
+  <!-- Calendar Card Crisp Gold Border -->
+  <rect
+    x="88"
+    y="108"
+    width="336"
+    height="316"
+    rx="56"
+    stroke="url(#kpc-gold)"
+    stroke-opacity="0.65"
+    stroke-width="6"
+  />
+
+  <!-- Top Calendar Binding Rings (Left & Right) -->
+  <rect x="166" y="76" width="28" height="62" rx="14" fill="url(#kpc-gold)" />
+  <rect x="172" y="82" width="16" height="50" rx="8" fill="#FEF3C7" fill-opacity="0.55" />
+  <rect x="318" y="76" width="28" height="62" rx="14" fill="url(#kpc-gold)" />
+  <rect x="324" y="82" width="16" height="50" rx="8" fill="#FEF3C7" fill-opacity="0.55" />
+
+  <!-- Luminous Golden Crescent Moon (Khmer Lunar Calendar / Chhankitek) -->
+  <g transform="translate(256 218) scale(0.84) translate(-266 -248)">
+    <path
+      d="M274 190C241.5 191.5 215.5 218.2 215.5 251C215.5 284.7 242.8 312 276.5 312C290.6 312 303.6 307.2 314 299.1C306.9 301.2 299.4 302.3 291.6 302.3C257.9 302.3 230.6 275 230.6 241.3C230.6 218.8 242.8 199.1 261 188.6C265.2 189.1 269.6 189.6 274 190Z"
+      fill="url(#kpc-gold)"
+    />
+    <!-- Khmer 4-Point Celestial Star inside Crescent -->
+    <path
+      d="M294 212L300.5 229.5L318 236L300.5 242.5L294 260L287.5 242.5L270 236L287.5 229.5L294 212Z"
+      fill="#FFFBEB"
+    />
+  </g>
+  <!-- Companion Micro Stars -->
+  <circle cx="152" cy="216" r="5" fill="#FDE68A" fill-opacity="0.85" />
+  <circle cx="358" cy="210" r="4.5" fill="#FDE68A" fill-opacity="0.75" />
+  <circle cx="176" cy="256" r="3" fill="#FEF3C7" fill-opacity="0.65" />
+
+  <!-- Stylized Geometric Angkor Wat Three-Tower Silhouette -->
+  <g fill="url(#kpc-temple)">
+    <!-- Central Lotus Prang (Tallest Tower) -->
+    <path d="M256 266L264 282H248L256 266Z" />
+    <path d="M244 285H268L272 304H240L244 285Z" />
+    <path d="M236 307H276L282 332H230L236 307Z" />
+    <rect x="228" y="334" width="56" height="44" rx="3" />
+
+    <!-- Left Prang Tower -->
+    <path d="M180 298L187 312H173L180 298Z" />
+    <path d="M168 315H192L196 334H164L168 315Z" />
+    <rect x="160" y="336" width="40" height="42" rx="3" />
+
+    <!-- Right Prang Tower -->
+    <path d="M332 298L339 312H325L332 298Z" />
+    <path d="M320 315H344L348 334H316L320 315Z" />
+    <rect x="312" y="336" width="40" height="42" rx="3" />
+
+    <!-- Connecting Galleries -->
+    <rect x="196" y="352" width="36" height="26" />
+    <rect x="280" y="352" width="36" height="26" />
+
+    <!-- Stepped Angkor Base Plinth -->
+    <rect x="134" y="376" width="244" height="12" rx="5" />
+    <rect x="118" y="392" width="276" height="12" rx="6" opacity="0.88" />
+  </g>
+
+  <!-- Subtle Temple Doorway Arch Accent -->
+  <path d="M248 378V354C248 349.6 251.6 346 256 346C260.4 346 264 349.6 264 354V378H248Z" fill="#1E1B4B" fill-opacity="0.72" />
 </svg>

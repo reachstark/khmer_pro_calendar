@@ -7,26 +7,20 @@ import {
   Moon,
   Monitor,
   Settings,
-  Sparkles,
   Layers,
   ChevronDown,
   Menu,
   X,
   Download,
 } from 'lucide-vue-next'
+import AppLogo from '@/components/AppLogo.vue'
 import { useCalendarState } from '@/composables/useCalendarState'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { usePwaInstall } from '@/composables/usePwaInstall'
 import { KHMER_SOLAR_MONTHS } from '@/utils/khmerCalendar'
 
-const {
-  currentYear,
-  currentMonth,
-  todayDetail,
-  goToToday,
-  isSearchOpen,
-  isSettingsOpen,
-} = useCalendarState()
+const { currentYear, currentMonth, todayDetail, goToToday, isSearchOpen, isSettingsOpen } =
+  useCalendarState()
 
 const { theme, setTheme, showWeekNumbers, toggleWeekNumbers } = useCalendarSettings()
 const { isInstallHelpOpen, triggerInstall } = usePwaInstall()
@@ -77,11 +71,23 @@ const themeIcon = computed(() => {
 
 const isCurrentMonthToday = computed(() => {
   const now = new Date()
-  return (
-    currentYear.value === now.getFullYear() &&
-    currentMonth.value === now.getMonth()
-  )
+  return currentYear.value === now.getFullYear() && currentMonth.value === now.getMonth()
 })
+
+function selectMonth(monthIndex: number) {
+  currentMonth.value = monthIndex
+  isMonthDropdownOpen.value = false
+}
+
+function selectYear(year: number) {
+  currentYear.value = year
+  isYearDropdownOpen.value = false
+}
+
+function handleMobileInstall() {
+  triggerInstall()
+  isMobileMenuOpen.value = false
+}
 </script>
 
 <template>
@@ -91,11 +97,14 @@ const isCurrentMonthToday = computed(() => {
     <div class="mx-auto flex max-w-7xl items-center justify-between px-3 py-2 sm:px-6 sm:py-3">
       <!-- App Brand & Title -->
       <div class="flex items-center gap-2 sm:gap-3.5 shrink-0">
-        <div
-          class="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-500 to-red-500 shadow-md shadow-orange-500/20 text-white transform active:scale-95 transition-transform"
+        <button
+          type="button"
+          @click="goToToday"
+          class="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-2xl shadow-md shadow-amber-500/20 transform hover:scale-105 active:scale-95 transition-transform focus:outline-none"
+          title="ប្រតិទិនខ្មែរ (Khmer Lunar Calendar)"
         >
-          <Sparkles class="h-4.5 w-4.5 sm:h-6 sm:w-6" />
-        </div>
+          <AppLogo class="h-full w-full" />
+        </button>
         <div>
           <div class="flex items-center gap-1.5">
             <h1 class="text-sm sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white">
@@ -128,7 +137,9 @@ const isCurrentMonthToday = computed(() => {
             class="flex items-center gap-1 sm:gap-1.5 rounded-xl px-2 py-1.5 sm:px-3 sm:py-1.5 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800 transition-colors"
           >
             <span>{{ KHMER_SOLAR_MONTHS[currentMonth]?.kh || '' }}</span>
-            <span class="text-slate-400 text-xs hidden md:inline font-normal">({{ KHMER_SOLAR_MONTHS[currentMonth]?.en || '' }})</span>
+            <span class="text-slate-400 text-xs hidden md:inline font-normal"
+              >({{ KHMER_SOLAR_MONTHS[currentMonth]?.en || '' }})</span
+            >
             <ChevronDown class="h-3 w-3 sm:h-3.5 sm:w-3.5 opacity-60" />
           </button>
 
@@ -147,7 +158,7 @@ const isCurrentMonthToday = computed(() => {
                 v-for="m in KHMER_SOLAR_MONTHS"
                 :key="m.index"
                 type="button"
-                @click="currentMonth = m.index; isMonthDropdownOpen = false"
+                @click="selectMonth(m.index)"
                 class="flex flex-col items-center justify-center rounded-xl p-2 text-center transition-colors"
                 :class="
                   currentMonth === m.index
@@ -190,7 +201,7 @@ const isCurrentMonthToday = computed(() => {
                 v-for="y in yearsList"
                 :key="y"
                 type="button"
-                @click="currentYear = y; isYearDropdownOpen = false"
+                @click="selectYear(y)"
                 class="flex items-center justify-center rounded-xl py-2 px-1 text-xs sm:text-sm font-semibold transition-colors"
                 :class="
                   currentYear === y
@@ -232,7 +243,9 @@ const isCurrentMonthToday = computed(() => {
         >
           <Calendar class="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           <span>ថ្ងៃនេះ</span>
-          <span class="rounded-md bg-white/20 dark:bg-white/10 px-1.5 py-0.5 text-xs font-bold font-mono">
+          <span
+            class="rounded-md bg-white/20 dark:bg-white/10 px-1.5 py-0.5 text-xs font-bold font-mono"
+          >
             {{ todayDetail.gregorian.day }}
           </span>
         </button>
@@ -304,7 +317,9 @@ const isCurrentMonthToday = computed(() => {
     >
       <div class="flex flex-col gap-2.5">
         <!-- Theme & Week Number Quick Row -->
-        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800">
+        <div
+          class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800"
+        >
           <span class="text-xs font-semibold text-slate-600 dark:text-slate-300">
             ផ្ទៃពណ៌កម្មវិធី (Theme)
           </span>
@@ -318,7 +333,9 @@ const isCurrentMonthToday = computed(() => {
           </button>
         </div>
 
-        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800">
+        <div
+          class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800"
+        >
           <span class="text-xs font-semibold text-slate-600 dark:text-slate-300">
             លេខសប្តាហ៍ (Week Numbers)
           </span>
@@ -339,7 +356,7 @@ const isCurrentMonthToday = computed(() => {
         <!-- PWA Install option for mobile -->
         <button
           type="button"
-          @click="triggerInstall(); isMobileMenuOpen = false"
+          @click="handleMobileInstall"
           class="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 py-2 px-3 text-xs font-bold text-white shadow-xs"
         >
           <Download class="h-4 w-4" />
@@ -358,15 +375,20 @@ const isCurrentMonthToday = computed(() => {
         <div
           class="relative z-10 w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900 text-center animate-in zoom-in-95 duration-150"
         >
-          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 mb-3">
-            <Download class="h-6 w-6" />
+          <div
+            class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg shadow-amber-500/20 mb-3"
+          >
+            <AppLogo class="h-full w-full" />
           </div>
           <h3 class="text-base font-bold text-slate-900 dark:text-white">
             របៀបដំឡើងកម្មវិធី (Install as App)
           </h3>
           <p class="mt-2.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed text-left">
-            • <strong>លើ Chrome / Edge:</strong> ចុចលើរូបតំណាង <strong>Install</strong> (រូបកុំព្យូទ័រ/ព្រួញចុះក្រោម) នៅខាងស្តាំនៃរបារអាសយដ្ឋាន (Address Bar)។<br><br>
-            • <strong>លើ Safari (iPhone/iPad):</strong> ចុចប៊ូតុង <strong>Share</strong> រួចជ្រើសរើស <strong>"Add to Home Screen"</strong>។
+            • <strong>លើ Chrome / Edge:</strong> ចុចលើរូបតំណាង
+            <strong>Install</strong> (រូបកុំព្យូទ័រ/ព្រួញចុះក្រោម) នៅខាងស្តាំនៃរបារអាសយដ្ឋាន
+            (Address Bar)។<br /><br />
+            • <strong>លើ Safari (iPhone/iPad):</strong> ចុចប៊ូតុង <strong>Share</strong> រួចជ្រើសរើស
+            <strong>"Add to Home Screen"</strong>។
           </p>
           <button
             type="button"
