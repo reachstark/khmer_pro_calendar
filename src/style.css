@@ -873,3 +873,214 @@ body.font-theme-moul *,
 .dark .envelope-shadow {
   filter: drop-shadow(0 0 7px rgba(239, 68, 68, 0.9)) drop-shadow(0 0 15px rgba(245, 158, 11, 0.65));
 }
+
+/* =====================================================
+   Redesigned Calendar Grid: Halloween & International New Year
+   ===================================================== */
+
+/* --- Halloween: Jack-o'-Lantern Pumpkin & Flying Bat --- */
+@keyframes halloween-pumpkin-flicker {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg) scale(1);
+    filter: drop-shadow(0 2px 5px rgba(249, 115, 22, 0.45));
+  }
+  25% {
+    transform: translateY(-2px) rotate(3deg) scale(1.04);
+    filter: drop-shadow(0 0 10px rgba(251, 146, 60, 0.85))
+      drop-shadow(0 0 16px rgba(147, 51, 234, 0.35));
+  }
+  50% {
+    transform: translateY(0) rotate(-2deg) scale(0.99);
+    filter: drop-shadow(0 2px 4px rgba(249, 115, 22, 0.35));
+  }
+  75% {
+    transform: translateY(-3px) rotate(2.5deg) scale(1.05);
+    filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.85))
+      drop-shadow(0 0 18px rgba(249, 115, 22, 0.5));
+  }
+}
+
+@keyframes halloween-bat-hover {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-5deg) scaleX(1);
+    filter: drop-shadow(0 1px 4px var(--bat-glow-a, rgba(109, 40, 217, 0.45)));
+  }
+  25% {
+    transform: translateY(-3px) rotate(4deg) scaleX(0.84);
+    filter: drop-shadow(0 2px 6px var(--bat-glow-b, rgba(239, 68, 68, 0.55)));
+  }
+  50% {
+    transform: translateY(-1px) rotate(-3deg) scaleX(1.05);
+    filter: drop-shadow(0 1px 4px var(--bat-glow-a, rgba(109, 40, 217, 0.55)));
+  }
+  75% {
+    transform: translateY(-3.5px) rotate(5deg) scaleX(0.86);
+    filter: drop-shadow(0 2px 7px var(--bat-glow-b, rgba(239, 68, 68, 0.6)));
+  }
+}
+
+@keyframes bat-swoop-bg {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-8deg) scaleX(1);
+  }
+  30% {
+    transform: translate(10px, -5px) rotate(8deg) scaleX(0.88);
+  }
+  65% {
+    transform: translate(4px, 3px) rotate(-4deg) scaleX(1.04);
+  }
+}
+
+@keyframes spooky-mist-drift {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: translate(4px, 4px) scale(1.15);
+  }
+}
+
+.anim-halloween-pumpkin {
+  transform-origin: bottom center;
+  animation: halloween-pumpkin-flicker 3.2s ease-in-out infinite;
+}
+
+.anim-halloween-bat {
+  animation: halloween-bat-hover 2s ease-in-out infinite;
+}
+
+.dark .anim-halloween-bat {
+  --bat-glow-a: rgba(251, 146, 60, 0.95);
+  --bat-glow-b: rgba(192, 132, 252, 0.95);
+}
+
+.dark .anim-bat-swoop {
+  filter: drop-shadow(0 0 5px rgba(192, 132, 252, 0.9));
+}
+
+.anim-bat-swoop {
+  animation: bat-swoop-bg 4.5s ease-in-out infinite;
+}
+
+.anim-spooky-mist {
+  animation: spooky-mist-drift 4s ease-in-out infinite;
+}
+
+/* --- International New Year (Jan 1): Champagne Toast & Effervescent Sparkles --- */
+@keyframes champagne-toast {
+  0%,
+  100% {
+    transform: rotate(-6deg) translateY(0) scale(1);
+    filter: drop-shadow(0 1px 3px rgba(245, 158, 11, 0.45));
+  }
+  25% {
+    transform: rotate(9deg) translateY(-2.5px) scale(1.08);
+    filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.85))
+      drop-shadow(0 0 12px rgba(99, 102, 241, 0.4));
+  }
+  50% {
+    transform: rotate(-2deg) translateY(-0.5px) scale(1);
+    filter: drop-shadow(0 1px 4px rgba(245, 158, 11, 0.5));
+  }
+  75% {
+    transform: rotate(6deg) translateY(-1.5px) scale(1.05);
+    filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.75));
+  }
+}
+
+@keyframes champagne-bg-sway {
+  0%,
+  100% {
+    transform: rotate(-4deg) translateY(0) scale(1);
+    filter: drop-shadow(0 2px 5px rgba(245, 158, 11, 0.35));
+  }
+  50% {
+    transform: rotate(5deg) translateY(-3px) scale(1.06);
+    filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.7));
+  }
+}
+
+@keyframes ny-bubble-rise {
+  0% {
+    transform: translateY(4px) scale(0.5);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.9;
+  }
+  75% {
+    opacity: 0.65;
+  }
+  100% {
+    transform: translateY(-18px) translateX(3px) scale(1.25);
+    opacity: 0;
+  }
+}
+
+@keyframes ny-shimmer-sweep {
+  0% {
+    background: linear-gradient(
+      115deg,
+      transparent 0%,
+      transparent 35%,
+      rgba(251, 191, 36, 0.16) 50%,
+      transparent 65%,
+      transparent 100%
+    );
+    background-size: 240% 240%;
+    background-position: 120% 0%;
+  }
+  100% {
+    background: linear-gradient(
+      115deg,
+      transparent 0%,
+      transparent 35%,
+      rgba(251, 191, 36, 0.16) 50%,
+      transparent 65%,
+      transparent 100%
+    );
+    background-size: 240% 240%;
+    background-position: -120% 0%;
+  }
+}
+
+@keyframes ny-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.1);
+  }
+}
+
+.anim-champagne-toast {
+  transform-origin: bottom center;
+  animation: champagne-toast 2.6s ease-in-out infinite;
+}
+
+.anim-champagne-bg {
+  transform-origin: bottom center;
+  animation: champagne-bg-sway 3.4s ease-in-out infinite;
+}
+
+.anim-ny-bubble {
+  animation: ny-bubble-rise 2.4s ease-out infinite;
+  animation-delay: var(--bubble-delay, 0s);
+}
+
+.anim-ny-shimmer {
+  animation: ny-shimmer-sweep 4s ease-in-out infinite;
+}
+
+.anim-ny-glow {
+  animation: ny-glow-pulse 2.8s ease-in-out infinite;
+}
