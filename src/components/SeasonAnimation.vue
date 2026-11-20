@@ -5,6 +5,7 @@ import lottie, { type AnimationItem } from 'lottie-web'
 import { useCalendarState } from '@/composables/useCalendarState'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { toKhmerNumber, CHINESE_NEW_YEAR_MAP } from '@/utils/khmerCalendar'
+import HalloweenBatsOverlay from '@/components/HalloweenBatsOverlay.vue'
 import fireworksAnimationData from '@/assets/lottie/fireworks.json'
 import snowflakeAsset from '@/assets/snowflake.png'
 import snowmanAsset from '@/assets/snowman.png'
@@ -12,8 +13,9 @@ import christmasTreeAsset from '@/assets/christmas_tree.png'
 import heartAsset from '@/assets/heart.png'
 import redEnvelopeAsset from '@/assets/red_envelope.png'
 
-const { currentMonth, currentYear } = useCalendarState()
-const { enableSeasonsAnim, previewDecember, previewValentine, previewCNY } = useCalendarSettings()
+const { currentMonth, currentYear, selectedDate } = useCalendarState()
+const { enableSeasonsAnim, previewDecember, previewValentine, previewCNY, previewHalloween } =
+  useCalendarSettings()
 
 const now = ref(new Date())
 
@@ -39,6 +41,17 @@ function isDateInChineseNewYear(date: Date): boolean {
 }
 
 const isCNYActive = computed(() => isDateInChineseNewYear(now.value) || previewCNY.value)
+
+// Halloween flying bats (Oct 31, viewing Oct 31 detail modal, or hidden localStorage/URL preview)
+const isRealHalloweenToday = computed(
+  () => now.value.getMonth() === 9 && now.value.getDate() === 31,
+)
+const isViewingHalloweenDate = computed(
+  () => selectedDate.value?.gregorian.month === 10 && selectedDate.value?.gregorian.day === 31,
+)
+const isHalloweenActive = computed(
+  () => isRealHalloweenToday.value || isViewingHalloweenDate.value || previewHalloween.value,
+)
 
 // January New Year Celebration & Lottie Fireworks
 const isJanuary = computed(() => currentMonth.value === 0)
@@ -528,6 +541,9 @@ const envelopes = Array.from({ length: 32 }, (_, i) => ({
       </template>
     </template>
   </div>
+
+  <!-- 4b. Halloween Lottie Flying Bats (Sprite-sheet optimized, <= 10 bats from left & right) -->
+  <HalloweenBatsOverlay v-if="isHalloweenActive" :elevated="isViewingHalloweenDate" />
 
   <!-- 5. January Lottie Fireworks Overlay (Plays once on entry) -->
   <Teleport to="body">
