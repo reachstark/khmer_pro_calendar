@@ -12,6 +12,8 @@ import { getNewYear } from '@thyrith/momentkh'
 import halloweenPumpkinAsset from '@/assets/halloween_pumpkin.png'
 import halloweenBatAsset from '@/assets/halloween_bat.png'
 import newYearChampagneAsset from '@/assets/new_year_champagne.png'
+import knyRumduolAsset from '@/assets/kny_rumduol.png'
+import knyStarLanternAsset from '@/assets/kny_star_lantern.png'
 
 const { currentYear, currentMonth, calendarWeeks, navDirection, selectedDate, selectDate } =
   useCalendarState()
@@ -417,31 +419,24 @@ function isSpecialDate(day: KhmerDayDetail): boolean {
                   </svg>
                 </div>
 
-                <!-- Khmer New Year: Angkor Wat silhouette + water splash SVG background -->
+                <!-- Khmer New Year: Animated Rumduol Blossom, Golden Sunburst & Water Blessings -->
                 <div
                   v-if="isKhmerNewYear(day) && day.isCurrentMonth"
-                  class="pointer-events-none absolute inset-0 overflow-hidden"
+                  class="pointer-events-none absolute inset-0 overflow-hidden select-none"
                 >
+                  <div
+                    class="absolute -right-3 -bottom-3 w-16 h-16 sm:w-22 sm:h-22 rounded-full bg-gradient-to-tl from-amber-400/35 via-yellow-300/20 to-orange-400/10 blur-xs anim-ny-glow"
+                  ></div>
+                  <div class="absolute inset-0 anim-ny-shimmer"></div>
+                  <!-- Animated Cambodia National Flower: Rumduol Blossom -->
+                  <img
+                    :src="knyRumduolAsset"
+                    alt=""
+                    class="absolute -right-0.5 -bottom-0.5 sm:right-0.5 sm:bottom-0.5 w-8 h-8 sm:w-12 sm:h-12 object-contain opacity-50 sm:opacity-65 dark:opacity-50 sm:dark:opacity-60 anim-kny-rumduol-bloom"
+                  />
+                  <!-- Blessing water drops -->
                   <svg
-                    class="absolute -right-2 -bottom-1 w-16 h-10 sm:w-20 sm:h-14 opacity-25 dark:opacity-20"
-                    viewBox="0 0 80 48"
-                    fill="none"
-                  >
-                    <rect x="0" y="40" width="80" height="8" rx="2" fill="#D97706" opacity="0.4" />
-                    <rect x="34" y="10" width="12" height="30" fill="#B45309" />
-                    <polygon points="40,2 32,14 48,14" fill="#D97706" />
-                    <rect x="14" y="20" width="10" height="20" fill="#B45309" />
-                    <polygon points="19,14 12,22 26,22" fill="#D97706" />
-                    <rect x="56" y="20" width="10" height="20" fill="#B45309" />
-                    <polygon points="61,14 54,22 68,22" fill="#D97706" />
-                    <rect x="4" y="28" width="8" height="12" fill="#92400E" />
-                    <polygon points="8,22 2,30 14,30" fill="#B45309" />
-                    <rect x="68" y="28" width="8" height="12" fill="#92400E" />
-                    <polygon points="72,22 66,30 78,30" fill="#B45309" />
-                  </svg>
-                  <!-- Water drops -->
-                  <svg
-                    class="absolute left-1 top-1 w-6 h-8 sm:w-8 sm:h-10 opacity-20 dark:opacity-15"
+                    class="absolute left-1 top-6 sm:top-7 w-4 h-5 sm:w-5 sm:h-6 opacity-30 dark:opacity-25"
                     viewBox="0 0 24 32"
                     fill="none"
                   >
@@ -611,59 +606,17 @@ function isSpecialDate(day: KhmerDayDetail): boolean {
                       </svg>
                     </div>
 
-                    <!-- Khmer New Year: SVG Water splash / traditional symbol -->
+                    <!-- Khmer New Year: Animated Star Lantern Badge -->
                     <div
                       v-else-if="isKhmerNewYear(day)"
                       class="relative flex items-center justify-center"
-                      title="ចូលឆ្នាំថ្មី (Khmer New Year)"
+                      title="ចូលឆ្នាំថ្មីប្រពៃណីជាតិ (Khmer New Year)"
                     >
-                      <svg
-                        class="h-4 w-4 sm:h-5 sm:w-5 anim-water-splash"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          d="M12 2 C12 2 5 12 5 17 C5 20.9 8.1 24 12 24 C15.9 24 19 20.9 19 17 C19 12 12 2 12 2Z"
-                          fill="#38BDF8"
-                          class="anim-water-fill"
-                        />
-                        <ellipse
-                          cx="9"
-                          cy="15"
-                          rx="1.5"
-                          ry="3"
-                          fill="white"
-                          opacity="0.3"
-                          transform="rotate(-15 9 15)"
-                        />
-                        <circle
-                          cx="8"
-                          cy="6"
-                          r="1.5"
-                          fill="#38BDF8"
-                          opacity="0.5"
-                          class="anim-side-drop"
-                          style="--drop-delay: 0s"
-                        />
-                        <circle
-                          cx="17"
-                          cy="8"
-                          r="1.2"
-                          fill="#38BDF8"
-                          opacity="0.4"
-                          class="anim-side-drop"
-                          style="--drop-delay: 0.3s"
-                        />
-                        <circle
-                          cx="6"
-                          cy="10"
-                          r="1"
-                          fill="#38BDF8"
-                          opacity="0.3"
-                          class="anim-side-drop"
-                          style="--drop-delay: 0.6s"
-                        />
-                      </svg>
+                      <img
+                        :src="knyStarLanternAsset"
+                        alt="គោមផ្កាយ"
+                        class="h-4.5 w-4.5 sm:h-5.5 sm:w-5.5 object-contain select-none pointer-events-none anim-kny-lantern-sway"
+                      />
                     </div>
 
                     <!-- Today Badge -->

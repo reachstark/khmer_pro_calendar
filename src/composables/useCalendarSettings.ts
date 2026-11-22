@@ -17,6 +17,7 @@ export const PREVIEW_DECEMBER_KEY = 'khmer_calendar_preview_december'
 export const PREVIEW_VALENTINE_KEY = 'khmer_calendar_preview_valentine'
 export const PREVIEW_CNY_KEY = 'khmer_calendar_preview_cny'
 export const PREVIEW_HALLOWEEN_KEY = 'khmer_calendar_preview_halloween'
+export const PREVIEW_KNY_KEY = 'khmer_calendar_preview_kny'
 
 // Global reactive states so all components share the exact same instance
 const theme = ref<AppTheme>('system')
@@ -32,6 +33,7 @@ const previewDecember = ref<boolean>(false)
 const previewValentine = ref<boolean>(false)
 const previewCNY = ref<boolean>(false)
 const previewHalloween = ref<boolean>(false)
+const previewKNY = ref<boolean>(false)
 
 const fontSizeValues: Record<FontSizeScale, string> = {
   sm: '14px',
@@ -169,6 +171,11 @@ export function useCalendarSettings() {
       urlParams?.get('previewBats') === 'true' ||
       localStorage.getItem(PREVIEW_HALLOWEEN_KEY) === 'true'
 
+    previewKNY.value =
+      urlParams?.get('previewKNY') === 'true' ||
+      urlParams?.get('previewKhmerNewYear') === 'true' ||
+      localStorage.getItem(PREVIEW_KNY_KEY) === 'true'
+
     applyTheme(theme.value)
     applyFontSize(fontSize.value)
     applyFontFamily(fontFamily.value)
@@ -232,6 +239,10 @@ export function useCalendarSettings() {
     localStorage.setItem(PREVIEW_HALLOWEEN_KEY, val.toString())
   })
 
+  watch(previewKNY, (val) => {
+    localStorage.setItem(PREVIEW_KNY_KEY, val.toString())
+  })
+
   onMounted(() => {
     init()
 
@@ -247,6 +258,8 @@ export function useCalendarSettings() {
           previewCNY.value = e.newValue === 'true'
         } else if (e.key === PREVIEW_HALLOWEEN_KEY) {
           previewHalloween.value = e.newValue === 'true'
+        } else if (e.key === PREVIEW_KNY_KEY) {
+          previewKNY.value = e.newValue === 'true'
         }
       })
     }
@@ -264,6 +277,7 @@ export function useCalendarSettings() {
     previewValentine,
     previewCNY,
     previewHalloween,
+    previewKNY,
     setTheme: (t: AppTheme) => (theme.value = t),
     setStartOfWeek: (d: number) => (startOfWeek.value = d),
     toggleWeekNumbers: () => (showWeekNumbers.value = !showWeekNumbers.value),
@@ -278,6 +292,7 @@ export function useCalendarSettings() {
     togglePreviewValentine: () => (previewValentine.value = !previewValentine.value),
     togglePreviewCNY: () => (previewCNY.value = !previewCNY.value),
     togglePreviewHalloween: () => (previewHalloween.value = !previewHalloween.value),
+    togglePreviewKNY: () => (previewKNY.value = !previewKNY.value),
     init,
   }
 }

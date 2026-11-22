@@ -12,6 +12,7 @@ import SearchDateModal from '@/components/SearchDateModal.vue'
 import CalendarSettingsModal from '@/components/CalendarSettingsModal.vue'
 import MobileBottomNav from '@/components/MobileBottomNav.vue'
 import SeasonAnimation from '@/components/SeasonAnimation.vue'
+import ZodiacYearCard from '@/components/ZodiacYearCard.vue'
 import { inject } from '@vercel/analytics'
 
 import { useCalendarState } from '@/composables/useCalendarState'
@@ -183,8 +184,10 @@ onUnmounted(() => {
     <!-- Top Sticky Header Bar -->
     <CalendarHeader />
 
-    <!-- Main Responsive Body Layout -->
-    <main class="flex-1 w-full max-w-7xl mx-auto px-3 py-3 sm:px-6 sm:py-6 pb-6 lg:pb-8">
+    <!-- Main Responsive Body Layout (Safe-Area Aware for Notch/Cutout Displays) -->
+    <main
+      class="flex-1 w-full max-w-7xl mx-auto py-3 sm:py-6 pl-[max(0.75rem,env(safe-area-inset-left,0px))] pr-[max(0.75rem,env(safe-area-inset-right,0px))] sm:px-6 pb-6 lg:pb-8"
+    >
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
         <!-- Main Column (Left/Center on Desktop) with Touch Swipe Navigation -->
         <div
@@ -263,6 +266,9 @@ onUnmounted(() => {
             </div>
           </div>
 
+          <!-- Zodiac Animal of the Year Highlight Card (Main Screen) -->
+          <ZodiacYearCard />
+
           <!-- Cambodian Holidays & Events List for Current Month (Desktop view) -->
           <div id="desktop-holidays-sidebar" class="hidden lg:flex flex-1 flex-col min-h-0">
             <MonthHolidaysList />
@@ -271,9 +277,9 @@ onUnmounted(() => {
       </div>
     </main>
 
-    <!-- Footer Attribution & Live Visitor Counter -->
+    <!-- Footer Attribution & Live Visitor Counter (Safe-Area Aware) -->
     <footer
-      class="w-full border-t border-slate-200/80 bg-white/40 pt-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:py-3 px-4 text-center text-xs text-slate-500 dark:border-slate-800/80 dark:bg-slate-900/40 dark:text-slate-400 backdrop-blur-sm"
+      class="w-full border-t border-slate-200/80 bg-white/40 pt-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:py-3 pl-[max(1rem,env(safe-area-inset-left,0px))] pr-[max(1rem,env(safe-area-inset-right,0px))] text-center text-xs text-slate-500 dark:border-slate-800/80 dark:bg-slate-900/40 dark:text-slate-400 backdrop-blur-sm"
     >
       <div
         class="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-2 sm:gap-4 font-medium"
@@ -313,7 +319,7 @@ onUnmounted(() => {
         @click="isHolidaysDrawerOpen = false"
       ></div>
       <div
-        class="relative z-10 w-full max-h-[85vh] overflow-y-auto rounded-t-3xl border border-slate-200 bg-white p-4 shadow-2xl dark:border-slate-800 dark:bg-slate-900 animate-in slide-in-from-bottom duration-200"
+        class="relative z-10 w-full max-h-[85dvh] overflow-y-auto rounded-t-3xl border border-slate-200 bg-white p-4 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] pl-[max(1rem,env(safe-area-inset-left,0px))] pr-[max(1rem,env(safe-area-inset-right,0px))] shadow-2xl dark:border-slate-800 dark:bg-slate-900 animate-in slide-in-from-bottom duration-200"
       >
         <MonthHolidaysList />
       </div>

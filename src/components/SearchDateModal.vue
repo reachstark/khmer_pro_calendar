@@ -1,23 +1,10 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import {
-  Search,
-  X,
-  Calendar,
-  ArrowRight,
-} from 'lucide-vue-next'
+import { Search, X, Calendar, ArrowRight } from 'lucide-vue-next'
 import { useCalendarState } from '@/composables/useCalendarState'
-import {
-  KHMER_SOLAR_MONTHS,
-  getKhmerDayDetail,
-  type KhmerDayDetail,
-} from '@/utils/khmerCalendar'
+import { KHMER_SOLAR_MONTHS, getKhmerDayDetail, type KhmerDayDetail } from '@/utils/khmerCalendar'
 
-const {
-  currentYear,
-  isSearchOpen,
-  goToDate,
-} = useCalendarState()
+const { currentYear, isSearchOpen, goToDate } = useCalendarState()
 
 const searchQuery = ref('')
 const pickYear = ref(currentYear.value)
@@ -68,11 +55,7 @@ function jumpToPickedDate() {
 }
 
 function handleSelectEvent(item: KhmerDayDetail) {
-  goToDate(
-    item.gregorian.year,
-    item.gregorian.month - 1,
-    item.gregorian.day
-  )
+  goToDate(item.gregorian.year, item.gregorian.month - 1, item.gregorian.day)
   isSearchOpen.value = false
 }
 
@@ -93,7 +76,10 @@ const quickQueries = [
 </script>
 
 <template>
-  <div v-if="isSearchOpen" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+  <div
+    v-if="isSearchOpen"
+    class="fixed inset-0 z-50 flex items-center justify-center pt-[max(0.75rem,env(safe-area-inset-top,0px))] pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] pl-[max(0.75rem,env(safe-area-inset-left,0px))] pr-[max(0.75rem,env(safe-area-inset-right,0px))] sm:p-4"
+  >
     <!-- Backdrop overlay -->
     <div
       class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
@@ -105,9 +91,13 @@ const quickQueries = [
       class="relative z-10 w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-200 bg-white p-4 sm:p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900 animate-in fade-in zoom-in-95 duration-200"
     >
       <!-- Header -->
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
+      <div
+        class="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800"
+      >
         <div class="flex items-center gap-2">
-          <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+          <div
+            class="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400"
+          >
             <Search class="h-4 w-4" />
           </div>
           <div>
@@ -164,7 +154,10 @@ const quickQueries = [
       </div>
 
       <!-- Search Results Area -->
-      <div v-if="searchQuery.trim()" class="mt-4 border-t border-slate-100 pt-3 dark:border-slate-800">
+      <div
+        v-if="searchQuery.trim()"
+        class="mt-4 border-t border-slate-100 pt-3 dark:border-slate-800"
+      >
         <h4 class="text-xs font-bold text-slate-500 mb-2">
           លទ្ធផលស្វែងរក ({{ searchResults.length }})
         </h4>
@@ -221,11 +214,7 @@ const quickQueries = [
               v-model.number="pickMonth"
               class="w-full rounded-xl border border-slate-200 bg-slate-50 p-2 text-xs sm:text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-white"
             >
-              <option
-                v-for="m in KHMER_SOLAR_MONTHS"
-                :key="m.index"
-                :value="m.index"
-              >
+              <option v-for="m in KHMER_SOLAR_MONTHS" :key="m.index" :value="m.index">
                 {{ m.kh }}
               </option>
             </select>

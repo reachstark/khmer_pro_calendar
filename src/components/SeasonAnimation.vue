@@ -5,6 +5,7 @@ import lottie, { type AnimationItem } from 'lottie-web'
 import { useCalendarState } from '@/composables/useCalendarState'
 import { useCalendarSettings } from '@/composables/useCalendarSettings'
 import { toKhmerNumber, CHINESE_NEW_YEAR_MAP } from '@/utils/khmerCalendar'
+import { getViewedYearZodiacSummary, isDateInKhmerNewYear } from '@/utils/khmerZodiac'
 import HalloweenBatsOverlay from '@/components/HalloweenBatsOverlay.vue'
 import fireworksAnimationData from '@/assets/lottie/fireworks.json'
 import snowflakeAsset from '@/assets/snowflake.png'
@@ -12,10 +13,18 @@ import snowmanAsset from '@/assets/snowman.png'
 import christmasTreeAsset from '@/assets/christmas_tree.png'
 import heartAsset from '@/assets/heart.png'
 import redEnvelopeAsset from '@/assets/red_envelope.png'
+import knyRumduolAsset from '@/assets/kny_rumduol.png'
+import knyStarLanternAsset from '@/assets/kny_star_lantern.png'
 
 const { currentMonth, currentYear, selectedDate } = useCalendarState()
-const { enableSeasonsAnim, previewDecember, previewValentine, previewCNY, previewHalloween } =
-  useCalendarSettings()
+const {
+  enableSeasonsAnim,
+  previewDecember,
+  previewValentine,
+  previewCNY,
+  previewHalloween,
+  previewKNY,
+} = useCalendarSettings()
 
 const now = ref(new Date())
 
@@ -52,6 +61,35 @@ const isViewingHalloweenDate = computed(
 const isHalloweenActive = computed(
   () => isRealHalloweenToday.value || isViewingHalloweenDate.value || previewHalloween.value,
 )
+
+// Khmer New Year (April month viewing, actual KNY days, viewing KNY date modal, or previewKNY)
+const isApril = computed(() => currentMonth.value === 3)
+const isRealKNYToday = computed(() => isDateInKhmerNewYear(now.value))
+const isViewingKNYDate = computed(() => {
+  if (!selectedDate.value) return false
+  if (selectedDate.value.holiday?.id.startsWith('kny-')) return true
+  const g = selectedDate.value.gregorian
+  return isDateInKhmerNewYear(new Date(g.year, g.month - 1, g.day))
+})
+const isKNYActive = computed(
+  () => isApril.value || isRealKNYToday.value || isViewingKNYDate.value || previewKNY.value,
+)
+const knyZodiacSummary = computed(() => getViewedYearZodiacSummary(currentYear.value, 3))
+const showKNYBanner = ref(false)
+let knyBannerTimer: ReturnType<typeof setTimeout> | null = null
+
+function triggerKNYBanner() {
+  if (knyBannerTimer) clearTimeout(knyBannerTimer)
+  showKNYBanner.value = true
+  knyBannerTimer = setTimeout(() => {
+    showKNYBanner.value = false
+  }, 6000)
+}
+
+function dismissKNYBanner() {
+  showKNYBanner.value = false
+  if (knyBannerTimer) clearTimeout(knyBannerTimer)
+}
 
 // January New Year Celebration & Lottie Fireworks
 const isJanuary = computed(() => currentMonth.value === 0)
@@ -150,12 +188,28 @@ watch(
       if (bannerTimer) clearTimeout(bannerTimer)
       cleanUpLottie()
     }
+
+    if (m === 3) {
+      triggerKNYBanner()
+    } else {
+      showKNYBanner.value = false
+      if (knyBannerTimer) clearTimeout(knyBannerTimer)
+    }
   },
   { immediate: true },
 )
 
+watch(
+  () => previewKNY.value,
+  (val) => {
+    if (val) triggerKNYBanner()
+    else if (!isApril.value) dismissKNYBanner()
+  },
+)
+
 onUnmounted(() => {
   if (bannerTimer) clearTimeout(bannerTimer)
+  if (knyBannerTimer) clearTimeout(knyBannerTimer)
   cleanUpLottie()
 })
 
@@ -215,6 +269,25 @@ const envelopes = Array.from({ length: 32 }, (_, i) => ({
   opacity: Number((0.82 + (i % 4) * 0.05).toFixed(2)), // 0.82 to 0.97
   swayDuration: `${Number((2.8 + (i % 4) * 0.6).toFixed(1))}s`,
 }))
+
+// Khmer New Year drifting Rumduol national flowers (ផ្ការំដួល):
+const rumduolFlowers = Array.from({ length: 24 }, (_, i) => ({
+  id: i,
+  left: `${Number(((i * 4.15 + (i % 5) * 3.2) % 96).toFixed(2))}%`,
+  size: 20 + (i % 5) * 4.5, // 20px to 38px
+  duration: `${Number((6.8 + (i % 5) * 1.5).toFixed(1))}s`,
+  delay: `${Number(((i * 0.34) % 6.5).toFixed(2))}s`,
+  opacity: Number((0.76 + (i % 4) * 0.06).toFixed(2)),
+  swayDuration: `${Number((3.0 + (i % 4) * 0.6).toFixed(1))}s`,
+}))
+
+// Khmer New Year hanging Star Lanterns (គោមផ្កាយ) along the top corners/edges:
+const knyLanterns = [
+  { id: 0, left: '3%', size: 46, delay: '0s', duration: '3.6s', mobileHide: false },
+  { id: 1, left: '12%', size: 34, delay: '0.6s', duration: '4.1s', mobileHide: true },
+  { id: 2, left: '84%', size: 36, delay: '0.3s', duration: '3.9s', mobileHide: true },
+  { id: 3, left: '91%', size: 48, delay: '0.9s', duration: '3.4s', mobileHide: false },
+]
 </script>
 
 <template>
@@ -393,9 +466,9 @@ const envelopes = Array.from({ length: 32 }, (_, i) => ({
         </svg>
       </div>
 
-      <!-- 3. Sticky Piles of Snow on Mobile with Snowman & Christmas Tree -->
+      <!-- 3. Sticky Piles of Snow on Mobile with Snowman & Christmas Tree (Safe-Area Aware) -->
       <div
-        class="fixed bottom-[54px] sm:bottom-[60px] left-0 right-0 h-16 sm:h-20 pointer-events-none z-30 select-none lg:hidden overflow-hidden"
+        class="fixed bottom-[calc(54px+env(safe-area-inset-bottom,0px))] sm:bottom-[calc(60px+env(safe-area-inset-bottom,0px))] left-0 right-0 h-16 sm:h-20 pointer-events-none z-30 select-none lg:hidden overflow-hidden"
       >
         <!-- Mobile Snowman on Left edge of snow pile -->
         <div
@@ -503,6 +576,59 @@ const envelopes = Array.from({ length: 32 }, (_, i) => ({
       </div>
     </template>
 
+    <!-- 3b. Khmer New Year (ចូលឆ្នាំខ្មែរ): Drifting Rumduol Flowers & Hanging Star Lanterns -->
+    <template v-if="isKNYActive">
+      <!-- Hanging Swaying Star Lanterns (គោមផ្កាយ) -->
+      <div
+        v-for="lantern in knyLanterns"
+        :key="'kny-lantern-' + lantern.id"
+        class="absolute top-[calc(6.2rem+env(safe-area-inset-top,0px))] lg:top-16 select-none pointer-events-none origin-top"
+        :class="lantern.mobileHide ? 'hidden md:block' : ''"
+        :style="{
+          left: lantern.left,
+          width: lantern.size + 'px',
+          height: lantern.size + 'px',
+          animation: `lantern-pendulum ${lantern.duration} ease-in-out infinite`,
+          animationDelay: lantern.delay,
+        }"
+      >
+        <div
+          class="mx-auto h-3 w-[1.5px] bg-gradient-to-b from-amber-500/70 to-amber-300/90 -mt-3"
+        ></div>
+        <img
+          :src="knyStarLanternAsset"
+          alt=""
+          class="w-full h-full object-contain kny-lantern-shadow select-none pointer-events-none"
+        />
+      </div>
+
+      <!-- Drifting Golden Rumduol Flowers (ផ្ការំដួល) -->
+      <div
+        v-for="flower in rumduolFlowers"
+        :key="'rumduol-' + flower.id"
+        class="absolute select-none pointer-events-none"
+        :style="{
+          left: flower.left,
+          top: '-45px',
+          width: flower.size + 'px',
+          height: flower.size + 'px',
+          opacity: flower.opacity,
+          animation: `rumduol-fall ${flower.duration} linear infinite`,
+          animationDelay: flower.delay,
+        }"
+      >
+        <img
+          :src="knyRumduolAsset"
+          alt=""
+          class="w-full h-full object-contain rumduol-shadow select-none pointer-events-none"
+          :style="{
+            animation: `rumduol-sway ${flower.swayDuration} ease-in-out infinite`,
+            animationDelay: flower.delay,
+          }"
+        />
+      </div>
+    </template>
+
     <!-- 4. Cambodia Seasonal Animations (Rainy & Dry) -->
     <template v-if="enableSeasonsAnim">
       <!-- Rainy Season: May - Oct (រដូវវស្សា) -->
@@ -572,7 +698,7 @@ const envelopes = Array.from({ length: 32 }, (_, i) => ({
     >
       <div
         v-if="showNewYearBanner && isJanuary"
-        class="pointer-events-auto fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2.5 sm:gap-3.5 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full bg-slate-900/95 text-white shadow-2xl shadow-amber-500/40 border border-amber-400/60 backdrop-blur-xl animate-in fade-in"
+        class="pointer-events-auto fixed top-[calc(0.75rem+env(safe-area-inset-top,0px))] sm:top-[calc(1rem+env(safe-area-inset-top,0px))] left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2.5 sm:gap-3.5 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full bg-slate-900/95 text-white shadow-2xl shadow-amber-500/40 border border-amber-400/60 backdrop-blur-xl animate-in fade-in max-w-[calc(100vw-1.5rem)]"
       >
         <span class="text-xl sm:text-2xl animate-bounce select-none">🎆</span>
         <div class="text-center sm:text-left">
@@ -590,6 +716,102 @@ const envelopes = Array.from({ length: 32 }, (_, i) => ({
           type="button"
           @click="dismissBanner"
           class="ml-1 -mr-1 p-1 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+          title="បិទ (Close)"
+        >
+          <X class="h-3.5 w-3.5" />
+        </button>
+      </div>
+    </Transition>
+  </Teleport>
+
+  <!-- 7. Khmer New Year Floating Celebration Banner (With Zodiac Animal Emblem & Safe-Area Top) -->
+  <Teleport to="body">
+    <Transition
+      enter-active-class="transition duration-500 ease-out"
+      enter-from-class="transform -translate-y-12 opacity-0 scale-95"
+      enter-to-class="transform translate-y-0 opacity-100 scale-100"
+      leave-active-class="transition duration-300 ease-in"
+      leave-from-class="transform translate-y-0 opacity-100 scale-100"
+      leave-to-class="transform -translate-y-12 opacity-0 scale-95"
+    >
+      <div
+        v-if="showKNYBanner && (isApril || previewKNY)"
+        class="pointer-events-auto fixed top-[calc(0.75rem+env(safe-area-inset-top,0px))] sm:top-[calc(1rem+env(safe-area-inset-top,0px))] left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2.5 sm:gap-3.5 pl-2.5 pr-3.5 py-2 sm:pl-3 sm:pr-5 sm:py-2 rounded-full bg-gradient-to-r from-slate-950/95 via-amber-950/95 to-slate-950/95 text-white shadow-2xl shadow-amber-500/40 border border-amber-400/70 backdrop-blur-xl max-w-[calc(100vw-1.5rem)]"
+      >
+        <img
+          :src="knyZodiacSummary.zodiac.imageUrl"
+          :alt="`ឆ្នាំ${knyZodiacSummary.zodiac.nameKh}`"
+          class="h-9 w-9 sm:h-10 sm:w-10 rounded-full object-cover border-2 border-amber-400/80 shadow-md shrink-0"
+        />
+        <div class="min-w-0 text-left">
+          <div
+            class="text-xs sm:text-sm font-extrabold bg-gradient-to-r from-amber-200 via-yellow-300 to-orange-300 bg-clip-text text-transparent truncate"
+          >
+            សួស្តីឆ្នាំថ្មី! ឆ្នាំ{{ knyZodiacSummary.zodiac.nameKh }}
+            {{ knyZodiacSummary.sakName }} ព.ស.{{ knyZodiacSummary.beYearKh }}
+          </div>
+          <div class="text-[10px] sm:text-xs font-semibold text-amber-100/90 truncate">
+            Happy Khmer New Year {{ currentYear }} • Year of the
+            {{ knyZodiacSummary.zodiac.nameEn }}
+          </div>
+        </div>
+        <img
+          :src="knyRumduolAsset"
+          alt=""
+          class="hidden sm:block h-7 w-7 object-contain shrink-0 anim-kny-rumduol-bloom"
+        />
+        <button
+          type="button"
+          @click="dismissKNYBanner"
+          class="ml-0.5 -mr-1 p-1 rounded-full text-amber-200/70 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
+          title="បិទ (Close)"
+        >
+          <X class="h-3.5 w-3.5" />
+        </button>
+      </div>
+    </Transition>
+  </Teleport>
+
+  <!-- 7. Khmer New Year Floating Celebration Banner (With Zodiac Animal Emblem & Safe-Area Top) -->
+  <Teleport to="body">
+    <Transition
+      enter-active-class="transition duration-500 ease-out"
+      enter-from-class="transform -translate-y-12 opacity-0 scale-95"
+      enter-to-class="transform translate-y-0 opacity-100 scale-100"
+      leave-active-class="transition duration-300 ease-in"
+      leave-from-class="transform translate-y-0 opacity-100 scale-100"
+      leave-to-class="transform -translate-y-12 opacity-0 scale-95"
+    >
+      <div
+        v-if="showKNYBanner && (isApril || previewKNY)"
+        class="pointer-events-auto fixed top-[calc(0.75rem+env(safe-area-inset-top,0px))] sm:top-[calc(1rem+env(safe-area-inset-top,0px))] left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2.5 sm:gap-3.5 pl-2.5 pr-3.5 py-2 sm:pl-3 sm:pr-5 sm:py-2 rounded-full bg-gradient-to-r from-slate-950/95 via-amber-950/95 to-slate-950/95 text-white shadow-2xl shadow-amber-500/40 border border-amber-400/70 backdrop-blur-xl max-w-[calc(100vw-1.5rem)]"
+      >
+        <img
+          :src="knyZodiacSummary.zodiac.imageUrl"
+          :alt="`ឆ្នាំ${knyZodiacSummary.zodiac.nameKh}`"
+          class="h-9 w-9 sm:h-10 sm:w-10 rounded-full object-cover border-2 border-amber-400/80 shadow-md shrink-0"
+        />
+        <div class="min-w-0 text-left">
+          <div
+            class="text-xs sm:text-sm font-extrabold bg-gradient-to-r from-amber-200 via-yellow-300 to-orange-300 bg-clip-text text-transparent truncate"
+          >
+            សួស្តីឆ្នាំថ្មី! ឆ្នាំ{{ knyZodiacSummary.zodiac.nameKh }} {{ knyZodiacSummary.sakName }} ព.ស.{{
+              knyZodiacSummary.beYearKh
+            }}
+          </div>
+          <div class="text-[10px] sm:text-xs font-semibold text-amber-100/90 truncate">
+            Happy Khmer New Year {{ currentYear }} • Year of the {{ knyZodiacSummary.zodiac.nameEn }}
+          </div>
+        </div>
+        <img
+          :src="knyRumduolAsset"
+          alt=""
+          class="hidden sm:block h-7 w-7 object-contain shrink-0 anim-kny-rumduol-bloom"
+        />
+        <button
+          type="button"
+          @click="dismissKNYBanner"
+          class="ml-0.5 -mr-1 p-1 rounded-full text-amber-200/70 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
           title="បិទ (Close)"
         >
           <X class="h-3.5 w-3.5" />

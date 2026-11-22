@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import {
-  Search,
-  CalendarDays,
-  Settings,
-  Sparkles,
-} from 'lucide-vue-next'
+import { Search, CalendarDays, Settings, Sparkles } from 'lucide-vue-next'
 import { useCalendarState } from '@/composables/useCalendarState'
 
 const {
@@ -22,7 +17,7 @@ const holidayCount = computed(() => monthHolidays.value.holidays.length)
 
 <template>
   <nav
-    class="fixed bottom-0 left-0 right-0 z-30 lg:hidden border-t border-slate-200/80 bg-white/90 px-2 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom,0px))] backdrop-blur-lg dark:border-slate-800/80 dark:bg-slate-900/90 transition-colors shadow-lg"
+    class="fixed bottom-0 left-0 right-0 z-30 lg:hidden border-t border-slate-200/80 bg-white/90 pt-1.5 pb-[max(0.45rem,env(safe-area-inset-bottom,0px))] pl-[max(0.5rem,env(safe-area-inset-left,0px))] pr-[max(0.5rem,env(safe-area-inset-right,0px))] backdrop-blur-lg dark:border-slate-800/80 dark:bg-slate-900/90 transition-colors shadow-lg"
   >
     <div class="mx-auto flex max-w-md items-center justify-between">
       <!-- 1. Today (ថ្ងៃនេះ) -->
@@ -57,7 +52,9 @@ const holidayCount = computed(() => monthHolidays.value.holidays.length)
             {{ holidayCount }}
           </span>
         </div>
-        <span class="text-[10px] leading-tight font-semibold truncate max-w-[85px] sm:max-w-none text-center">
+        <span
+          class="text-[10px] leading-tight font-semibold truncate max-w-[85px] sm:max-w-none text-center"
+        >
           បុណ្យជាតិ & ព្រឹត្តិការណ៍
         </span>
       </button>

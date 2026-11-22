@@ -13,6 +13,10 @@ import {
 import confetti from 'canvas-confetti'
 import { useCalendarState } from '@/composables/useCalendarState'
 import { toKhmerNumber } from '@/utils/khmerCalendar'
+import { getKhmerZodiacByIndex } from '@/utils/khmerZodiac'
+import { getNewYear } from '@thyrith/momentkh'
+import knyRumduolAsset from '@/assets/kny_rumduol.png'
+import knyStarLanternAsset from '@/assets/kny_star_lantern.png'
 
 const { selectedDate, closeModal, selectPrevDay, selectNextDay } = useCalendarState()
 
@@ -117,6 +121,30 @@ const isChristmas = computed(() => {
   )
 })
 
+const isKhmerNewYear = computed(() => {
+  if (!selectedDate.value) return false
+  if (selectedDate.value.holiday?.id.startsWith('kny-')) return true
+  const ny = getNewYear(selectedDate.value.gregorian.year)
+  if (!ny) return false
+  return (
+    selectedDate.value.gregorian.month === ny.month &&
+    selectedDate.value.gregorian.day >= ny.day &&
+    selectedDate.value.gregorian.day <= ny.day + 2
+  )
+})
+
+const selectedZodiac = computed(() => {
+  if (!selectedDate.value) return null
+  return getKhmerZodiacByIndex(selectedDate.value.khmer.animalYear)
+})
+
+const selectedYearSongkranTime = computed(() => {
+  if (!selectedDate.value) return ''
+  const ny = getNewYear(selectedDate.value.gregorian.year)
+  if (!ny) return ''
+  return `${toKhmerNumber(String(ny.hour).padStart(2, '0'))}:${toKhmerNumber(String(ny.minute).padStart(2, '0'))}`
+})
+
 function copyKhmerDate() {
   if (!selectedDate.value) return
   const textToCopy = selectedDate.value.copyFormat
@@ -154,7 +182,7 @@ function shareDate() {
 <template>
   <div
     v-if="selectedDate"
-    class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+    class="fixed inset-0 z-50 flex items-end sm:items-center justify-center pt-[env(safe-area-inset-top,0px)] pl-[env(safe-area-inset-left,0px)] pr-[env(safe-area-inset-right,0px)] sm:p-4"
   >
     <!-- Backdrop overlay with dynamic drag opacity -->
     <div
@@ -175,7 +203,7 @@ function shareDate() {
         transform: dragOffsetY > 0 ? `translateY(${dragOffsetY}px)` : undefined,
         transition: isDragging ? 'none' : 'transform 0.22s cubic-bezier(0.2, 0.9, 0.4, 1.1)',
       }"
-      class="relative z-10 w-full max-w-2xl max-h-[92vh] sm:max-h-[85vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border border-slate-200 bg-white p-4 sm:p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900 duration-200 transition-colors"
+      class="relative z-10 w-full max-w-2xl max-h-[90dvh] sm:max-h-[85dvh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border border-slate-200 bg-white p-4 sm:p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] sm:pb-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900 duration-200 transition-colors"
     >
       <!-- Mobile Pull Bar Indicator (Draggable Handle) -->
       <div
@@ -299,10 +327,14 @@ function shareDate() {
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+              <span
+                class="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300"
+              >
                 ឆ្លងឆ្នាំសកល • Happy New Year
               </span>
-              <span class="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:text-amber-200">
+              <span
+                class="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:text-amber-200"
+              >
                 {{ selectedDate.gregorian.year }}
               </span>
             </div>
@@ -329,10 +361,14 @@ function shareDate() {
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-xs font-bold uppercase tracking-wider text-red-700 dark:text-red-300">
+              <span
+                class="text-xs font-bold uppercase tracking-wider text-red-700 dark:text-red-300"
+              >
                 ពិធីបុណ្យចូលឆ្នាំចិន • Chinese New Year
               </span>
-              <span class="rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-bold text-red-800 dark:text-red-200">
+              <span
+                class="rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-bold text-red-800 dark:text-red-200"
+              >
                 恭喜发财
               </span>
             </div>
@@ -359,10 +395,14 @@ function shareDate() {
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-xs font-bold uppercase tracking-wider text-pink-700 dark:text-pink-300">
+              <span
+                class="text-xs font-bold uppercase tracking-wider text-pink-700 dark:text-pink-300"
+              >
                 ទិវានៃក្ដីស្រឡាញ់ • Valentine's Day
               </span>
-              <span class="rounded-full bg-pink-500/20 px-2 py-0.5 text-[10px] font-bold text-pink-800 dark:text-pink-200">
+              <span
+                class="rounded-full bg-pink-500/20 px-2 py-0.5 text-[10px] font-bold text-pink-800 dark:text-pink-200"
+              >
                 ១៤ កុម្ភៈ
               </span>
             </div>
@@ -370,7 +410,8 @@ function shareDate() {
               រីករាយទិវានៃក្ដីស្រឡាញ់! 💕🌹
             </h4>
             <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
-              អបអរសាទរក្ដីស្រឡាញ់ មិត្តភាពដ៏បរិសុទ្ធ និងការចែករំលែកសេចក្ដីល្អចំពោះមនុស្សជាទីស្រឡាញ់ និងមាតាបិតា!
+              អបអរសាទរក្ដីស្រឡាញ់ មិត្តភាពដ៏បរិសុទ្ធ និងការចែករំលែកសេចក្ដីល្អចំពោះមនុស្សជាទីស្រឡាញ់
+              និងមាតាបិតា!
             </p>
           </div>
         </div>
@@ -389,10 +430,14 @@ function shareDate() {
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-xs font-bold uppercase tracking-wider text-orange-700 dark:text-orange-300">
+              <span
+                class="text-xs font-bold uppercase tracking-wider text-orange-700 dark:text-orange-300"
+              >
                 ពិធីបុណ្យហាឡូវីន • Halloween
               </span>
-              <span class="rounded-full bg-orange-500/20 px-2 py-0.5 text-[10px] font-bold text-orange-800 dark:text-orange-200">
+              <span
+                class="rounded-full bg-orange-500/20 px-2 py-0.5 text-[10px] font-bold text-orange-800 dark:text-orange-200"
+              >
                 Trick or Treat
               </span>
             </div>
@@ -406,7 +451,53 @@ function shareDate() {
         </div>
       </div>
 
-      <!-- 5. Christmas Celebration Decor (Dec 24 / 25) -->
+      <!-- 5. Khmer New Year Celebration Decor (Moha Songkran / Choul Chnam Thmey) -->
+      <div
+        v-else-if="isKhmerNewYear"
+        class="mt-3.5 relative overflow-hidden rounded-2xl border border-amber-400/70 bg-gradient-to-r from-amber-500/25 via-yellow-400/20 to-orange-500/25 p-4 shadow-lg shadow-amber-500/20 dark:border-amber-400/55 dark:from-amber-950/60 dark:via-yellow-950/45 dark:to-orange-950/55 animate-gradient"
+      >
+        <!-- Decorative Rumduol & Star Lantern Accents -->
+        <img
+          :src="knyStarLanternAsset"
+          alt=""
+          class="pointer-events-none select-none absolute -right-1 -top-1 h-12 w-12 opacity-30 anim-kny-lantern-sway"
+        />
+        <div class="relative z-10 flex items-center gap-3">
+          <div
+            class="flex h-13 w-13 shrink-0 items-center justify-center rounded-2xl bg-amber-500/20 p-1.5 border border-amber-400/60 shadow-inner"
+          >
+            <img
+              :src="knyRumduolAsset"
+              alt="ផ្ការំដួល"
+              class="h-full w-full object-contain anim-kny-rumduol-bloom"
+            />
+          </div>
+          <div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span
+                class="text-xs font-extrabold uppercase tracking-wider text-amber-800 dark:text-amber-300"
+              >
+                ចូលឆ្នាំថ្មីប្រពៃណីជាតិ • Khmer New Year
+              </span>
+              <span
+                v-if="selectedYearSongkranTime"
+                class="rounded-full bg-amber-500/25 px-2 py-0.5 text-[10px] font-bold text-amber-900 dark:text-amber-200 border border-amber-400/40"
+              >
+                មហាសង្ក្រាន្ត {{ selectedYearSongkranTime }}
+              </span>
+            </div>
+            <h4 class="text-base font-extrabold text-slate-900 dark:text-white mt-0.5">
+              សួស្តីឆ្នាំថ្មី ឆ្នាំ{{ selectedDate.khmer.animalYearName }}
+              {{ selectedDate.khmer.sakName }}!
+            </h4>
+            <p class="text-xs text-slate-700 dark:text-slate-200 mt-0.5">
+              សូមទេវតាឆ្នាំថ្មីប្រទានពរជ័យ សិរីមង្គល វិបុលសុខ មហាប្រសើរ និងជោគជ័យគ្រប់ប្រការ!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Christmas Celebration Decor (Dec 24 / 25) -->
       <div
         v-else-if="isChristmas"
         class="mt-3.5 relative overflow-hidden rounded-2xl border border-emerald-500/60 bg-gradient-to-r from-emerald-600/25 via-red-500/25 to-emerald-600/25 p-4 shadow-lg shadow-emerald-500/15 dark:border-emerald-500/50 dark:from-emerald-950/50 dark:via-red-950/50 dark:to-emerald-950/50 animate-gradient"
@@ -419,10 +510,14 @@ function shareDate() {
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+              <span
+                class="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300"
+              >
                 បុណ្យណូអែល • Christmas Celebration
               </span>
-              <span class="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-200">
+              <span
+                class="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-200"
+              >
                 Merry Christmas
               </span>
             </div>
@@ -430,7 +525,8 @@ function shareDate() {
               រីករាយពិធីបុណ្យគ្រីស្ទម៉ាស់! 🎅🎁❄️
             </h4>
             <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
-              សូមឱ្យពិធីបុណ្យណូអែលនាំមកនូវសន្តិភាព សេចក្តីស្រឡាញ់ ភាពកក់ក្តៅ និងស្នាមញញឹមដល់គ្រប់ក្រុមគ្រួសារ!
+              សូមឱ្យពិធីបុណ្យណូអែលនាំមកនូវសន្តិភាព សេចក្តីស្រឡាញ់ ភាពកក់ក្តៅ
+              និងស្នាមញញឹមដល់គ្រប់ក្រុមគ្រួសារ!
             </p>
           </div>
         </div>
@@ -554,6 +650,58 @@ function shareDate() {
           <img src="/icons/holy_day.png" alt="" class="h-3.5 w-3.5 object-contain" />
           <span>ថ្ងៃសីល</span>
         </span>
+      </div>
+
+      <!-- Zodiac Animal of the Year Highlight Showcase -->
+      <div
+        v-if="selectedZodiac"
+        class="mt-4 relative overflow-hidden rounded-2xl border border-amber-400/45 bg-gradient-to-br p-3.5 shadow-sm dark:border-amber-500/35"
+        :class="selectedZodiac.accentGradient"
+      >
+        <div class="flex items-center gap-3.5">
+          <div
+            class="relative h-16 w-16 sm:h-18 sm:w-18 shrink-0 overflow-hidden rounded-2xl border-2 border-amber-400/75 bg-slate-950 shadow-md shadow-amber-500/20"
+          >
+            <img
+              :src="selectedZodiac.imageUrl"
+              :alt="`ឆ្នាំ${selectedZodiac.nameKh}`"
+              class="h-full w-full object-cover"
+            />
+            <span
+              class="absolute bottom-0.5 right-0.5 rounded-full bg-slate-950/75 px-1.5 py-0.2 text-[8px] font-bold text-amber-300 border border-amber-400/30"
+            >
+              AI
+            </span>
+          </div>
+
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span
+                class="text-[10px] font-extrabold uppercase tracking-wider text-amber-800 dark:text-amber-300"
+              >
+                ឆ្នាំសត្វប្រចាំកាលបរិច្ឆេទនេះ • Khmer Zodiac
+              </span>
+              <span
+                class="rounded-full border px-2 py-0.5 text-[10px] font-bold"
+                :class="selectedZodiac.badgeClasses"
+              >
+                {{ selectedZodiac.elementKh }} • {{ selectedZodiac.elementEn }}
+              </span>
+            </div>
+
+            <h4 class="mt-0.5 text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+              ឆ្នាំ{{ selectedDate.khmer.animalYearName }} {{ selectedDate.khmer.sakName }}
+              {{ selectedDate.khmer.animalYearEmoji }}
+              <span class="text-xs font-semibold text-slate-600 dark:text-slate-300">
+                (Year of the {{ selectedZodiac.nameEn }})
+              </span>
+            </h4>
+
+            <p class="mt-0.5 text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
+              {{ selectedZodiac.traitKh }}
+            </p>
+          </div>
+        </div>
       </div>
 
       <!-- Detailed Metrics Grid -->

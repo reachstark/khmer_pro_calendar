@@ -86,7 +86,10 @@ const fontFamilyOptions: {
 </script>
 
 <template>
-  <div v-if="isSettingsOpen" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+  <div
+    v-if="isSettingsOpen"
+    class="fixed inset-0 z-50 flex items-center justify-center pt-[max(0.75rem,env(safe-area-inset-top,0px))] pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] pl-[max(0.75rem,env(safe-area-inset-left,0px))] pr-[max(0.75rem,env(safe-area-inset-right,0px))] sm:p-4"
+  >
     <!-- Backdrop overlay -->
     <div
       class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
