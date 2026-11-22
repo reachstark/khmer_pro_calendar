@@ -558,17 +558,6 @@ function shareDate() {
             class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/50 to-black/25"
           ></div>
 
-          <!-- AI Generated Image Tag (Top-Left on Banner) -->
-          <div class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 z-10">
-            <span
-              class="inline-flex items-center gap-1.5 rounded-full bg-slate-950/70 backdrop-blur-md px-2.5 py-1 text-[10px] sm:text-[11px] font-semibold text-slate-100 border border-white/20 shadow-md select-none"
-              title="រូបភាពបង្កើតដោយ AI • AI Generated Image"
-            >
-              <Sparkles class="h-3 w-3 text-amber-400 shrink-0" />
-              <span>AI Generated Image</span>
-            </span>
-          </div>
-
           <!-- Official Holiday / Observance Badge on Image -->
           <div class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3">
             <span
@@ -667,11 +656,6 @@ function shareDate() {
               :alt="`ឆ្នាំ${selectedZodiac.nameKh}`"
               class="h-full w-full object-cover"
             />
-            <span
-              class="absolute bottom-0.5 right-0.5 rounded-full bg-slate-950/75 px-1.5 py-0.2 text-[8px] font-bold text-amber-300 border border-amber-400/30"
-            >
-              AI
-            </span>
           </div>
 
           <div class="min-w-0 flex-1">

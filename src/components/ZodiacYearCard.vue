@@ -75,11 +75,6 @@ function jumpToKhmerNewYear() {
           class="h-full w-full object-cover anim-zodiac-float"
           loading="eager"
         />
-        <span
-          class="absolute bottom-1 right-1 rounded-full bg-slate-950/75 px-1.5 py-0.5 text-[8px] font-bold text-amber-300 border border-amber-400/40 backdrop-blur-xs"
-        >
-          AI
-        </span>
       </button>
 
       <!-- Zodiac Identity & Blessings -->
@@ -195,12 +190,6 @@ function jumpToKhmerNewYear() {
                 :alt="`ឆ្នាំ${activeModalZodiac.nameKh}`"
                 class="h-full w-full object-cover"
               />
-              <span
-                class="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-slate-950/75 px-2 py-0.5 text-[9px] font-semibold text-amber-300 border border-white/15 backdrop-blur-xs"
-              >
-                <Sparkles class="h-2.5 w-2.5" />
-                AI
-              </span>
             </div>
 
             <div class="text-center sm:text-left flex-1">
