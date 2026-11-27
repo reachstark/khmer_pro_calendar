@@ -10,6 +10,7 @@ const SHOW_WEEK_NUM_KEY = 'khmer_calendar_show_week_num'
 const FONT_SIZE_KEY = 'khmer_calendar_font_size'
 const FONT_FAMILY_KEY = 'khmer_calendar_font_family'
 const SEASONS_ANIM_KEY = 'khmer_calendar_seasons_anim'
+const ENABLE_MINI_TOOLS_KEY = 'khmer_calendar_enable_mini_tools'
 
 // LocalStorage demo preview keys
 export const PREVIEW_COUNTDOWN_KEY = 'khmer_calendar_preview_countdown'
@@ -26,6 +27,7 @@ const showWeekNumbers = ref<boolean>(true)
 const fontSize = ref<FontSizeScale>('md')
 const fontFamily = ref<FontFamilyOption>('google-sans')
 const enableSeasonsAnim = ref<boolean>(true)
+const enableMiniTools = ref<boolean>(false) // Disabled by default; desktop-exclusive
 
 // Demo preview states for festive features
 const previewCountdown = ref<boolean>(false)
@@ -143,6 +145,12 @@ export function useCalendarSettings() {
       enableSeasonsAnim.value = savedSeasons === 'true'
     }
 
+    // Load desktop mini tools toggle (disabled by default)
+    const savedMiniTools = localStorage.getItem(ENABLE_MINI_TOOLS_KEY)
+    if (savedMiniTools !== null) {
+      enableMiniTools.value = savedMiniTools === 'true'
+    }
+
     // Load demo / preview flags from localStorage or URL query parameters
     const urlParams =
       typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null
@@ -219,6 +227,10 @@ export function useCalendarSettings() {
     localStorage.setItem(SEASONS_ANIM_KEY, enable.toString())
   })
 
+  watch(enableMiniTools, (enable) => {
+    localStorage.setItem(ENABLE_MINI_TOOLS_KEY, enable.toString())
+  })
+
   watch(previewCountdown, (val) => {
     localStorage.setItem(PREVIEW_COUNTDOWN_KEY, val.toString())
   })
@@ -260,6 +272,8 @@ export function useCalendarSettings() {
           previewHalloween.value = e.newValue === 'true'
         } else if (e.key === PREVIEW_KNY_KEY) {
           previewKNY.value = e.newValue === 'true'
+        } else if (e.key === ENABLE_MINI_TOOLS_KEY) {
+          enableMiniTools.value = e.newValue === 'true'
         }
       })
     }
@@ -272,6 +286,7 @@ export function useCalendarSettings() {
     fontSize,
     fontFamily,
     enableSeasonsAnim,
+    enableMiniTools,
     previewCountdown,
     previewDecember,
     previewValentine,
@@ -287,6 +302,7 @@ export function useCalendarSettings() {
       applyFontFamily(f)
     },
     toggleSeasonsAnim: () => (enableSeasonsAnim.value = !enableSeasonsAnim.value),
+    toggleMiniTools: () => (enableMiniTools.value = !enableMiniTools.value),
     togglePreviewCountdown: () => (previewCountdown.value = !previewCountdown.value),
     togglePreviewDecember: () => (previewDecember.value = !previewDecember.value),
     togglePreviewValentine: () => (previewValentine.value = !previewValentine.value),

@@ -11,6 +11,7 @@ import {
   Layers,
   Eye,
   CloudRain,
+  Wrench,
 } from 'lucide-vue-next'
 import { useCalendarState } from '@/composables/useCalendarState'
 import {
@@ -36,6 +37,8 @@ const {
   setFontFamily,
   enableSeasonsAnim,
   toggleSeasonsAnim,
+  enableMiniTools,
+  toggleMiniTools,
 } = useCalendarSettings()
 
 const themeOptions: { id: AppTheme; labelKh: string; labelEn: string; icon: Component }[] = [
@@ -123,7 +126,7 @@ const fontFamilyOptions: {
         <button
           type="button"
           @click="isSettingsOpen = false"
-          class="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors"
+          class="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors"
         >
           <X class="h-4 w-4" />
         </button>
@@ -144,10 +147,10 @@ const fontFamilyOptions: {
               :key="opt.id"
               type="button"
               @click="setTheme(opt.id)"
-              class="flex flex-col items-center justify-center gap-1.5 rounded-2xl border p-2.5 sm:p-3 text-center transition-all"
+              class="flex flex-col items-center justify-center gap-1.5 rounded-2xl border p-2.5 sm:p-3 text-center transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
               :class="
                 theme === opt.id
-                  ? 'border-amber-500 bg-amber-500/15 text-amber-600 dark:text-amber-400 font-bold shadow-sm'
+                  ? 'border-amber-500 bg-amber-500/15 text-amber-700 dark:text-amber-300 font-bold shadow-sm'
                   : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:bg-slate-800'
               "
             >
@@ -174,10 +177,10 @@ const fontFamilyOptions: {
               :key="opt.id"
               type="button"
               @click="setStartOfWeek(opt.id)"
-              class="rounded-2xl border p-2.5 text-center transition-all"
+              class="rounded-2xl border p-2.5 text-center transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
               :class="
                 startOfWeek === opt.id
-                  ? 'border-amber-500 bg-amber-500/15 text-amber-600 dark:text-amber-400 font-bold shadow-sm'
+                  ? 'border-amber-500 bg-amber-500/15 text-amber-700 dark:text-amber-300 font-bold shadow-sm'
                   : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:bg-slate-800'
               "
             >
@@ -210,8 +213,10 @@ const fontFamilyOptions: {
           <!-- Switch Toggle -->
           <button
             type="button"
+            role="switch"
+            :aria-checked="showWeekNumbers"
             @click="toggleWeekNumbers"
-            class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+            class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
             :class="showWeekNumbers ? 'bg-amber-500' : 'bg-slate-300 dark:bg-slate-700'"
           >
             <span
@@ -235,7 +240,7 @@ const fontFamilyOptions: {
               :key="opt.id"
               type="button"
               @click="setFontFamily(opt.id)"
-              class="flex flex-col items-start justify-center rounded-2xl border p-2.5 sm:p-3 text-left transition-all"
+              class="flex flex-col items-start justify-center rounded-2xl border p-2.5 sm:p-3 text-left transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
               :class="[
                 fontFamily === opt.id
                   ? 'border-amber-500 bg-amber-500/15 text-amber-700 dark:text-amber-300 font-bold shadow-sm'
@@ -263,10 +268,10 @@ const fontFamilyOptions: {
               :key="opt.id"
               type="button"
               @click="setFontSize(opt.id)"
-              class="rounded-2xl border p-2.5 text-center transition-all"
+              class="rounded-2xl border p-2.5 text-center transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
               :class="
                 fontSize === opt.id
-                  ? 'border-amber-500 bg-amber-500/15 text-amber-600 dark:text-amber-400 font-bold shadow-sm'
+                  ? 'border-amber-500 bg-amber-500/15 text-amber-700 dark:text-amber-300 font-bold shadow-sm'
                   : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:bg-slate-800'
               "
             >
@@ -310,13 +315,53 @@ const fontFamilyOptions: {
           <!-- Switch Toggle -->
           <button
             type="button"
+            role="switch"
+            :aria-checked="enableSeasonsAnim"
             @click="toggleSeasonsAnim"
-            class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+            class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
             :class="enableSeasonsAnim ? 'bg-amber-500' : 'bg-slate-300 dark:bg-slate-700'"
           >
             <span
               class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
               :class="enableSeasonsAnim ? 'translate-x-5' : 'translate-x-0'"
+            ></span>
+          </button>
+        </div>
+
+        <!-- 7. Desktop Mini Tools Toggle (Desktop Exclusive, Disabled by Default) -->
+        <div
+          class="hidden lg:flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 p-3.5 dark:border-slate-800 dark:bg-slate-800/50"
+        >
+          <div class="flex items-center gap-2.5 pr-3">
+            <div
+              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-700 dark:text-amber-300"
+            >
+              <Wrench class="h-4 w-4" />
+            </div>
+            <div>
+              <p class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100">
+                ឧបករណ៍ជំនួយ (Desktop Mini Tools)
+              </p>
+              <p class="text-[11px] text-slate-600 dark:text-slate-400">
+                បង្ហាញផ្ទាំងឧបករណ៍ជំនួយនៅជ្រុងក្រោមខាងឆ្វេង សម្រាប់បំប្លែងលេខជាអក្សរ គណនាថ្ងៃ អាយុ
+                និងសករាជ
+              </p>
+            </div>
+          </div>
+
+          <!-- Switch Toggle -->
+          <button
+            type="button"
+            role="switch"
+            aria-label="ឧបករណ៍ជំនួយ (Desktop Mini Tools)"
+            :aria-checked="enableMiniTools"
+            @click="toggleMiniTools"
+            class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+            :class="enableMiniTools ? 'bg-amber-500' : 'bg-slate-300 dark:bg-slate-700'"
+          >
+            <span
+              class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+              :class="enableMiniTools ? 'translate-x-5' : 'translate-x-0'"
             ></span>
           </button>
         </div>
@@ -326,7 +371,7 @@ const fontFamilyOptions: {
       <button
         type="button"
         @click="isSettingsOpen = false"
-        class="mt-6 w-full rounded-2xl bg-amber-500 py-2.5 text-xs sm:text-sm font-bold text-white hover:bg-amber-600 shadow-md shadow-amber-500/20 active:scale-98 transition-all"
+        class="mt-6 w-full rounded-2xl bg-amber-500 py-2.5 text-xs sm:text-sm font-bold text-slate-950 hover:bg-amber-400 shadow-md shadow-amber-500/20 active:scale-98 transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
       >
         រក្សាទុក
       </button>

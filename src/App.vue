@@ -13,6 +13,7 @@ import CalendarSettingsModal from '@/components/CalendarSettingsModal.vue'
 import MobileBottomNav from '@/components/MobileBottomNav.vue'
 import SeasonAnimation from '@/components/SeasonAnimation.vue'
 import ZodiacYearCard from '@/components/ZodiacYearCard.vue'
+import DesktopMiniToolsCard from '@/components/DesktopMiniToolsCard.vue'
 import { inject } from '@vercel/analytics'
 
 import { useCalendarState } from '@/composables/useCalendarState'
@@ -334,6 +335,9 @@ onUnmounted(() => {
 
     <!-- 3. Calendar Settings Modal (Theme, Start of Week, Week Number, Font Size) -->
     <CalendarSettingsModal />
+
+    <!-- Desktop-Exclusive Sticky Bottom-Left Expandable Mini Tools Card -->
+    <DesktopMiniToolsCard />
 
     <!-- Mobile Bottom Floating Navigation Dock -->
     <MobileBottomNav />
