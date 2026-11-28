@@ -300,8 +300,10 @@ function shareDate() {
           </button>
         </div>
 
-        <!-- The exact requested string with ត្រូវនឹង... on next line -->
-        <div class="relative z-10 mt-2 space-y-1 select-all">
+        <!-- The exact requested string with ត្រូវនឹង... on next line (range-selectable) -->
+        <div
+          class="relative z-10 mt-2 space-y-1 select-text cursor-text selection:bg-amber-300 selection:text-slate-950 dark:selection:bg-amber-400 dark:selection:text-slate-950"
+        >
           <p class="text-base sm:text-lg font-bold leading-relaxed text-slate-900 dark:text-white">
             {{ selectedDate.lunarFullText }}
           </p>

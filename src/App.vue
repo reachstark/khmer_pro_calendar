@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, computed, watch } from 'vue'
-import { Sparkles, Copy, Check, Eye } from 'lucide-vue-next'
-import confetti from 'canvas-confetti'
+import { Eye } from 'lucide-vue-next'
 import CalendarHeader from '@/components/CalendarHeader.vue'
 import MonthBannerCard from '@/components/MonthBannerCard.vue'
 import NewYearCountdown from '@/components/NewYearCountdown.vue'
@@ -13,7 +12,9 @@ import CalendarSettingsModal from '@/components/CalendarSettingsModal.vue'
 import MobileBottomNav from '@/components/MobileBottomNav.vue'
 import SeasonAnimation from '@/components/SeasonAnimation.vue'
 import ZodiacYearCard from '@/components/ZodiacYearCard.vue'
+import TodayCalendarCard from '@/components/TodayCalendarCard.vue'
 import DesktopMiniToolsCard from '@/components/DesktopMiniToolsCard.vue'
+import ShareCalendarBanner from '@/components/ShareCalendarBanner.vue'
 import { inject } from '@vercel/analytics'
 
 import { useCalendarState } from '@/composables/useCalendarState'
@@ -23,7 +24,6 @@ import { usePwaInstall } from '@/composables/usePwaInstall'
 import { useSwipeNavigation } from '@/composables/useSwipeNavigation'
 
 const {
-  todayDetail,
   prevMonth,
   nextMonth,
   goToToday,
@@ -31,7 +31,6 @@ const {
   isSettingsOpen,
   isHolidaysDrawerOpen,
   selectedDate,
-  selectDate,
   selectPrevDay,
   selectNextDay,
 } = useCalendarState()
@@ -82,23 +81,6 @@ watch(
   },
   { immediate: true },
 )
-
-const isTodayCopied = ref(false)
-
-function copyTodayDate() {
-  navigator.clipboard.writeText(todayDetail.value.copyFormat).then(() => {
-    isTodayCopied.value = true
-    confetti({
-      particleCount: 30,
-      spread: 50,
-      origin: { y: 0.8 },
-      colors: ['#F59E0B', '#10B981', '#3B82F6'],
-    })
-    setTimeout(() => {
-      isTodayCopied.value = false
-    }, 2500)
-  })
-}
 
 // Global Keyboard Navigation
 function handleKeyDown(e: KeyboardEvent) {
@@ -212,60 +194,8 @@ onUnmounted(() => {
 
         <!-- Sidebar Column (Right on Desktop) -->
         <div class="lg:col-span-4 flex flex-col gap-4 sm:gap-5">
-          <!-- Today's Live Khmer Lunar Date Card (Desktop Quick Widget) -->
-          <div
-            class="rounded-3xl border border-sky-500/30 bg-gradient-to-br from-sky-500/10 via-blue-500/5 to-indigo-500/10 p-4 sm:p-5 shadow-lg shadow-sky-500/5 dark:from-sky-500/15 dark:to-blue-500/10 transition-colors"
-          >
-            <div class="flex items-center justify-between mb-2">
-              <span
-                class="flex items-center gap-1.5 text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-wider"
-              >
-                <Sparkles class="h-3.5 w-3.5" />
-                កាលបរិច្ឆេទថ្ងៃនេះ
-              </span>
-
-              <!-- Quick copy button -->
-              <button
-                type="button"
-                @click="copyTodayDate"
-                class="flex items-center gap-1 rounded-xl px-2.5 py-1 text-[11px] font-bold text-sky-800 dark:text-sky-300 bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/30 transition-all active:scale-95"
-                title="ចម្លងថ្ងៃនេះ (Copy Today)"
-              >
-                <component :is="isTodayCopied ? Check : Copy" class="h-3 w-3" />
-                <span>{{ isTodayCopied ? 'ចម្លងរួច' : 'ចម្លង' }}</span>
-              </button>
-            </div>
-
-            <div class="space-y-0.5 select-all">
-              <p
-                class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-relaxed"
-              >
-                {{ todayDetail.lunarFullText }}
-              </p>
-              <p
-                class="text-[11px] sm:text-xs font-semibold text-slate-600 dark:text-slate-300 leading-relaxed"
-              >
-                {{ todayDetail.solarFullText }}
-              </p>
-            </div>
-
-            <!-- Quick Day Badge Row -->
-            <div
-              class="mt-3 flex items-center justify-between pt-2.5 border-t border-sky-500/20 text-[11px] text-sky-900 dark:text-sky-200"
-            >
-              <span class="font-semibold">
-                {{ todayDetail.khmer.animalYearName }} {{ todayDetail.khmer.animalYearEmoji }} •
-                {{ todayDetail.khmer.sakName }}
-              </span>
-              <button
-                type="button"
-                @click="selectDate(todayDetail)"
-                class="text-sky-600 dark:text-sky-400 font-bold hover:underline"
-              >
-                មើលលម្អិត &rarr;
-              </button>
-            </div>
-          </div>
+          <!-- Playful Tear-Off Today Khmer Lunar Date Card -->
+          <TodayCalendarCard />
 
           <!-- Zodiac Animal of the Year Highlight Card (Main Screen) -->
           <ZodiacYearCard />
@@ -276,6 +206,9 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
+
+      <!-- Share Website with Friends Banner (Bottom of Calendar UI) -->
+      <ShareCalendarBanner class="mt-5 sm:mt-6 lg:mt-7" />
     </main>
 
     <!-- Footer Attribution & Live Visitor Counter (Safe-Area Aware) -->

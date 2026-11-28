@@ -795,12 +795,12 @@ const knyLanterns = [
           <div
             class="text-xs sm:text-sm font-extrabold bg-gradient-to-r from-amber-200 via-yellow-300 to-orange-300 bg-clip-text text-transparent truncate"
           >
-            សួស្តីឆ្នាំថ្មី! ឆ្នាំ{{ knyZodiacSummary.zodiac.nameKh }} {{ knyZodiacSummary.sakName }} ព.ស.{{
-              knyZodiacSummary.beYearKh
-            }}
+            សួស្តីឆ្នាំថ្មី! ឆ្នាំ{{ knyZodiacSummary.zodiac.nameKh }}
+            {{ knyZodiacSummary.sakName }} ព.ស.{{ knyZodiacSummary.beYearKh }}
           </div>
           <div class="text-[10px] sm:text-xs font-semibold text-amber-100/90 truncate">
-            Happy Khmer New Year {{ currentYear }} • Year of the {{ knyZodiacSummary.zodiac.nameEn }}
+            Happy Khmer New Year {{ currentYear }} • Year of the
+            {{ knyZodiacSummary.zodiac.nameEn }}
           </div>
         </div>
         <img
